@@ -2,15 +2,15 @@ function validate()
 
 %% Inputs
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150525/s108';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20150528/s108';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150528/s108';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20150528/s108_interleave_9';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
 xResolution = 5; % nm
 yResolution = 5; % nm
 
-interleave = 1; % if 1, e.g for x axis there will be a gap of 10nm
+interleave = 9; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
 validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.

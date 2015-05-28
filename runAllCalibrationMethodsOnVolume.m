@@ -17,7 +17,7 @@ function runAllCalibrationMethodsOnVolume...
 % % 10 - SD of XY per pixel intensity difference
 params.predict = 1; % set to 0 if only the interpolation curve is required.
 params.xyResolution = 5; % nm
-params.maxShift = 10;
+params.maxShift = 20;
 params.minShift = 0;
 params.maxNumImages = 700; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
@@ -30,7 +30,7 @@ params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
 
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150525/s108';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150528/s108';
 
 for calibrationMethod=1:10
     str1 = sprintf('Running calibration method %02d',calibrationMethod);
