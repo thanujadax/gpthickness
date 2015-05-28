@@ -53,13 +53,17 @@ plotSaveMeanCalibrationCurveWithSD...
 
 %% method1 predict the thickness/resolution in the assumed unknown direction
 if(validateUsingXresolution)
+    inputResolution = xResolution;
+    outputResolution = yResolution;
     [predictedThickness, predThickSd] = predictThicknessXZ_Y...
-            (inputImageStackFileName,meanVector,stdVector,xResolution,...
+            (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave);
     
 else
+    inputResolution = yResolution;
+    outputResolution = xResolution,
     [predictedThickness, predThickSd] = predictThicknessYZ_X...
-            (inputImageStackFileName,meanVector,stdVectoryResolution,...
+            (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave);
 end
 
@@ -98,15 +102,62 @@ predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,meth
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
+% histograms.
+numBins = floor(numel(predictedThickness)/50);
+figure;hist(predictedThickness,numBins)
+title(titleStr)
+% save
+predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
+% calculate the error, mean error and the variance
+trueThickness = ones(numel(predictedThickness),1).* (outputResolution * (1+interleave));
+predictionError = (trueThickness - predictedThickness)./trueThickness(1);
+meanAbsPredictionError = mean(abs(predictionError));
+stdPredictionError = std(predictionError);
+meanSectionThickness = mean(predictedThickness);
+stdSectionThickness = std(predictedThickness);
+
+% save predictions
+predictionFileName = sprintf('NError_%s_%s_%s',predictionFigureFileStr,subTitle,method);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+save(strcat(predictionFileName,'.dat'),'predictionError','-ASCII');
+
+% plot prediction error
+figure;
+plot(predictionError);
+titleStr = sprintf('Normalized Prediction Error %s - Interleave = %d (%s interploation)',...
+                    subTitle,interleave,method);
+title(titleStr)
+
+xlabel('Inter-section interval');
+ylabel('Prediction Error');
+% save prediction plot
+predictionFileName = sprintf('predictionError_%s_%s_%s',predictionFigureFileStr,subTitle,method);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
+% write stats to text file
+statsFileName = sprintf('stats_%s_%s_%s',predictionFigureFileStr,subTitle,method);
+statsFileName = fullfile(outputSavePath,statsFileName);
+statsFileName = strcat(statsFileName,'.dat'); 
+fidStats = fopen(statsFileName,'w');
+fprintf(fidStats,'mean abs normalized prediction error = %d \n',meanAbsPredictionError);
+fprintf(fidStats,'SD of prediction error = %d \n',stdPredictionError);
+fprintf(fidStats,'mean section thickness = %d \n',meanSectionThickness);
+fprintf(fidStats,'SD of section thickness = %d \n',stdSectionThickness);
+fclose(fidStats);
+
 %% method 2: predict the thickness/resolution in the assumed unknown direction
 if(validateUsingXresolution)
     [predictedThickness, predThickSd] = predictThicknessXZ_Y...
-            (inputImageStackFileName,meanVector,stdVector,xResolution,...
+            (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method2,interleave);
     
 else
     [predictedThickness, predThickSd] = predictThicknessYZ_X...
-            (inputImageStackFileName,meanVector,stdVectoryResolution,...
+            (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method2,interleave);
 end
 
@@ -132,17 +183,61 @@ save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
 figure;
 plot(predThickSd);
 titleStr = sprintf('Predicted thickness SD %s - Interleave = %d (%s interploation)',...
-                    subTitle,interleave,method);
+                    subTitle,interleave,method2);
 title(titleStr)
 
 xlabel('Inter-section interval');
 ylabel('Thickness SD (nm))');
 % save
-predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,method);
+predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
+% histograms.
+numBins = floor(numel(predictedThickness)/50);
+figure;hist(predictedThickness,numBins)
+title(titleStr)
+% save
+predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % calculate the error, mean error and the variance
+trueThickness = ones(numel(predictedThickness),1).* (outputResolution * (1+interleave));
+predictionError = (trueThickness - predictedThickness)./trueThickness(1);
+meanAbsPredictionError = mean(abs(predictionError));
+stdPredictionError = std(predictionError);
+meanSectionThickness = mean(predictedThickness);
+stdSectionThickness = std(predictedThickness);
 
-% todo add histograms.
+% save
+predictionFileName = sprintf('NError_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+save(strcat(predictionFileName,'.dat'),'predictionError','-ASCII');
+
+% plot prediction error
+figure;
+plot(predictionError);
+titleStr = sprintf('Normalized Prediction Error %s - Interleave = %d (%s interploation)',...
+                    subTitle,interleave,method2);
+title(titleStr)
+
+xlabel('Inter-section interval');
+ylabel('Prediction Error');
+% save
+predictionFileName = sprintf('predictionError_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
+% write to text file
+statsFileName = sprintf('stats_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
+statsFileName = fullfile(outputSavePath,statsFileName);
+statsFileName = strcat(statsFileName,'.dat'); 
+fidStats = fopen(statsFileName,'w');
+fprintf(fidStats,'mean abs normalized prediction error = %d \n',meanAbsPredictionError);
+fprintf(fidStats,'SD of prediction error = %d \n',stdPredictionError);
+fprintf(fidStats,'mean section thickness = %d \n',meanSectionThickness);
+fprintf(fidStats,'SD of section thickness = %d \n',stdSectionThickness);
+fclose(fidStats);
+
 
