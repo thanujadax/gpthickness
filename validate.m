@@ -13,7 +13,7 @@ yResolution = 5; % nm
 interleave = 1; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
+validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.
 % For FIBSEM, the resolution of x and y are known (~ 5 nm)
 % if set we treat y as the known resolution to calibrate the decay curves
 % and x as the direction for which  
@@ -71,10 +71,9 @@ end
 figure;plot(predictedThickness);
 % lineProps = [];
 % transparent = 1;
-titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interploation)',...
+titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
                     subTitle,interleave,method);
 title(titleStr)
-% H = mseb((1:numel(predictedThickness)),predictedThickness,predThickSd,lineProps,transparent);
 xlabel('Inter-section interval');
 ylabel('Thickness (nm)');
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
@@ -83,6 +82,21 @@ ylabel('Thickness (nm)');
 predictionFileName = sprintf('%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
+
+% plot predicted thickness with error bar
+lineProps = [];
+transparent = 1;
+titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
+                    subTitle,interleave,method);
+xlabelStr = 'Inter-section interval';
+ylabelStr = 'Thickness (nm)';
+shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
+    titleStr,xlabelStr,ylabelStr);
+% save plot
+predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,method);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
 % save thickness in txt file
 save(strcat(predictionFileName,'.dat'),'predictedThickness','-ASCII');
 save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
@@ -91,7 +105,7 @@ save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
 % plot SD
 figure;
 plot(predThickSd);
-titleStr = sprintf('Predicted thickness SD %s - Interleave = %d (%s interploation)',...
+titleStr = sprintf('Predicted thickness SD %s - Interleave = %d (%s interpolation)',...
                     subTitle,interleave,method);
 title(titleStr)
 
@@ -106,6 +120,8 @@ print(predictionFileName,'-dpng');
 numBins = floor(numel(predictedThickness)/50);
 figure;hist(predictedThickness,numBins)
 title(titleStr)
+xlabel('Predicted thickness (nm)')
+ylabel('# sections')
 % save
 predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
@@ -175,6 +191,22 @@ ylabel('Thickness (nm)');
 predictionFileName = sprintf('%s_%s_%s',predictionFigureFileStr,subTitle,method2);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
+
+% plot predicted thickness with error bar
+titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
+                    subTitle,interleave,method2);
+xlabelStr = 'Inter-section interval';
+ylabelStr = 'Thickness (nm)';
+shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
+    titleStr,xlabelStr,ylabelStr);
+% save plot
+predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,method2);
+predictionFileName = fullfile(outputSavePath,predictionFileName);
+print(predictionFileName,'-dpng');
+
+
+
+
 % save thickness in txt file
 save(strcat(predictionFileName,'.dat'),'predictedThickness','-ASCII');
 save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
@@ -197,6 +229,8 @@ print(predictionFileName,'-dpng');
 numBins = floor(numel(predictedThickness)/50);
 figure;hist(predictedThickness,numBins)
 title(titleStr)
+xlabel('Predicted thickness (nm)')
+ylabel('# sections')
 % save
 predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method2);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
