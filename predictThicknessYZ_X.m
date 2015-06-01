@@ -1,6 +1,6 @@
-function [predictedThickness, thicknessSD] = predictThicknessYZ_X...
+function [predictedThickness, thicknessSD,syntheticStack] = predictThicknessYZ_X...
         (inputImageStackFileName,meanVector,sdVector,inputResolution,...
-        distMin,method,interleave)
+        distMin,method,interleave,saveSyntheticStack)
     
 % read image stack
 % calculate pairwise c.o.c of each adjacent pair of images YZ_X
@@ -17,6 +17,14 @@ numSectionIntervals = numel(1:(interleave+1):sizeC-(1+interleave));
 predictedThickness = zeros(numSectionIntervals,1);
 thicknessSD = zeros(numSectionIntervals,1);
 
+if(isempty(saveSyntheticStack))
+    saveSyntheticStack = 0;
+end
+
+if(saveSyntheticStack)
+    syntheticStack = zeros(sizeR,sizeZ,(numSectionIntervals+1));
+end
+
 k = 0;
 for i=1:(interleave+1):sizeC-(1+interleave)
     A(:,:) = inputImageStack(:,i,:);
@@ -27,4 +35,14 @@ for i=1:(interleave+1):sizeC-(1+interleave)
     predictedThickness(k) = predThicknessUnscaled .* inputResolution;
     thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
             predThicknessUnscaled,method) .* inputResolution;
+        
+    if(saveSyntheticStack)
+        syntheticStack(:,:,i) = A(:,:);
+    end
+end
+
+if(saveSyntheticStack)
+    syntheticStack(:,:,end) = B(:,:);
+else
+    syntheticStack = 0;
 end

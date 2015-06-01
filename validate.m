@@ -1,9 +1,10 @@
 function validate()
 
 %% Inputs
+saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
 precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150528/s108';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20150528/s108_interleave_9';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20150601/s108_interleave_9';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -13,7 +14,7 @@ yResolution = 5; % nm
 interleave = 9; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.
+validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
 % For FIBSEM, the resolution of x and y are known (~ 5 nm)
 % if set we treat y as the known resolution to calibrate the decay curves
 % and x as the direction for which  
@@ -55,16 +56,24 @@ plotSaveMeanCalibrationCurveWithSD...
 if(validateUsingXresolution)
     inputResolution = xResolution;
     outputResolution = yResolution;
-    [predictedThickness, predThickSd] = predictThicknessXZ_Y...
+    [predictedThickness, predThickSd,syntheticStack] = predictThicknessXZ_Y...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method,interleave);
-    
+            distMin,method,interleave,saveSyntheticStack);    
 else
     inputResolution = yResolution;
-    outputResolution = xResolution,
-    [predictedThickness, predThickSd] = predictThicknessYZ_X...
+    outputResolution = xResolution;
+    [predictedThickness, predThickSd,syntheticStack] = predictThicknessYZ_X...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method,interleave);
+            distMin,method,interleave,saveSyntheticStack);
+end
+
+if(saveSyntheticStack)
+    outputFileName = sprintf('syntheticStack_%s_%s.tif',...
+                        subTitle,method);
+    outputFileName = fullfile(outputSavePath,outputFileName);        
+    for K=1:length(syntheticStack(1, 1, :))
+       imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
+    end
 end
 
 % plot predicted thickness
@@ -117,7 +126,7 @@ predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % histograms.
-numBins = floor(numel(predictedThickness)/50);
+numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
 figure;hist(predictedThickness,numBins)
 title(titleStr)
 xlabel('Predicted thickness (nm)')
@@ -167,14 +176,23 @@ fclose(fidStats);
 
 %% method 2: predict the thickness/resolution in the assumed unknown direction
 if(validateUsingXresolution)
-    [predictedThickness, predThickSd] = predictThicknessXZ_Y...
+    [predictedThickness, predThickSd,syntheticStack] = predictThicknessXZ_Y...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method2,interleave);
+            distMin,method2,interleave,saveSyntheticStack);
     
 else
-    [predictedThickness, predThickSd] = predictThicknessYZ_X...
+    [predictedThickness, predThickSd,syntheticStack] = predictThicknessYZ_X...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method2,interleave);
+            distMin,method2,interleave,saveSyntheticStack);
+end
+
+if(saveSyntheticStack)
+    outputFileName = sprintf('syntheticStack_%s_%s.tif',...
+                        subTitle,method2);
+    outputFileName = fullfile(outputSavePath,outputFileName);        
+    for K=1:length(syntheticStack(1, 1, :))
+       imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
+    end
 end
 
 % plot predicted thickness
@@ -226,7 +244,7 @@ predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % histograms.
-numBins = floor(numel(predictedThickness)/50);
+numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
 figure;hist(predictedThickness,numBins)
 title(titleStr)
 xlabel('Predicted thickness (nm)')
