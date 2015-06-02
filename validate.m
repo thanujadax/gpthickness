@@ -68,19 +68,34 @@ else
 end
 
 if(saveSyntheticStack)
-    outputFileName = sprintf('syntheticStack_%s_%s.tif',...
-                        subTitle,method);
-    outputFileName = fullfile(outputSavePath,outputFileName);        
-    for K=1:length(syntheticStack(1, 1, :))
+    outputFileName = sprintf('syntheticStack_%s.tif',subTitle);
+    outputFileName = fullfile(outputSavePath,outputFileName);
+    syntheticStack = syntheticStack./255;
+    for K=1:size(syntheticStack,3)
        imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
     end
+
+%     t = Tiff(outputFileName,'w');
+% 
+%     tagstruct.ImageLength = size(syntheticStack,1);
+%     tagstruct.ImageWidth = size(syntheticStack,2);
+%     tagstruct.Photometric = Tiff.Photometric.MinIsBlack;
+%     tagstruct.BitsPerSample = 8;
+%     tagstruct.SamplesPerPixel = 1;
+%     tagstruct.RowsPerStrip = 16;
+%     tagstruct.PlanarConfiguration = Tiff.PlanarConfiguration.Chunky;
+%     tagstruct.Software = 'MATLAB';
+%     t.setTag(tagstruct);
+%     
+%     t.write(syntheticStack);
+%     t.close();
 end
 
 % plot predicted thickness
 figure;plot(predictedThickness);
 % lineProps = [];
 % transparent = 1;
-titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
+titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpolation)',...
                     subTitle,interleave,method);
 title(titleStr)
 xlabel('Inter-section interval');
@@ -186,14 +201,6 @@ else
             distMin,method2,interleave,saveSyntheticStack);
 end
 
-if(saveSyntheticStack)
-    outputFileName = sprintf('syntheticStack_%s_%s.tif',...
-                        subTitle,method2);
-    outputFileName = fullfile(outputSavePath,outputFileName);        
-    for K=1:length(syntheticStack(1, 1, :))
-       imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
-    end
-end
 
 % plot predicted thickness
 figure;plot(predictedThickness);

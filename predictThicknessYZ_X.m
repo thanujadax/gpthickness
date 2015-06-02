@@ -37,7 +37,7 @@ for i=1:(interleave+1):sizeC-(1+interleave)
             predThicknessUnscaled,method) .* inputResolution;
         
     if(saveSyntheticStack)
-        syntheticStack(:,:,i) = A(:,:);
+        syntheticStack(:,:,k) = A(:,:);
     end
 end
 
