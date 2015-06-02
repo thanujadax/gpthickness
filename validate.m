@@ -159,7 +159,7 @@ stdPredictionError = std(predictionError);
 meanSectionThickness = mean(predictedThickness);
 stdSectionThickness = std(predictedThickness);
 
-% save predictions
+% save prediction error
 predictionFileName = sprintf('NError_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 save(strcat(predictionFileName,'.dat'),'predictionError','-ASCII');
