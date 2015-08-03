@@ -1,7 +1,7 @@
 function mainPredictThicknessOfVolume()
 
-inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/30m/s108/20150602';
+inputImageStackFileName = '/home/thanuja/Dropbox/data/emchallenge/tr-stack.tiff';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssTEM/isbi2013/membraneProbability/20150608';
 
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -21,7 +21,7 @@ params.imgStackFileExt = 'tif';
 params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
-params.maxShift = 16;
+params.maxShift = 35;
 params.maxNumImages = 100; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
@@ -101,8 +101,10 @@ predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % save thickness in txt file
-save(strcat(predictionFileName,'.dat'),'predictedThickness','-ASCII');
-save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
+predictedThicknessCol = predictedThickness';
+predictionSDCol = predictionSD';
+save(strcat(predictionFileName,'.dat'),'predictedThicknessCol','-ASCII');
+save(strcat(predictionFileName,'_SD','.dat'),'predictionSDCol','-ASCII');
 % calculate the error, mean error and the variance
 
 % plot SD
