@@ -1,5 +1,6 @@
 function thicknessEstimates = doThicknessEstimation(...
-    calibrationMethods,inputImageStackFileName,outputSavePath,params)
+    calibrationMethods,inputImageStackFileName,outputSavePath,params,...
+    distanceMeasure)
 
 % Performs section thickness estimation using representative
 % curves to determine the distance between two (adjacent) sections
@@ -53,8 +54,9 @@ nameOfStack = nameOfStack{1};
 if(sum(calibrationMethods == 3)>0)
     disp('Calculating c.o.c decay curve using ZY stack, along X ...')
     calibrationString = 'c.o.c ZY along X';
-    calibrationFigureFileString = '01_cocZY_X';
-    xcorrMat = getXcorrZYstack(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    calibrationFigureFileString = '01_xcorZY_X';
+    xcorrMat = getXcorrZYstack(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')
     % each column of xcorrMat corresponds to a sequence of shifted frames of
     % the zy plane along the x axis.
@@ -66,15 +68,17 @@ end
 if(sum(calibrationMethods == 2)>0)
     disp('Calculating c.o.c decay curve using XY images stack, along Y ...')
     calibrationString = 'c.o.c XY along Y';
-    calibrationFigureFileString = '02_cocXY_Y';
-    xcorrMat = getXcorrXYstack(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    calibrationFigureFileString = '02_xcorXY_Y';
+    xcorrMat = getXcorrXYstack(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')    
     saveXcorrMat(nameOfStack,2,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 10)>0)
     calibrationString = 'SD of pixel intensity XY along X';
     disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X ...')
-    xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')
     calibrationFigureFileString = '03_sdpiXY_X';
     saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);
@@ -82,57 +86,64 @@ end
 if(sum(calibrationMethods == 4)>0)
     calibrationString = 'c.o.c ZY along Y';
     disp('Calculating c.o.c decay curve using ZY stack, along Y ...')
-    xcorrMat = getXcorrZYstackY(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrZYstackY(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done')
-    calibrationFigureFileString = '04_cocZY_Y';
+    calibrationFigureFileString = '04_xcorZY_Y';
     saveXcorrMat(nameOfStack,4,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 1)>0)
     calibrationString = 'c.o.c XY along X';
     disp('Calculating c.o.c decay curve using XY images stack, along X ...')
-    xcorrMat = getXcorrXYstackX(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrXYstackX(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = '05_cocXY_X';
+    calibrationFigureFileString = '05_xcorXY_X';
     saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 5)>0)
     calibrationString = 'c.o.c XZ along X';
     disp('Calculating c.o.c decay curve using XZ images stack, along X ...')
-    xcorrMat = getXcorrXZstackX(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrXZstackX(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = '06_cocXZ_X';
+    calibrationFigureFileString = '06_xcorXZ_X';
     saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 6)>0)
     calibrationString = 'c.o.c XZ along Y';
     disp('Calculating c.o.c decay curve using XZ images stack, along Y ...')
-    xcorrMat = getXcorrXZstackY(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrXZstackY(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '07_cocXZ_Y';
+    calibrationFigureFileString = '07_xcorXZ_Y';
     saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 7)>0)
     calibrationString = 'c.o.c XY along Z';
     disp('Calculating c.o.c decay curve using XY images stack, along Z ...')
-    xcorrMat = getXcorrXYstackZ(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrXYstackZ(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '08_cocXY_Z';
+    calibrationFigureFileString = '08_xcorXY_Z';
     saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 8)>0)
     calibrationString = 'c.o.c ZY along Z';
     disp('Calculating c.o.c decay curve using ZY images stack, along Z ...')
-    xcorrMat = getXcorrZYstackZ(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrZYstackZ(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '09_cocZY_Z';
+    calibrationFigureFileString = '09_xcorZY_Z';
     saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 9)>0)
     calibrationString = 'c.o.c XZ along Z';
     disp('Calculating c.o.c decay curve using XZ images stack, along Z ...')
-    xcorrMat = getXcorrXZstackZ(inputImageStackFileName,params.maxShift,params.minShift,params.maxNumImages);
+    xcorrMat = getXcorrXZstackZ(inputImageStackFileName,params.maxShift,...
+        params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '10_cocXZ_Z';    
+    calibrationFigureFileString = '10_xcorXZ_Z';    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat);
 end
     % error('Unrecognized calibration method specified. Check calibrationMethod')
@@ -146,7 +157,11 @@ if(params.plotOutput && (numel(calibrationMethods)==1))
     titleStr = sprintf('Similarity curve (%d): %s. Vol %s',calibrationMethods(1),calibrationString,nameOfStack);
     title(titleStr)
     xlabelStr = 'Shifted pixels';
-    ylabelStr = 'Coefficient of Correlation';
+    if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+        ylabelStr = 'Max Normalized Cross Correlation';
+    else
+        ylabelStr = 'Coefficient of Correlation';
+    end
     transparent = 0;
     if(params.suppressPlots)
         set(gcf,'Visible','off');
@@ -174,7 +189,8 @@ if(params.predict && (numel(calibrationMethods)==1))
 %         inputImageStackFileName,xcorrMat,params.maxShift,calibrationMethod);
     
 relZresolution = predictThicknessFromCurveFromMultiplePairs(...
-        inputImageStackFileName,xcorrMat,params.minShift,params.maxShift,calibrationMethods(1),params.numPairs);
+        inputImageStackFileName,xcorrMat,params.minShift,params.maxShift,...
+        calibrationMethods(1),params.numPairs,distanceMeasure);
 % each row contains one set of estimates for all the sections. First row is
 % from the images i and i+1, the second row is from images i and i+2 etc    
 thicknessEstimates = relZresolution .* params.xyResolution;

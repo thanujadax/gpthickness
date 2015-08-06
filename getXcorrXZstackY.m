@@ -1,4 +1,5 @@
-function xcorrMat = getXcorrXZstackY(inputImageStackFileName,maxShift,minShift,maxNumImages)
+function xcorrMat = getXcorrXZstackY(inputImageStackFileName,maxShift,...
+    minShift,maxNumImages,distanceMeasure)
 % calculate the correlation of the xz plane. along Y axis
 % Inputs:
 % imageStack - image stack (tif) for which the thickness has to be
@@ -34,7 +35,13 @@ for z=1:maxNumImages
         A(:,:) = inputImageStack(z,:,:);
         B(:,:) = inputImageStack(z+g,:,:);  % with shift
         k=k+1;
-        xcorrMat(z,k) = corr2(A,B);
+        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            xcorrImage = normxcorr2(A,B);
+            xcorrMat(z,k) = max(abs(xcorrImage(:)));
+        else
+            xcorrMat(z,k) = corr2(A,B);
+        end
+      
     end
 end
 %% plot

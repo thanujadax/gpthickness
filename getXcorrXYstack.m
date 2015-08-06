@@ -1,4 +1,5 @@
-function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,maxNumImages)
+function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,maxNumImages,...
+                        distanceMeasure)
 % calculate the correlation of XY face along the Y axis . i.e. parallel to the
 % cutting plane where we have maximum resolution (5nmx5nm for FIBSEM)
 
@@ -40,7 +41,12 @@ for z=1:maxNumImages
         A(:,:) = I(1+g:size(I,1),:);
         B(:,:) = I(1:size(I,1)-g,:);
         
-        xcorrMat(z,k) = corr2(A,B);
+        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            xcorrImage = normxcorr2(A,B);
+            xcorrMat(z,k) = max(abs(xcorrImage(:)));
+        else
+            xcorrMat(z,k) = corr2(A,B);
+        end
     end
 end
 

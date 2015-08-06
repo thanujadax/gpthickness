@@ -1,4 +1,5 @@
-function cocMat = getXcorrXZstackZ(inputImageStackFileName,maxShift,minShift,maxNumImages)
+function cocMat = getXcorrXZstackZ(inputImageStackFileName,maxShift,...
+    minShift,maxNumImages,distanceMeasure)
 % calculate the c.o.c of XZ face along the Z axis
 
 % Inputs:
@@ -40,7 +41,14 @@ for z=1:maxNumImages
         A(:,:) = inputImageStack(z,:,1+g:numC);
         B(:,:) = inputImageStack(z,:,1:numC-g);
         k=k+1;
-        cocMat(z,k) = corr2(A,B);
+        
+        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            xcorrImage = normxcorr2(A,B);
+            cocMat(z,k) = max(abs(xcorrImage(:)));
+        else
+            cocMat(z,k) = corr2(A,B);
+        end
+        
     end
 end
 

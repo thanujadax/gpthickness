@@ -1,4 +1,5 @@
-function xcorrMat = getXcorrZYstackY(inputImageStackFileName,maxShift,minShift,maxNumImages)
+function xcorrMat = getXcorrZYstackY(inputImageStackFileName,maxShift,...
+    minShift,maxNumImages,distanceMeasure)
 % calculate c.o.c curve on the ZY plane, shifting the (same) image along
 % the Y axis. Multiple images are used to get an average estimate of the
 % decay of c.o.c.
@@ -38,7 +39,13 @@ for z=1:maxNumImages
         A(:,:) = inputImageStack(1+g:size(inputImageStack,1),z,:);
         B(:,:) = inputImageStack(1:size(inputImageStack,1)-g,z,:);  % with shift
         k=k+1;
-        xcorrMat(z,k) = corr2(A,B);
+        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            xcorrImage = normxcorr2(A,B);
+            xcorrMat(z,k) = max(abs(xcorrImage(:)));
+        else
+            xcorrMat(z,k) = corr2(A,B);
+        end
+        
     end
 end
 %% plot
