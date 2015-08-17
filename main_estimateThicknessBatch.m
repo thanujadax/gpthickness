@@ -25,7 +25,8 @@ params.numPairs = 1; % number of section pairs to be used to estimate the thickn
 params.plotOutput = 0; % don't plot intermediate curves.
 params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
-
+distanceMeasure = 'maxNormalizedXcorr';
+% distanceMeasure = 'coefficientOfCorrelation';
 %% File paths
 
 outputSavePath = '/home/thanuja/projects/tests/thickness/batchEstimation/20150504/calibration01';
@@ -50,7 +51,7 @@ parfor i=1:length(sampleDirectories)
         inputImageStackFileName = fullfile...
             (sampleSubDirName,imageStackDir(j).name);
         thicknessEstimates = doThicknessEstimation(...
-    calibrationMethod,inputImageStackFileName,outputSavePath,params);
+    calibrationMethod,inputImageStackFileName,outputSavePath,params,distanceMeasure);
     % writes output to output path as txt file. Col vector.
     end
     

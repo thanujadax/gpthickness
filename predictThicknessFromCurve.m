@@ -1,6 +1,6 @@
 function [predictedThickness, predictionSD] = predictThicknessFromCurve(...
-        imageStackFileName,meanVector,sdVector,distMin,methodCOC,...
-        interpolationMethod,inputResolution)
+        imageStackFileName,meanVector,sdVector,distMin,...
+        interpolationMethod,inputResolution,distanceMeasure)
 % Returns the section thickness relative to the xy resolution. Multiply by
 % xyResolution to get the actual thickness.
 
@@ -33,7 +33,7 @@ str1 = sprintf('Calculating distances');
 disp(str1);
 
 
-if(~methodCOC)
+if(strcmp(distanceMeasure,'coefficientOfCorrelation'))
     % use the method of SD of pixelwise intensity difference
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);
@@ -46,7 +46,7 @@ if(~methodCOC)
         predictionSD(k) = interp1((distMin:distMax-1),sdVector,...
             predictedThicknessUnscaled,interpolationMethod) .* inputResolution;
     end
-else
+elseif(strcmp(distanceMeasure,'coefficientOfCorrelation'))
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));
@@ -58,4 +58,19 @@ else
         predictionSD(i) = interp1((distMin:distMax-1),sdVector,...
             predThicknessUnscaled,interpolationMethod) .* inputResolution;
     end
+elseif(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+    for i = 1:numSectionIntervals
+        image1 = inputImageStack(:,:,i);
+        image2 = inputImageStack(:,:,(i+1));
+        % calculate the distance between the two images based on the
+        % correlation coefficient
+        xcorrMat = normxcorr2(image1,image2);
+        maxXcorr = max(abs(xcorrMat(:)));
+        predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),maxXcorr,interpolationMethod);
+        predictedThickness(i) = predThicknessUnscaled .* inputResolution;
+        predictionSD(i) = interp1((distMin:distMax-1),sdVector,...
+            predThicknessUnscaled,interpolationMethod) .* inputResolution;
+    end
+else
+    error('unrecongnized distance measure!')
 end

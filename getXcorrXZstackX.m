@@ -26,7 +26,7 @@ numImages = numY;
 
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
-disp('Estimating similarity curve using correlation coefficient of shifted XY sections ...')
+fprintf('Estimating similarity curve using %s of shifted XY sections ...',distanceMeasure);
 if(maxNumImages>numImages)
     maxNumImages = numImages;
     str1 = sprintf('maxNumImages > numImages. using numImages = %d instead',numImages);
@@ -35,25 +35,48 @@ end
 numShifts = maxShift - minShift + 1;
 cocMat = zeros(maxNumImages,numShifts);
 I = zeros(numR,numC);
-for z=1:maxNumImages
-    I(:,:) = inputImageStack(z,:,:);
-    % [numR,numC] = size(I);
-    k=0;
-    for g=minShift:maxShift
-        A = zeros(numR-g,numC);
-        B = zeros(numR-g,numC);
 
-        A(:,:) = I(1+g:size(I,1),:);
-        B(:,:) = I(1:size(I,1)-g,:);
-        k=k+1;
-        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+if(strcmp(distanceMeasure,'maxNCC'))
+    for z=1:maxNumImages
+        I(:,:) = inputImageStack(z,:,:);
+        % [numR,numC] = size(I);
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);
+
+            A(:,:) = I(1+g:size(I,1),:);
+            B(:,:) = I(1:size(I,1)-g,:);
+            k=k+1;
+
             xcorrImage = normxcorr2(A,B);
             cocMat(z,k) = max(abs(xcorrImage(:)));
-        else
-            cocMat(z,k) = corr2(A,B);
+
         end
     end
+    
+elseif(strcmp(distanceMeasure,'COC'))
+    for z=1:maxNumImages
+        I(:,:) = inputImageStack(z,:,:);
+        % [numR,numC] = size(I);
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);
+
+            A(:,:) = I(1+g:size(I,1),:);
+            B(:,:) = I(1:size(I,1)-g,:);
+            k=k+1;
+
+            cocMat(z,k) = corr2(A,B);
+
+        end
+    end
+    
+else
+    error('Unrecognized distance measure')
 end
+
 
 %% plot
 % titleStr = 'Coefficient of Correlation using XZ sections along X axis';

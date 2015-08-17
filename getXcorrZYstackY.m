@@ -23,7 +23,7 @@ numImages = size(inputImageStack,2); % x axis
 
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
-disp('Estimating similarity curve using zy sections, shifting along Y ...')
+fprintf('Estimating %s similarity curve using zy sections, shifting along Y ...',distanceMeasure);
 if(maxNumImages>numImages)
     maxNumImages = numImages;
     str1 = sprintf('maxNumImages > numImages. using numImages = %d instead',numImages);
@@ -31,23 +31,37 @@ if(maxNumImages>numImages)
 end
 numShifts = maxShift - minShift + 1;
 xcorrMat = zeros(maxNumImages,numShifts);
-for z=1:maxNumImages
-    k=0;
-    for g=minShift:maxShift
-        A = zeros(numR-g,numC);
-        B = zeros(numR-g,numC);   
-        A(:,:) = inputImageStack(1+g:size(inputImageStack,1),z,:);
-        B(:,:) = inputImageStack(1:size(inputImageStack,1)-g,z,:);  % with shift
-        k=k+1;
-        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+
+if(strcmp(distanceMeasure,'maxNCC'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);   
+            A(:,:) = inputImageStack(1+g:size(inputImageStack,1),z,:);
+            B(:,:) = inputImageStack(1:size(inputImageStack,1)-g,z,:);  % with shift
+            k=k+1;            
             xcorrImage = normxcorr2(A,B);
             xcorrMat(z,k) = max(abs(xcorrImage(:)));
-        else
-            xcorrMat(z,k) = corr2(A,B);
         end
-        
-    end
+    end    
+elseif(strcmp(distanceMeasure,'COC'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);   
+            A(:,:) = inputImageStack(1+g:size(inputImageStack,1),z,:);
+            B(:,:) = inputImageStack(1:size(inputImageStack,1)-g,z,:);  % with shift
+            k=k+1;
+            xcorrMat(z,k) = corr2(A,B);            
+        end
+    end    
+else
+    error('Unrecognized distance measure')
 end
+
+
 %% plot
 % titleStr = 'Coefficient of Correlation using ZY sections, along Y';
 % xlabelStr = 'Shifted pixels';

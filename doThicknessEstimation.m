@@ -52,9 +52,10 @@ nameOfStack = strtok(tokenizedFName(end),'.');
 nameOfStack = nameOfStack{1};
 
 if(sum(calibrationMethods == 3)>0)
-    disp('Calculating c.o.c decay curve using ZY stack, along X ...')
-    calibrationString = 'c.o.c ZY along X';
-    calibrationFigureFileString = '01_xcorZY_X';
+    str1 = sprintf('Calculating %s decay curve using ZY stack, along X ...',distanceMeasure); 
+    disp(str1)
+    calibrationString = sprintf('%s ZY along X',distanceMeasure);
+    calibrationFigureFileString = sprintf('01_%s_ZY_X',distanceMeasure);
     xcorrMat = getXcorrZYstack(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')
@@ -66,9 +67,9 @@ if(sum(calibrationMethods == 3)>0)
     
 end
 if(sum(calibrationMethods == 2)>0)
-    disp('Calculating c.o.c decay curve using XY images stack, along Y ...')
-    calibrationString = 'c.o.c XY along Y';
-    calibrationFigureFileString = '02_xcorXY_Y';
+    fprintf('Calculating %s decay curve using XY images stack, along Y ...',distanceMeasure);
+    calibrationString = sprintf('%s XY along Y',distanceMeasure);
+    calibrationFigureFileString = sprintf('02_%s_XY_Y',distanceMeasure);
     xcorrMat = getXcorrXYstack(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')    
@@ -84,66 +85,66 @@ if(sum(calibrationMethods == 10)>0)
     saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 4)>0)
-    calibrationString = 'c.o.c ZY along Y';
-    disp('Calculating c.o.c decay curve using ZY stack, along Y ...')
+    calibrationString = sprintf('%s ZY along Y',distanceMeasure);
+    fprintf('Calculating %s decay curve using ZY stack, along Y ...',distanceMeasure);
     xcorrMat = getXcorrZYstackY(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done')
-    calibrationFigureFileString = '04_xcorZY_Y';
+    calibrationFigureFileString = sprintf('04_%s_ZY_Y',distanceMeasure);
     saveXcorrMat(nameOfStack,4,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 1)>0)
-    calibrationString = 'c.o.c XY along X';
-    disp('Calculating c.o.c decay curve using XY images stack, along X ...')
+    calibrationString = sprintf('%s XY along X',distanceMeasure);
+    fprintf('Calculating %s decay curve using XY images stack, along X ...',distanceMeasure);
     xcorrMat = getXcorrXYstackX(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = '05_xcorXY_X';
+    calibrationFigureFileString = sprintf('05_%s_XY_X',distanceMeasure);
     saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 5)>0)
-    calibrationString = 'c.o.c XZ along X';
-    disp('Calculating c.o.c decay curve using XZ images stack, along X ...')
+    calibrationString = sprintf('%s XZ along X',distanceMeasure);
+    fprintf('Calculating %s decay curve using XZ images stack, along X ...',distanceMeasure);
     xcorrMat = getXcorrXZstackX(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = '06_xcorXZ_X';
+    calibrationFigureFileString = sprintf('06_%s_XZ_X',distanceMeasure);
     saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 6)>0)
-    calibrationString = 'c.o.c XZ along Y';
-    disp('Calculating c.o.c decay curve using XZ images stack, along Y ...')
+    calibrationString = sprintf('%s XZ along Y',distanceMeasure);
+    fprintf('Calculating %s decay curve using XZ images stack, along Y ...',distanceMeasure)
     xcorrMat = getXcorrXZstackY(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '07_xcorXZ_Y';
+    calibrationFigureFileString = sprintf('07_%s_XZ_Y',distanceMeasure);
     saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 7)>0)
-    calibrationString = 'c.o.c XY along Z';
-    disp('Calculating c.o.c decay curve using XY images stack, along Z ...')
+    calibrationString = sprintf('%s XY along Z',distanceMeasure);
+    fprintf('Calculating %s decay curve using XY images stack, along Z ...',distanceMeasure);
     xcorrMat = getXcorrXYstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '08_xcorXY_Z';
+    calibrationFigureFileString = sprintf('08_%s_XY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 8)>0)
-    calibrationString = 'c.o.c ZY along Z';
-    disp('Calculating c.o.c decay curve using ZY images stack, along Z ...')
+    calibrationString = sprintf('%s ZY along Z',distanceMeasure);
+    fprintf('Calculating %s decay curve using ZY images stack, along Z ...',distanceMeasure)
     xcorrMat = getXcorrZYstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '09_xcorZY_Z';
+    calibrationFigureFileString = sprintf('09_%s_ZY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 9)>0)
-    calibrationString = 'c.o.c XZ along Z';
-    disp('Calculating c.o.c decay curve using XZ images stack, along Z ...')
+    calibrationString = sprintf('%s XZ along Z',distanceMeasure);
+    fprintf('Calculating %s decay curve using XZ images stack, along Z ...',distanceMeasure);
     xcorrMat = getXcorrXZstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = '10_xcorXZ_Z';    
+    calibrationFigureFileString = sprintf('10_%s_XZ_Z',distanceMeasure);    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat);
 end
     % error('Unrecognized calibration method specified. Check calibrationMethod')

@@ -20,7 +20,7 @@ B = zeros(numX,numZ);
 z = 1; % starting image
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
-disp('Estimating similarity curve using zy sections ...')
+fprintf('Estimating %s similarity curve using zy sections ...',distanceMeasure);
 numImages = numImages - maxShift;
 if(maxNumImages>numImages)
     maxNumImages = numImages;
@@ -29,21 +29,34 @@ if(maxNumImages>numImages)
 end
 numShifts = maxShift - minShift + 1;
 xcorrMat = zeros(maxNumImages,numShifts);
+
+if(strcmp(distanceMeasure,'maxNCC'))
 for z=1:maxNumImages
     k=0;
     for g=minShift:maxShift
         A(:,:) = inputImageStack(z,:,:);
         B(:,:) = inputImageStack(z+g,:,:);  % with shift
         k=k+1;
-        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
-            xcorrImage = normxcorr2(A,B);
-            xcorrMat(z,k) = max(abs(xcorrImage(:)));
-        else
-            xcorrMat(z,k) = corr2(A,B);
-        end
-      
+        xcorrImage = normxcorr2(A,B);
+        xcorrMat(z,k) = max(abs(xcorrImage(:)));
+
     end
+end    
+elseif(strcmp(distanceMeasure,'COC'))
+for z=1:maxNumImages
+    k=0;
+    for g=minShift:maxShift
+        A(:,:) = inputImageStack(z,:,:);
+        B(:,:) = inputImageStack(z+g,:,:);  % with shift
+        k=k+1;
+        xcorrMat(z,k) = corr2(A,B);
+
+    end
+end    
+else
+    error('Unrecognized distance measure!')
 end
+    
 %% plot
 % titleStr = 'Coefficient of Correlation using XZ sections along Y';
 % xlabelStr = 'Shifted pixels';

@@ -1,7 +1,10 @@
 function mainPredictThicknessOfVolume()
 
-inputImageStackFileName = '/home/thanuja/Dropbox/data/emchallenge/tr-stack.tiff';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssTEM/isbi2013/membraneProbability/20150608';
+%inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
+%outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
+
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/cubes/s108/s108_1-200.tif';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150812';
 
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -15,6 +18,9 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssTEM/
 % % 10 - SD of XY per pixel intensity difference
 
 calibrationMethods = [1 2];
+
+% distanceMeasure = 'COC';
+distanceMeasure = 'maxNCC'; 
 
 % params only for doThicknessEstimation
 params.imgStackFileExt = 'tif';
@@ -32,7 +38,7 @@ params.pathToPrecomputedCurve = '';
 params.suppressPlots = 1;
 
 % other params
-methodCOC = 1;
+% methodCOC = 1; % if it's based on correlation
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -46,15 +52,15 @@ subTitle = nameOfStack{1};
 
 interpolationMethod = 'linear';
 
-calibrationString = 'Avg c.o.c decay using X, Y resolutions';
-calibrationFigureFileString = 'coc_xyResolution_ensemble';
+calibrationString = sprintf('Avg %s decay using X, Y resolutions',distanceMeasure);
+calibrationFigureFileString = sprintf('%s_xyResolution_ensemble',distanceMeasure);
 color = 'b';
 
 predictionFigureFileStr = 'Prediction';
 
 % create xcorr mat files. We do not use the predictions here.
 doThicknessEstimation(...
-    calibrationMethods,inputImageStackFileName,outputSavePath,params);
+    calibrationMethods,inputImageStackFileName,outputSavePath,params,distanceMeasure);
 
 % get the calibration curves from the precomputed .mat files        
 % get the avg calibration curve
@@ -68,8 +74,8 @@ plotSaveMeanCalibrationCurveWithSD...
 
 % predict thickness
 [predictedThickness, predictionSD] = predictThicknessFromCurve(...
-        inputImageStackFileName,meanVector,stdVector,distMin,methodCOC,...
-        interpolationMethod,inputResolution);
+        inputImageStackFileName,meanVector,stdVector,distMin,...
+        interpolationMethod,inputResolution,distanceMeasure);
 
 %% Plots
 % plot predicted thickness

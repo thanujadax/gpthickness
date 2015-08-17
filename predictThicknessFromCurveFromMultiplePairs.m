@@ -48,9 +48,11 @@ if(numPairs > 0)
             if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
                 relZresolution(1,i) = getRelativeDistance_maxXcorr...
                     (image1,image2,mean(xcorrMat,1),maxShift,minShift);
-            else                
+            elseif(strcmp(distanceMeasure,'coefficientOfCorrelation'))                
                 relZresolution(1,i) = getRelativeDistance_cc2...
                     (image1,image2,mean(xcorrMat,1),maxShift,minShift);
+            else
+                error('unrecognized distance measure!')
             end
         end
     end

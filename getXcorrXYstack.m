@@ -20,7 +20,7 @@ numImages = size(inputImageStack,3);
 
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
-disp('Estimating similarity curve using correlation coefficient of shifted XY sections ...')
+fprintf('Estimating similarity curve using %s of shifted XY sections ...',distanceMeasure);
 if(maxNumImages>numImages)
     maxNumImages = numImages;
     str1 = sprintf('maxNumImages > numImages. using numImages = %d instead',numImages);
@@ -29,25 +29,40 @@ end
 numShifts = maxShift - minShift + 1;
 xcorrMat = zeros(maxNumImages,numShifts);
 
-for z=1:maxNumImages
-    I = inputImageStack(:,:,z);
-    [numR,numC] = size(I);
-    k = 0;
-    for g=minShift:maxShift
-        k = k + 1;
-        A = zeros(numR-g,numC);
-        B = zeros(numR-g,numC);
-
-        A(:,:) = I(1+g:size(I,1),:);
-        B(:,:) = I(1:size(I,1)-g,:);
-        
-        if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+if(strcmp(distanceMeasure,'maxNCC'))
+    for z=1:maxNumImages
+        I = inputImageStack(:,:,z);
+        [numR,numC] = size(I);
+        k = 0;
+        for g=minShift:maxShift
+            k = k + 1;
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);
+            A(:,:) = I(1+g:size(I,1),:);
+            B(:,:) = I(1:size(I,1)-g,:);
             xcorrImage = normxcorr2(A,B);
             xcorrMat(z,k) = max(abs(xcorrImage(:)));
-        else
-            xcorrMat(z,k) = corr2(A,B);
         end
     end
+    
+elseif(strcmp(distanceMeasure,'COC'))
+    for z=1:maxNumImages
+        I = inputImageStack(:,:,z);
+        [numR,numC] = size(I);
+        k = 0;
+        for g=minShift:maxShift
+            k = k + 1;
+            A = zeros(numR-g,numC);
+            B = zeros(numR-g,numC);
+
+            A(:,:) = I(1+g:size(I,1),:);
+            B(:,:) = I(1:size(I,1)-g,:);
+            xcorrMat(z,k) = corr2(A,B);
+            
+        end
+    end    
+else
+    error('Unrecognized distance measure!')
 end
 
 %% plot
