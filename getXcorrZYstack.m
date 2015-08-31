@@ -43,6 +43,10 @@ if(strcmp(distanceMeasure,'maxNCC'))
             A(:,:) = inputImageStack(:,z,:);
             B(:,:) = inputImageStack(:,z+g,:);  % with shift
             xcorrImage = normxcorr2(A,B);
+%             gpuA = gpuArray(A);
+%             gpuB = gpuArray(B);
+%             xcorrImage = normxcorr2(gpuA,gpuB);
+%             xcorrImage = double(xcorrImage);
             xcorrMat(z,k) = max(abs(xcorrImage(:)));
         end
     end

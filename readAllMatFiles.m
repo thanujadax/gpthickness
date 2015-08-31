@@ -38,10 +38,20 @@ function mat = readMats(indices,matFilePath,matFileDir)
 
 mat = [];
 numInds = length(indices);
-
+numMatFiles = length(matFileDir);
 for i=1:numInds
     clear xcorrMat
-    load(fullfile(matFilePath,matFileDir(indices(i)).name));
-    mat = [mat; xcorrMat];
+    for j=1:numMatFiles
+        % check if numInds(i) exists as part of a file name        
+        str1 = strsplit((matFileDir(j).name),'cID');
+        if(iscell(str1) && length(str1)==2)
+            if(str2num(strtok(str1{2},'.'))==indices(i))
+                load(fullfile(matFilePath,matFileDir(j).name));
+                mat = [mat; xcorrMat];
+                break
+            end
+        end
+        
+    end
     
 end

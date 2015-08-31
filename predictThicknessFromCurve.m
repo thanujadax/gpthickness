@@ -33,7 +33,7 @@ str1 = sprintf('Calculating distances');
 disp(str1);
 
 
-if(strcmp(distanceMeasure,'coefficientOfCorrelation'))
+if(strcmp(distanceMeasure,'SDI'))
     % use the method of SD of pixelwise intensity difference
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);
@@ -46,7 +46,7 @@ if(strcmp(distanceMeasure,'coefficientOfCorrelation'))
         predictionSD(k) = interp1((distMin:distMax-1),sdVector,...
             predictedThicknessUnscaled,interpolationMethod) .* inputResolution;
     end
-elseif(strcmp(distanceMeasure,'coefficientOfCorrelation'))
+elseif(strcmp(distanceMeasure,'COC'))
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));
@@ -58,7 +58,7 @@ elseif(strcmp(distanceMeasure,'coefficientOfCorrelation'))
         predictionSD(i) = interp1((distMin:distMax-1),sdVector,...
             predThicknessUnscaled,interpolationMethod) .* inputResolution;
     end
-elseif(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+elseif(strcmp(distanceMeasure,'maxNCC'))
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));

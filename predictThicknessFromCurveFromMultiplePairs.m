@@ -45,10 +45,10 @@ if(numPairs > 0)
             image2 = inputImageStack(:,:,(i+1));
             % calculate the distance between the two images based on the
             % correlation coefficient
-            if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            if(strcmp(distanceMeasure,'maxNCC'))
                 relZresolution(1,i) = getRelativeDistance_maxXcorr...
                     (image1,image2,mean(xcorrMat,1),maxShift,minShift);
-            elseif(strcmp(distanceMeasure,'coefficientOfCorrelation'))                
+            elseif(strcmp(distanceMeasure,'COC'))                
                 relZresolution(1,i) = getRelativeDistance_cc2...
                     (image1,image2,mean(xcorrMat,1),maxShift,minShift);
             else
@@ -74,13 +74,15 @@ if(numPairs>1)
             image2 = inputImageStack(:,:,(i+2));
             % calculate the distance between the two images based on the
             % correlation coefficient
-            if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+            if(strcmp(distanceMeasure,'maxNCC'))
                 relZresolution(2,i) = getRelativeDistance_maxXcorr...
                     (image1,image2,mean(xcorrMat,1),maxShift,minShift);
-            else                
+            elseif(strcom(distanceMeasure,'SDI'))                
                 relZresolution(2,i) = getRelativeDistance_cc2...
                 (image1,image2,mean(xcorrMat,1),maxShift,minShift);
-            end
+            else
+		error('Incompatible distance measure used for calibration method')
+	    end
         end
     end    
 end

@@ -158,7 +158,7 @@ if(params.plotOutput && (numel(calibrationMethods)==1))
     titleStr = sprintf('Similarity curve (%d): %s. Vol %s',calibrationMethods(1),calibrationString,nameOfStack);
     title(titleStr)
     xlabelStr = 'Shifted pixels';
-    if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+    if(strcmp(distanceMeasure,'maxNCC'))
         ylabelStr = 'Max Normalized Cross Correlation';
     else
         ylabelStr = 'Coefficient of Correlation';
@@ -242,7 +242,7 @@ function saveXcorrMat(nameOfStack,calibrationID,outputSavePath,xcorrMat)
     % save calibration curve .mat
     disp('Saving xcorrMat')
 
-    matName = sprintf('xcorrMat_%s_%02d.mat',nameOfStack,calibrationID);
+    matName = sprintf('xcorrMat_%s_%cID02d.mat',nameOfStack,calibrationID);
     xcorrFileName = fullfile(outputSavePath,matName);
     save(xcorrFileName,'xcorrMat')
     disp('done')

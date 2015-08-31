@@ -33,7 +33,7 @@ end
 numShifts = maxShift - minShift + 1;
 cocMat = zeros(maxNumImages,numShifts);
 
-if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+if(strcmp(distanceMeasure,'maxNCC'))
     for z=1:maxNumImages 
         k=0;
         for g=minShift:maxShift
@@ -46,7 +46,7 @@ if(strcmp(distanceMeasure,'maxNormalizedXcorr'))
             cocMat(z,k) = max(abs(xcorrImage(:)));
         end
     end    
-elseif(strcmp(distanceMeasure,'maxNormalizedXcorr'))
+elseif(strcmp(distanceMeasure,'COC'))
     for z=1:maxNumImages 
         k=0;
         for g=minShift:maxShift

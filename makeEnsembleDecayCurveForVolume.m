@@ -1,4 +1,5 @@
-function [y,errBar] = makeEnsembleDecayCurveForVolume(matFilePath,fileStr,zDirection,calibrationMethods)
+function [y,errBar] = makeEnsembleDecayCurveForVolume(matFilePath,fileStr,...
+    zDirection,calibrationMethods,distanceMeasure)
 
 % Inputs:
 % matFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150512/s108';
@@ -32,7 +33,7 @@ tokenizedSubDirName = strsplit(matFilePath,filesep);
 volName = tokenizedSubDirName{end};
 titleStr = sprintf('Ensemble similarity decay curve: vol %s - %s',volName,directionStr);
 xlabelStr = 'Distance (#px or #sections)';
-ylabelStr = 'Coefficient of Correlation';
+ylabelStr = sprintf('%s',distanceMeasure);
 transparent = 0;
 figure;
 shadedErrorBar((0:(numC-1)),y,errBar,plotColor,transparent,...

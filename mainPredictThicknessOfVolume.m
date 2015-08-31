@@ -3,8 +3,8 @@ function mainPredictThicknessOfVolume()
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/cubes/s108/s108_1-200.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150812';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150818/s108';
 
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -17,10 +17,12 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2];
+calibrationMethods = [1 2 3 4 5 6 7 8 9];
 
-% distanceMeasure = 'COC';
-distanceMeasure = 'maxNCC'; 
+% distanceMeasure = 'SDI';  % standard deviation of pixel intensity
+% differences
+% distanceMeasure = 'COC';  % coefficient of correlation
+distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
 
 % params only for doThicknessEstimation
 params.imgStackFileExt = 'tif';
@@ -65,7 +67,7 @@ doThicknessEstimation(...
 % get the calibration curves from the precomputed .mat files        
 % get the avg calibration curve
 [meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
-    (outputSavePath,fileStr,0,calibrationMethods);
+    (outputSavePath,fileStr,0,calibrationMethods,distanceMeasure);
 
 % plot decay curve
 plotSaveMeanCalibrationCurveWithSD...
