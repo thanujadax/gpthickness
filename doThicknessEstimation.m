@@ -55,7 +55,7 @@ if(sum(calibrationMethods == 3)>0)
     str1 = sprintf('Calculating %s decay curve using ZY stack, along X ...',distanceMeasure); 
     disp(str1)
     calibrationString = sprintf('%s ZY along X',distanceMeasure);
-    calibrationFigureFileString = sprintf('01_%s_ZY_X',distanceMeasure);
+    calibrationFigureFileString = sprintf('03_%s_ZY_X',distanceMeasure);
     xcorrMat = getXcorrZYstack(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')
@@ -81,7 +81,7 @@ if(sum(calibrationMethods == 10)>0)
     xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
         params.maxShift,params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')
-    calibrationFigureFileString = '03_sdpiXY_X';
+    calibrationFigureFileString = '10_sdpiXY_X';
     saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 4)>0)
@@ -99,7 +99,7 @@ if(sum(calibrationMethods == 1)>0)
     xcorrMat = getXcorrXYstackX(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = sprintf('05_%s_XY_X',distanceMeasure);
+    calibrationFigureFileString = sprintf('01_%s_XY_X',distanceMeasure);
     saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 5)>0)
@@ -108,7 +108,7 @@ if(sum(calibrationMethods == 5)>0)
     xcorrMat = getXcorrXZstackX(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
-    calibrationFigureFileString = sprintf('06_%s_XZ_X',distanceMeasure);
+    calibrationFigureFileString = sprintf('05_%s_XZ_X',distanceMeasure);
     saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 6)>0)
@@ -117,7 +117,7 @@ if(sum(calibrationMethods == 6)>0)
     xcorrMat = getXcorrXZstackY(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = sprintf('07_%s_XZ_Y',distanceMeasure);
+    calibrationFigureFileString = sprintf('06_%s_XZ_Y',distanceMeasure);
     saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 7)>0)
@@ -126,7 +126,7 @@ if(sum(calibrationMethods == 7)>0)
     xcorrMat = getXcorrXYstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = sprintf('08_%s_XY_Z',distanceMeasure);
+    calibrationFigureFileString = sprintf('07_%s_XY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 8)>0)
@@ -135,7 +135,7 @@ if(sum(calibrationMethods == 8)>0)
     xcorrMat = getXcorrZYstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = sprintf('09_%s_ZY_Z',distanceMeasure);
+    calibrationFigureFileString = sprintf('08_%s_ZY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat);
 end    
 if(sum(calibrationMethods == 9)>0)
@@ -144,16 +144,13 @@ if(sum(calibrationMethods == 9)>0)
     xcorrMat = getXcorrXZstackZ(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
-    calibrationFigureFileString = sprintf('10_%s_XZ_Z',distanceMeasure);    
+    calibrationFigureFileString = sprintf('09_%s_XZ_Z',distanceMeasure);    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat);
 end
     % error('Unrecognized calibration method specified. Check calibrationMethod')
 
 
 %% plot calibration curve
-
-
-
 if(params.plotOutput && (numel(calibrationMethods)==1))
     titleStr = sprintf('Similarity curve (%d): %s. Vol %s',calibrationMethods(1),calibrationString,nameOfStack);
     title(titleStr)
@@ -242,7 +239,7 @@ function saveXcorrMat(nameOfStack,calibrationID,outputSavePath,xcorrMat)
     % save calibration curve .mat
     disp('Saving xcorrMat')
 
-    matName = sprintf('xcorrMat_%s_%cID02d.mat',nameOfStack,calibrationID);
+    matName = sprintf('xcorrMat_%s_cID%02d.mat',nameOfStack,calibrationID);
     xcorrFileName = fullfile(outputSavePath,matName);
     save(xcorrFileName,'xcorrMat')
     disp('done')

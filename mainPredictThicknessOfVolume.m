@@ -17,12 +17,12 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2 3 4 5 6 7 8 9];
+calibrationMethods = [1 2 3 4 5 6 7 8 9 10];
 
 % distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences
-% distanceMeasure = 'COC';  % coefficient of correlation
-distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
+distanceMeasure = 'COC';  % coefficient of correlation
+% distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
 
 % params only for doThicknessEstimation
 params.imgStackFileExt = 'tif';
@@ -44,8 +44,8 @@ params.suppressPlots = 1;
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
-xResolution = 5; % nm
-yResolution = 5; % nm
+%xResolution = 5; % nm
+%yResolution = 5; % nm
 inputResolution = 5;
 
 tokenizedFName = strsplit(inputImageStackFileName,filesep);

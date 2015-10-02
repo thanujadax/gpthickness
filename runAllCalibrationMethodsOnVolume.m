@@ -1,6 +1,8 @@
 function runAllCalibrationMethodsOnVolume...
     (inputImageStackFileName,outputSavePath,params)
 
+% almost obsolete. Refer to mainPredictThicknessOfVolume.m
+
 % run all calibration methods for one volume and save the calibration
 % curves and the predictions in the outputPath
 

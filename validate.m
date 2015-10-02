@@ -2,9 +2,9 @@ function validate()
 
 %% Inputs
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150528/s108';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20150821/s108_interleave_1_y';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151002/s704_interleave_1_x';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -14,7 +14,7 @@ yResolution = 5; % nm
 interleave = 1; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.
+validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
 % For FIBSEM, the resolution of x and y are known (~ 5 nm)
 % if set we treat y as the known resolution to calibrate the decay curves
 % and x as the direction for which  
