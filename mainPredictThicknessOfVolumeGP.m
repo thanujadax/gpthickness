@@ -1,11 +1,14 @@
-function mainPredictThicknessOfVolume()
+function mainPredictThicknessOfVolumeGP()
 
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
 outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150818/s704';
-% precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
+
+gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
+usePrecomputedSimilarityData = 1;
+
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
 % % 3 - c.o.c across ZY sections, along x axis

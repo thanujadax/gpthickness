@@ -1,6 +1,6 @@
 function thicknessEstimates = doThicknessEstimation(...
     calibrationMethods,inputImageStackFileName,outputSavePath,params,...
-    distanceMeasure)
+    distanceMeasure,withGPML)
 
 % Performs section thickness estimation using representative
 % curves to determine the distance between two (adjacent) sections
@@ -12,6 +12,7 @@ function thicknessEstimates = doThicknessEstimation(...
 %   between 2 adjacent sections. It will have multiple columns if
 %   param.numPairs > 1. 2nd column will be the estimate using the i and
 %   i+2nd image. etc.
+%   writes thickness estimates in txt file in outpoutSavePath
 
 %% Parameters
 % 
