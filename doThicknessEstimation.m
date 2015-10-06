@@ -1,6 +1,6 @@
 function thicknessEstimates = doThicknessEstimation(...
     calibrationMethods,inputImageStackFileName,outputSavePath,params,...
-    distanceMeasure,withGPML)
+    distanceMeasure)
 
 % Performs section thickness estimation using representative
 % curves to determine the distance between two (adjacent) sections
@@ -80,7 +80,7 @@ if(sum(calibrationMethods == 10)>0)
     calibrationString = 'SD of pixel intensity XY along X';
     disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X ...')
     xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
-        params.maxShift,params.minShift,params.maxNumImages,distanceMeasure);
+        params.maxShift,params.minShift,params.maxNumImages);
     disp('done!')
     calibrationFigureFileString = '10_sdpiXY_X';
     saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);

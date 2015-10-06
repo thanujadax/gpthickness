@@ -1,5 +1,7 @@
 function sV = calculateSimilarityForImgStack(imageStackFileName,distanceMeasure)
 
+% calculate pairwise image similarity for each adjacent image pair
+
 inputImageStack = readTiffStackToArray(imageStackFileName);
 numImg = size(inputImageStack,3);
 numSectionIntervals = numImg - 1;

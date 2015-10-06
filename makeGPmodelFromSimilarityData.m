@@ -20,10 +20,10 @@ vSampled = randi(length(similarityDataMat),1,numImgToUse);
 
 % plot similarities to be used for GP
 figure(), 
-plot(repmat([0:1:size(mData,2)-1]',1,nNumImg),mData(vSampled,:)','+'), ...
+plot(repmat([0:1:size(similarityDataMat,2)-1]',1,numImgToUse),similarityDataMat(vSampled,:)'), ...
 title('Similarities between images'), ...
-xlabel('similarity'), ylabel('distance'), ...
-axis([0,size(mData,2),0.5,1]);
+xlabel('distance'), ylabel('similarity'), ...
+%axis([0,size(similarityDataMat,2),0.1,1]);
 
 % create x y values
 % x - similarity values
@@ -66,7 +66,7 @@ title('Similarity-Distance curve')
 f = [m+2*sqrt(s2); flip(m-2*sqrt(s2),1)];
 fill([vZ; flip(vZ,1)], f, [7 7 7]/8);
 hold on; plot(vZ, m, 'LineWidth', 2); plot(vX, vY, '+', 'MarkerSize', 12),
-axis([0,1,0,36]),
+% axis([0,1,0,36]),
 grid on, xlabel('similarity'), ylabel('distance'); hold off;
 % save plot
 plotFileName = fullfile(outputSavePath,'similarity_distance_curve.svg');

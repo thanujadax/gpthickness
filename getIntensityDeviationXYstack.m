@@ -1,5 +1,5 @@
 function sigmaMat = getIntensityDeviationXYstack...
-    (inputImageStackFileName,maxShift,minShift,maxNumImages,distanceMeasure)
+    (inputImageStackFileName,maxShift,minShift,maxNumImages)
 % calculate the sd of intensity difference along the xy plane. i.e. parallel to the
 % cutting plane where we have maximum resolution (5nmx5nm for FIBSEM)
 

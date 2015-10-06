@@ -17,7 +17,7 @@ if(z)
     % along z axis. only 3 curves to be combined
     indices = [7,8,9];
     % numCurves = numel(indices); % 8,9,10
-    disp('Reading .mat files ending with 08, 09 and 10 - along z axis')
+    disp('Reading .mat files ending with 07, 08 and 09 - along z axis')
     
 else
     % x,y directions. i.e. 6 curves

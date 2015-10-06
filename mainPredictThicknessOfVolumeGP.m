@@ -5,9 +5,8 @@ function mainPredictThicknessOfVolumeGP()
 
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
 outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150818/s704';
-
 gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
-usePrecomputedSimilarityData = 1;
+
 
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -64,8 +63,11 @@ color = 'b';
 predictionFigureFileStr = 'Prediction';
 
 % create xcorr mat files. We do not use the predictions here.
-doThicknessEstimation(...
-    calibrationMethods,inputImageStackFileName,outputSavePath,params,distanceMeasure);
+if(~params.usePrecomputedCurve)
+    doThicknessEstimation(...
+        calibrationMethods,inputImageStackFileName,outputSavePath,params,distanceMeasure);
+    
+end
 
 % get the calibration curves from the precomputed .mat files        
 % get the avg calibration curve

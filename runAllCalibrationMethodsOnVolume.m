@@ -19,9 +19,9 @@ function runAllCalibrationMethodsOnVolume...
 % % 10 - SD of XY per pixel intensity difference
 params.predict = 1; % set to 0 if only the interpolation curve is required.
 params.xyResolution = 5; % nm
-params.maxShift = 20;
+params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 700; % number of sections to initiate calibration.
+params.maxNumImages = 500; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -30,14 +30,16 @@ params.suppressPlots = 1;
 params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
+distanceMeasure = 'COC';
 
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150528/s108';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151006/s704';
 
-for calibrationMethod=1:10
+%for calibrationMethod=1:10
+calibrationMethod=10;
     str1 = sprintf('Running calibration method %02d',calibrationMethod);
     disp(str1)
     thicknessEstimates = doThicknessEstimation(...
-    calibrationMethod,inputImageStackFileName,outputSavePath,params);
+    calibrationMethod,inputImageStackFileName,outputSavePath,params,distanceMeasure);
     
-end
+% end
