@@ -1,7 +1,6 @@
-function sigmaMat = getIntensityDeviationXYstack...
+function sigmaMat = getIntensityDeviationXstack...
     (inputImageStackFileName,maxShift,minShift,maxNumImages)
-% calculate the sd of intensity difference along the xy plane. i.e. parallel to the
-% cutting plane where we have maximum resolution (5nmx5nm for FIBSEM)
+% calculate the sd of intensity difference along X axis.
 
 % Inputs:
 % imageStack - image stack (tif) for which the thickness has to be
@@ -27,17 +26,17 @@ sigmaMat = zeros(maxNumImages,numShifts);
 
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
-disp('Estimating similarity curve using SD of intensity differences across shifted XY sections')
+disp('Estimating similarity curve using SD of intensity differences along X axis')
 
 for z=1:maxNumImages
     I = inputImageStack(:,:,z);
     [numR,numC] = size(I);
     k = 0;
     for g=minShift:maxShift
-        d1I = (I(1+g:size(I,1),:)-I(1:size(I,1)-g,:)); % shifted in y
+        % d1I = (I(1+g:size(I,1),:)-I(1:size(I,1)-g,:)); % shifted in y
         d2I = (I(:,1+g:size(I,2))-I(:,1:size(I,2)-g)); % shifted in x
         k = k + 1;
-        sigmaMat(z,k) = std([d1I(:);d2I(:)]);
+        sigmaMat(z,k) = std(d2I(:));
     end
 end
 

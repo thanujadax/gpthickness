@@ -27,7 +27,10 @@ function thicknessEstimates = doThicknessEstimation(...
 % % 7 - c.o.c across XY sections, along Z
 % % 8 - c.o.c across ZY sections, along Z
 % % 9 - c.o.c. across XZ sections, along Z
-% % 10 - SD of XY per pixel intensity difference
+% % 10 - SD of per pixel intensity difference - XY avg
+% % 11 - SD of per pixel intensity difference - along X only
+% % 12 - SD of per pixel intensity difference - along Y only
+
 
 % % TODO: methods robust against registration problems
 % 
@@ -75,16 +78,7 @@ if(sum(calibrationMethods == 2)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')    
     saveXcorrMat(nameOfStack,2,outputSavePath,xcorrMat);
-end    
-if(sum(calibrationMethods == 10)>0)
-    calibrationString = 'SD of pixel intensity XY along X';
-    disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X ...')
-    xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
-        params.maxShift,params.minShift,params.maxNumImages);
-    disp('done!')
-    calibrationFigureFileString = '10_sdpiXY_X';
-    saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);
-end    
+end        
 if(sum(calibrationMethods == 4)>0)
     calibrationString = sprintf('%s ZY along Y',distanceMeasure);
     fprintf('Calculating %s decay curve using ZY stack, along Y ...',distanceMeasure);
@@ -147,6 +141,51 @@ if(sum(calibrationMethods == 9)>0)
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('09_%s_XZ_Z',distanceMeasure);    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat);
+end
+if(sum(calibrationMethods == 10)>0)
+    calibrationString = 'SD of pixel intensity XY along X and Y';
+    disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X and Y...')
+    xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '10_sdpi_XY';
+    saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat);
+end
+if(sum(calibrationMethods == 11)>0)
+    calibrationString = 'SD of pixel intensity along X';
+    disp('Calculating SD of intensity deviation curve along X ...')
+    xcorrMat = getIntensityDeviationXstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '11_sdpi_X';
+    saveXcorrMat(nameOfStack,11,outputSavePath,xcorrMat);
+end
+if(sum(calibrationMethods == 12)>0)
+    calibrationString = 'SD of pixel intensity along Y';
+    disp('Calculating SD of intensity deviation curve along Y ...')
+    xcorrMat = getIntensityDeviationYstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '12_sdpi_Y';
+    saveXcorrMat(nameOfStack,12,outputSavePath,xcorrMat);
+end
+if(sum(calibrationMethods == 13)>0)
+    calibrationString = 'MSE of pixel intensity along X';
+    disp('Calculating MSE of intensity deviation curve along X ...')
+    xcorrMat = getIntensityMSE_Xstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '13_MSE_X';
+    saveXcorrMat(nameOfStack,13,outputSavePath,xcorrMat);
+end
+if(sum(calibrationMethods == 14)>0)
+    calibrationString = 'MSE of pixel intensity along Y';
+    disp('Calculating MSE of intensity deviation curve along Y ...')
+    xcorrMat = getIntensityMSE_Ystack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '14_MSE_Y';
+    saveXcorrMat(nameOfStack,14,outputSavePath,xcorrMat);
 end
     % error('Unrecognized calibration method specified. Check calibrationMethod')
 
