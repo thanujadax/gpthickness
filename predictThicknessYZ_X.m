@@ -1,6 +1,6 @@
 function [predictedThickness, thicknessSD,syntheticStack] = predictThicknessYZ_X...
         (inputImageStackFileName,meanVector,sdVector,inputResolution,...
-        distMin,method,interleave,saveSyntheticStack)
+        distMin,method,interleave,saveSyntheticStack,distanceMeasure)
     
 % read image stack
 % calculate pairwise c.o.c of each adjacent pair of images YZ_X
@@ -26,20 +26,55 @@ if(saveSyntheticStack)
 end
 
 k = 0;
-for i=1:(interleave+1):sizeC-(1+interleave)
-    A(:,:) = inputImageStack(:,i,:);
-    B(:,:) = inputImageStack(:,(i+1+interleave),:);
-    coc = corr2(A,B);
-    k = k + 1;
-    predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-    predictedThickness(k) = predThicknessUnscaled .* inputResolution;
-    thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
-            predThicknessUnscaled,method) .* inputResolution;
-        
-    if(saveSyntheticStack)
-        syntheticStack(:,:,k) = A(:,:);
+
+if(strcmp(distanceMeasure,'COC'))
+    for i=1:(interleave+1):sizeC-(1+interleave)
+        A(:,:) = inputImageStack(:,i,:);
+        B(:,:) = inputImageStack(:,(i+1+interleave),:);
+        coc = corr2(A,B);
+        k = k + 1;
+        predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
+        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+                predThicknessUnscaled,method) .* inputResolution;
+
+        if(saveSyntheticStack)
+            syntheticStack(:,:,k) = A(:,:);
+        end
     end
+elseif(strcmp(distanceMeasure,'SDI'))
+    for i=1:(interleave+1):sizeC-(1+interleave)
+        A(:,:) = inputImageStack(:,i,:);
+        B(:,:) = inputImageStack(:,(i+1+interleave),:);
+        coc = getPixIntensityDeviationSigma(A,B);
+        k = k + 1;
+        predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
+        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+                predThicknessUnscaled,method) .* inputResolution;
+
+        if(saveSyntheticStack)
+            syntheticStack(:,:,k) = A(:,:);
+        end     
+    end    
+    
+elseif(strcmp(distanceMeasure,'MSE'))
+    for i=1:(interleave+1):sizeC-(1+interleave)
+        A(:,:) = inputImageStack(:,i,:);
+        B(:,:) = inputImageStack(:,(i+1+interleave),:);
+        coc = getPixIntensityMSE(A,B);
+        k = k + 1;
+        predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
+        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+                predThicknessUnscaled,method) .* inputResolution;
+
+        if(saveSyntheticStack)
+            syntheticStack(:,:,k) = A(:,:);
+        end     
+    end     
 end
+    
 
 if(saveSyntheticStack)
     syntheticStack(:,:,end) = B(:,:);

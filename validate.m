@@ -3,24 +3,26 @@ function validate()
 %% Inputs
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/sdi';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151012/s704_interleave_1_x';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/100i/mse';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151012/s704/mse/y';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
 xResolution = 5; % nm
 yResolution = 5; % nm
-
+%******************************************************************
+%*** CHECK CALIBRATION METHODS VECTOR UNDER VALIDATION SECTION ****
+%******************************************************************
 interleave = 1; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
+validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.
 % For FIBSEM, the resolution of x and y are known (~ 5 nm)
 % if set we treat y as the known resolution to calibrate the decay curves
 % and x as the direction for which  
 
 %% Param
-distanceMeasure = 'SDI';
+distanceMeasure = 'MSE';
 method = 'spline'; % method of interpolation
 method2 = 'linear';
 
@@ -31,13 +33,16 @@ predictionFigureFileStr = 'prediction';
 % checkAndCreateSubDir(outputSavePath,subDir);
 if(validateUsingXresolution)
     % predict y resolution using x
-    calibrationMethods = [1 3 5];
+    % calibrationMethods = [1 3 5];
+    calibrationMethods = [13];
     calibrationString = sprintf('Avg %s decay using X resolution',distanceMeasure);
     calibrationFigureFileString = sprintf('%s_xResolution_ensemble',distanceMeasure);
     subTitle = 'XZ_y';
+    % subTitle = 'XZ_y';
 else
     % predict x resolution using y
-    calibrationMethods = [2 4 6];
+    % calibrationMethods = [2 4 6];
+    calibrationMethods = [14];
     calibrationString = sprintf('Avg %s decay using Y resolution',distanceMeasure);
     calibrationFigureFileString = sprintf('%s_yResolution_ensemble',distanceMeasure);
     subTitle = 'YZ_x';
@@ -59,13 +64,13 @@ if(validateUsingXresolution)
     outputResolution = yResolution;
     [predictedThickness, predThickSd,syntheticStack] = predictThicknessXZ_Y...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method,interleave,saveSyntheticStack);    
+            distMin,method,interleave,saveSyntheticStack,distanceMeasure);    
 else
     inputResolution = yResolution;
     outputResolution = xResolution;
     [predictedThickness, predThickSd,syntheticStack] = predictThicknessYZ_X...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method,interleave,saveSyntheticStack);
+            distMin,method,interleave,saveSyntheticStack,distanceMeasure);
 end
 
 if(saveSyntheticStack)
@@ -194,12 +199,12 @@ fclose(fidStats);
 if(validateUsingXresolution)
     [predictedThickness, predThickSd,syntheticStack] = predictThicknessXZ_Y...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method2,interleave,saveSyntheticStack);
+            distMin,method2,interleave,saveSyntheticStack,distanceMeasure);
     
 else
     [predictedThickness, predThickSd,syntheticStack] = predictThicknessYZ_X...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
-            distMin,method2,interleave,saveSyntheticStack);
+            distMin,method2,interleave,saveSyntheticStack,distanceMeasure);
 end
 
 
