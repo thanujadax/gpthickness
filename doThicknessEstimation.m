@@ -30,7 +30,8 @@ function thicknessEstimates = doThicknessEstimation(...
 % % 10 - SD of per pixel intensity difference - XY avg
 % % 11 - SD of per pixel intensity difference - along X only
 % % 12 - SD of per pixel intensity difference - along Y only
-
+% % 13 - MSE of per pixel intensity difference - along X only
+% % 14 - MSE of per pixel intensity difference - along Y only
 
 % % TODO: methods robust against registration problems
 % 

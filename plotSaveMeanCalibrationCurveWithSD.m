@@ -10,7 +10,7 @@ nameOfStack = nameOfStack{1};
 titleStr = sprintf('Similarity curve: %s. Vol %s',calibrationString,nameOfStack);
 title(titleStr)
 xlabelStr = 'Shifted pixels';
-ylabelStr = 'Coefficient of Correlation';
+ylabelStr = 'Similarity';
 transparent = 0;
 if(saveOnly)
     set(gcf,'Visible','off');

@@ -46,6 +46,18 @@ if(strcmp(distanceMeasure,'SDI'))
         predictionSD(k) = interp1((distMin:distMax-1),sdVector,...
             predictedThicknessUnscaled,interpolationMethod) .* inputResolution;
     end
+elseif(strcmp(distanceMeasure,'MSE'))
+    for i = 1:numSectionIntervals
+        image1 = inputImageStack(:,:,i);
+        image2 = inputImageStack(:,:,(i+1));
+        % calculate the distance between the two images based on the
+        % correlation coefficient
+        mse_intensity = getPixIntensityMSE(image1,image2);
+        predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),mse_intensity,interpolationMethod);
+        predictedThickness(i) = predThicknessUnscaled .* inputResolution;
+        predictionSD(i) = interp1((distMin:distMax-1),sdVector,...
+            predThicknessUnscaled,interpolationMethod) .* inputResolution;
+    end    
 elseif(strcmp(distanceMeasure,'COC'))
     for i = 1:numSectionIntervals
         image1 = inputImageStack(:,:,i);

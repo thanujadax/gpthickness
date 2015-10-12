@@ -1,7 +1,7 @@
 function [y,errBar] = getMeanInterpolationCurves(matFilePath,fileStr,calibrationInds)
 
 % Reads the .mat files saved in matFilePath. Each of those files should
-% correspond to different interpolation curves
+% correspond to a different interpolation curve
 % e.g. curve1 = mean(xcorrMat_1,1);
 % errBar is the standard deviation of each curve
 % file names should be of pattern fileStr%d.mat

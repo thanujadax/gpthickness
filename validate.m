@@ -3,8 +3,8 @@ function validate()
 %% Inputs
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151002/s704_interleave_1_x';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/sdi';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151012/s704_interleave_1_x';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -20,7 +20,7 @@ validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
 % and x as the direction for which  
 
 %% Param
-distanceMeasure = 'COC';
+distanceMeasure = 'SDI';
 method = 'spline'; % method of interpolation
 method2 = 'linear';
 

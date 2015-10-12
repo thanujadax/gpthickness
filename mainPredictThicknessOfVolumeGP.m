@@ -19,7 +19,7 @@ gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2 3 4 5 6 7 8 9 10];
+calibrationMethods = [10 11 12 13 14];
 
 % distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences

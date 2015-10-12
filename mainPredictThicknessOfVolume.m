@@ -4,7 +4,11 @@ function mainPredictThicknessOfVolume()
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150818/s704';
+
+% also the path where precomputed xcorr.mat files are saved
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/100i/coc';
+
+
 % precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -17,8 +21,9 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2 3 4 5 6 7 8 9 10];
+calibrationMethods = [1 2];
 
+% distanceMeasure = 'MSE';  % MSE of pixel intensity
 % distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences
 distanceMeasure = 'COC';  % coefficient of correlation
@@ -33,11 +38,14 @@ params.maxShift = 35;
 params.maxNumImages = 100; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
+params.ImageSequence = [1]; % not used 
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of one section
 params.plotOutput = 1; % don't plot intermediate curves.
 params.usePrecomputedCurve = 0;
-params.pathToPrecomputedCurve = '';
+params.pathToPrecomputedCurve = outputSavePath;
 params.suppressPlots = 1;
+
+predictThickness = 0;
 
 % other params
 % methodCOC = 1; % if it's based on correlation
@@ -60,10 +68,11 @@ color = 'b';
 
 predictionFigureFileStr = 'Prediction';
 
+if(~params.usePrecomputedCurve)
 % create xcorr mat files. We do not use the predictions here.
 doThicknessEstimation(...
     calibrationMethods,inputImageStackFileName,outputSavePath,params,distanceMeasure);
-
+end
 % get the calibration curves from the precomputed .mat files        
 % get the avg calibration curve
 [meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
@@ -74,6 +83,7 @@ plotSaveMeanCalibrationCurveWithSD...
     (inputImageStackFileName,calibrationString,saveOnly,...
     distMin,meanVector,stdVector,color,outputSavePath,calibrationFigureFileString);
 
+if(predictThickness)
 % predict thickness
 [predictedThickness, predictionSD] = predictThicknessFromCurve(...
         inputImageStackFileName,meanVector,stdVector,distMin,...
@@ -139,4 +149,5 @@ print(predictionFileName,'-dpng');
 % predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 % predictionFileName = fullfile(outputSavePath,predictionFileName);
 % print(predictionFileName,'-dpng');
+end
 

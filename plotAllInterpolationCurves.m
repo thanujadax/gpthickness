@@ -18,16 +18,17 @@ function plotAllInterpolationCurves(outputSavePath)
 % % 10 - SD of XY per pixel intensity difference
 
 params.xyResolution = 5; % nm
-params.maxShift = 15;
-params.maxNumImages = 600; % number of sections to initiate calibration.
+params.maxShift = 35;
+params.maxNumImages = 100; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
-params.numPairs = 2; % number of section pairs to be used to estimate the thickness of onesection
+params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
 params.plotOutput = 1;
-params.usePrecomputedCurve = 0;
-params.pathToPrecomputedCurve = '';
+params.usePrecomputedCurve = 1;
 
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150525/s108';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/100i/coc';
+
+params.pathToPrecomputedCurve = outputSavePath;
 
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 tokenizedSubDirName = strsplit(outputSavePath,filesep);
@@ -47,7 +48,7 @@ tokenizedSubDirName = tokenizedSubDirName{end};
 % legend('Line 1','Line 2','Line 3')
 
 x = 1:params.maxShift;
-[y,errBar] = getMeanInterpolationCurves(outputSavePath,fileStr);
+[y,errBar] = getMeanInterpolationCurves(outputSavePath,fileStr,[]);
 lineProps = [];
 transparent = 1;
 
@@ -66,7 +67,7 @@ figure;
 plot(y');
 legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
 xlabel('Distance (num pixels)')
-ylabel('Coefficient of correlation')
+ylabel('Similarity')
 titleStr = sprintf('Thickness interpolation curves: %s',tokenizedSubDirName);
 title(titleStr);
 %set(gca,'position',[0 0 1 1],'units','normalized')
