@@ -69,7 +69,44 @@ elseif(strcmp(distanceMeasure,'COC'))
             cocMat(z,k) = corr2(A,B);
             
         end
+    end
+    
+elseif(strcmp(distanceMeasure,'SDI'))
+    for z=1:maxNumImages
+        I = inputImageStack(:,:,z);
+        [numR,numC] = size(I);
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR,numC-g);
+            B = zeros(numR,numC-g);
+
+            A(:,:) = I(:,1+g:size(I,2));
+            B(:,:) = I(:,1:size(I,2)-g);
+            k=k+1;
+            dI = B - A;
+            cocMat(z,k) = std(dI(:));
+            
+        end
+    end
+    
+elseif(strcmp(distanceMeasure,'MSE'))
+    for z=1:maxNumImages
+        I = inputImageStack(:,:,z);
+        [numR,numC] = size(I);
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR,numC-g);
+            B = zeros(numR,numC-g);
+
+            A(:,:) = I(:,1+g:size(I,2));
+            B(:,:) = I(:,1:size(I,2)-g);
+            k=k+1;
+            [~,MSE_intensity,~,~] = measerr(A,B);
+            cocMat(z,k) = MSE_intensity;
+            
+        end
     end    
+    
 else
     error('Unrecognized distance measure!');
 end

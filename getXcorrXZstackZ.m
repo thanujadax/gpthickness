@@ -1,4 +1,4 @@
-function cocMat = getXcorrXZstackZ(inputImageStackFileName,maxShift,...
+function xcorrMat = getXcorrXZstackZ(inputImageStackFileName,maxShift,...
     minShift,maxNumImages,distanceMeasure)
 % calculate the c.o.c of XZ face along the Z axis
 
@@ -31,7 +31,7 @@ if(maxNumImages>numImages)
     disp(str1)
 end
 numShifts = maxShift - minShift + 1;
-cocMat = zeros(maxNumImages,numShifts);
+xcorrMat = zeros(maxNumImages,numShifts);
 
 if(strcmp(distanceMeasure,'maxNCC'))
     for z=1:maxNumImages 
@@ -43,7 +43,7 @@ if(strcmp(distanceMeasure,'maxNCC'))
             B(:,:) = inputImageStack(z,:,1:numC-g);
             k=k+1;
             xcorrImage = normxcorr2(A,B);
-            cocMat(z,k) = max(abs(xcorrImage(:)));
+            xcorrMat(z,k) = max(abs(xcorrImage(:)));
         end
     end    
 elseif(strcmp(distanceMeasure,'COC'))
@@ -55,7 +55,33 @@ elseif(strcmp(distanceMeasure,'COC'))
             A(:,:) = inputImageStack(z,:,1+g:numC);
             B(:,:) = inputImageStack(z,:,1:numC-g);
             k=k+1;
-            cocMat(z,k) = corr2(A,B);
+            xcorrMat(z,k) = corr2(A,B);
+        end
+    end    
+elseif(strcmp(distanceMeasure,'SDI'))
+    for z=1:maxNumImages 
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR,numC-g);
+            B = zeros(numR,numC-g);
+            A(:,:) = inputImageStack(z,:,1+g:numC);
+            B(:,:) = inputImageStack(z,:,1:numC-g);
+            k=k+1;
+            dI = B - A;
+            xcorrMat(z,k) = std(dI(:));
+        end
+    end    
+elseif(strcmp(distanceMeasure,'MSE'))
+    for z=1:maxNumImages 
+        k=0;
+        for g=minShift:maxShift
+            A = zeros(numR,numC-g);
+            B = zeros(numR,numC-g);
+            A(:,:) = inputImageStack(z,:,1+g:numC);
+            B(:,:) = inputImageStack(z,:,1:numC-g);
+            k=k+1;
+            [~,MSE_intensity,~,~] = measerr(A,B);
+            xcorrMat(z,k) = MSE_intensity;
         end
     end    
 else

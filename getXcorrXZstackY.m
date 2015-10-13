@@ -31,28 +31,52 @@ numShifts = maxShift - minShift + 1;
 xcorrMat = zeros(maxNumImages,numShifts);
 
 if(strcmp(distanceMeasure,'maxNCC'))
-for z=1:maxNumImages
-    k=0;
-    for g=minShift:maxShift
-        A(:,:) = inputImageStack(z,:,:);
-        B(:,:) = inputImageStack(z+g,:,:);  % with shift
-        k=k+1;
-        xcorrImage = normxcorr2(A,B);
-        xcorrMat(z,k) = max(abs(xcorrImage(:)));
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(z,:,:);
+            B(:,:) = inputImageStack(z+g,:,:);  % with shift
+            k=k+1;
+            xcorrImage = normxcorr2(A,B);
+            xcorrMat(z,k) = max(abs(xcorrImage(:)));
 
-    end
-end    
+        end
+    end    
 elseif(strcmp(distanceMeasure,'COC'))
-for z=1:maxNumImages
-    k=0;
-    for g=minShift:maxShift
-        A(:,:) = inputImageStack(z,:,:);
-        B(:,:) = inputImageStack(z+g,:,:);  % with shift
-        k=k+1;
-        xcorrMat(z,k) = corr2(A,B);
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(z,:,:);
+            B(:,:) = inputImageStack(z+g,:,:);  % with shift
+            k=k+1;
+            xcorrMat(z,k) = corr2(A,B);
 
+        end
+    end 
+elseif(strcmp(distanceMeasure,'SDI'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(z,:,:);
+            B(:,:) = inputImageStack(z+g,:,:);  % with shift
+            k=k+1;
+            dI = B - A;
+            xcorrMat(z,k) = std(dI(:));
+
+        end
     end
-end    
+elseif(strcmp(distanceMeasure,'MSE'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(z,:,:);
+            B(:,:) = inputImageStack(z+g,:,:);  % with shift
+            k=k+1;
+            [~,MSE_intensity,~,~] = measerr(A,B);
+            xcorrMat(z,k) = MSE_intensity;
+
+        end
+    end
 else
     error('Unrecognized distance measure!')
 end

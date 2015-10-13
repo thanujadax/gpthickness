@@ -5,16 +5,15 @@ function [predictedThickness, predictionSD] = predictThicknessFromCurve(...
 % xyResolution to get the actual thickness.
 
 % calibrationMethod
-% % 1 - c.o.c across XY sections, along X
-% % 2 - c.o.c across XY sections, along Y axis
-% % 3 - c.o.c across ZY sections, along x axis
-% % 4 - c.o.c across ZY sections along Y
-% % 5 - c.o.c acroxx XZ sections, along X
-% % 6 - c.o.c acroxx XZ sections, along Y
-% % 7 - c.o.c across XY sections, along Z
-% % 8 - c.o.c across ZY sections, along Z
-% % 9 - c.o.c. across XZ sections, along Z
-% % 10 - SD of XY per pixel intensity difference
+% % 1 - COC/SDI/MSE/maxNCC across XY sections, along X
+% % 2 - COC/SDI/MSE/maxNCC across XY sections, along Y axis
+% % 3 - COC/SDI/MSE/maxNCC across ZY sections, along x axis
+% % 4 - COC/SDI/MSE/maxNCC across ZY sections along Y
+% % 5 - COC/SDI/MSE/maxNCC across XZ sections, along X
+% % 6 - COC/SDI/MSE/maxNCC across XZ sections, along Y
+% % 7 - COC/SDI/MSE/maxNCC across XY sections, along Z
+% % 8 - COC/SDI/MSE/maxNCC across ZY sections, along Z
+% % 9 - COC/SDI/MSE/maxNCC across XZ sections, along Z
 % TODO: methods robust against registration problems
 
 % numPairs -

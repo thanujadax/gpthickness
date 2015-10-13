@@ -81,20 +81,6 @@ if(saveSyntheticStack)
        imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
     end
 
-%     t = Tiff(outputFileName,'w');
-% 
-%     tagstruct.ImageLength = size(syntheticStack,1);
-%     tagstruct.ImageWidth = size(syntheticStack,2);
-%     tagstruct.Photometric = Tiff.Photometric.MinIsBlack;
-%     tagstruct.BitsPerSample = 8;
-%     tagstruct.SamplesPerPixel = 1;
-%     tagstruct.RowsPerStrip = 16;
-%     tagstruct.PlanarConfiguration = Tiff.PlanarConfiguration.Chunky;
-%     tagstruct.Software = 'MATLAB';
-%     t.setTag(tagstruct);
-%     
-%     t.write(syntheticStack);
-%     t.close();
 end
 
 % plot predicted thickness

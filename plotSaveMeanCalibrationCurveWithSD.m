@@ -21,4 +21,4 @@ shadedErrorBar((distMin:(distMax-1)),meanVector,stdVector,color,transparent,...
 % save calibration curve figure
 % calibrationFigureFileName = strcat(calibrationFigureFileString,'.png')
 calibrationFigureFileName = fullfile(outputSavePath,calibrationFigureFileString);
-print(calibrationFigureFileName,'-dpng');
+print(calibrationFigureFileName,'-dsvg');

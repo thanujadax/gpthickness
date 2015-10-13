@@ -57,7 +57,31 @@ elseif(strcmp(distanceMeasure,'COC'))
             xcorrMat(z,k) = corr2(A,B);
 
         end
-    end    
+    end
+elseif(strcmp(distanceMeasure,'SDI'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(:,:,z);
+            B(:,:) = inputImageStack(:,:,z+g);  % with shift
+            k=k+1;
+            dI = B - A;
+            xcorrMat(z,k) = std(dI(:));
+
+        end
+    end
+elseif(strcmp(distanceMeasure,'MSE'))
+    for z=1:maxNumImages
+        k=0;
+        for g=minShift:maxShift
+            A(:,:) = inputImageStack(:,:,z);
+            B(:,:) = inputImageStack(:,:,z+g);  % with shift
+            k=k+1;
+            [~,MSE_intensity,~,~] = measerr(A,B);
+            xcorrMat(z,k) = MSE_intensity;
+
+        end
+    end
 else
     error('Unrecognized distance measure');
 end
