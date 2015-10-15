@@ -18,16 +18,18 @@ function plotAllInterpolationCurves(outputSavePath,distanceMeasure)
 
 params.xyResolution = 5; % nm
 params.maxShift = 35;
-params.maxNumImages = 100; % number of sections to initiate calibration.
+params.maxNumImages = 1; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
 params.plotOutput = 1;
 params.usePrecomputedCurve = 1;
 
-distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
-calibrationInds = [1 2 3 4 5 6];
+distanceMeasure = 'SDI';
+% distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses_curves';
+calibrationInds = [1 2];
 params.pathToPrecomputedCurve = outputSavePath;
 
 fileStr = 'xcorrMat'; % general string that defines the .mat file
