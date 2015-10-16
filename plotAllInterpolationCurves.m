@@ -17,6 +17,7 @@ function plotAllInterpolationCurves(outputSavePath,distanceMeasure)
 % % 9 - COC/SDI/MSE/maxNCC across XZ sections, along Z
 
 params.xyResolution = 5; % nm
+params.minShift = 0;
 params.maxShift = 35;
 params.maxNumImages = 1; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
@@ -70,7 +71,10 @@ transparent = 1;
 figure; 
 % errBarZero = zeros(size(errBar));
 % H2 = mseb(x,y,errBarZero,lineProps,transparent);
-plot(y');
+x = params.minShift:params.maxShift;
+plot(x,y');
+% axis([XMIN XMAX YMIN YMAX])
+% axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
 legend(c_legendStr);
 xlabel('Distance (num pixels)')
