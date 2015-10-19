@@ -1,10 +1,11 @@
-function validate()
+function validate(inputImageStackFileName,precomputedMatFilePath,...
+                    outputSavePath,ValidateUsingXresolution)
 
 %% Inputs
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151012/s704/100i/mse';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151012/s704/mse/y';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151012/s502/sdi/x';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -16,13 +17,13 @@ yResolution = 5; % nm
 interleave = 1; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateUsingXresolution = 0 ; % if 0, validation is done using y resolution.
+validateUsingXresolution = 1 ; % if 0, validation is done using y resolution.
 % For FIBSEM, the resolution of x and y are known (~ 5 nm)
 % if set we treat y as the known resolution to calibrate the decay curves
 % and x as the direction for which  
 
 %% Param
-distanceMeasure = 'MSE';
+distanceMeasure = 'SDI';
 method = 'spline'; % method of interpolation
 method2 = 'linear';
 
@@ -34,7 +35,7 @@ predictionFigureFileStr = 'prediction';
 if(validateUsingXresolution)
     % predict y resolution using x
     % calibrationMethods = [1 3 5];
-    calibrationMethods = [13];
+    calibrationMethods = [1];
     calibrationString = sprintf('Avg %s decay using X resolution',distanceMeasure);
     calibrationFigureFileString = sprintf('%s_xResolution_ensemble',distanceMeasure);
     subTitle = 'XZ_y';
@@ -42,7 +43,7 @@ if(validateUsingXresolution)
 else
     % predict x resolution using y
     % calibrationMethods = [2 4 6];
-    calibrationMethods = [14];
+    calibrationMethods = [2];
     calibrationString = sprintf('Avg %s decay using Y resolution',distanceMeasure);
     calibrationFigureFileString = sprintf('%s_yResolution_ensemble',distanceMeasure);
     subTitle = 'YZ_x';

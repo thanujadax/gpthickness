@@ -74,7 +74,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
             A(:,:) = I(1+g:size(I,1),:);
             B(:,:) = I(1:size(I,1)-g,:);
             
-            xcorrMat(z,k) = getNormalizedPixIntensityDeviation(A,B);           
+            xcorrMat(z,k) = getPixIntensityDeviation(A,B);           
         end
     end 
 elseif(strcmp(distanceMeasure,'MSE'))

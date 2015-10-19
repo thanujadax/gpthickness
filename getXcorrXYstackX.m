@@ -84,7 +84,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
             B(:,:) = I(:,1:size(I,2)-g);
             k=k+1;
             
-            cocMat(z,k) = getNormalizedPixIntensityDeviation(A,B);
+            cocMat(z,k) = getPixIntensityDeviation(A,B);
             
         end
     end

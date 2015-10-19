@@ -70,7 +70,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
             A(:,:) = inputImageStack(:,z,:);
             B(:,:) = inputImageStack(:,z+g,:);  % with shift
             % dI = B - A;
-            xcorrMat(z,k) = getNormalizedPixIntensityDeviation(A,B);
+            xcorrMat(z,k) = getPixIntensityDeviation(A,B);
 
         end
     end

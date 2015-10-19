@@ -46,7 +46,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
     for i=1:(interleave+1):sizeC-(1+interleave)
         A(:,:) = inputImageStack(:,i,:);
         B(:,:) = inputImageStack(:,(i+1+interleave),:);
-        coc = getPixIntensityDeviationSigma(A,B);
+        coc = getPixIntensityDeviation(A,B);
         k = k + 1;
         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
         predictedThickness(k) = predThicknessUnscaled .* inputResolution;

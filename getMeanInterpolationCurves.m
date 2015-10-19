@@ -40,8 +40,8 @@ if(isempty(calibrationInds))
     calibrationInds = 1:numCurves;
 end
 
-c_legendStr = getCalibrationIndLegend(calibrationInds);
-
+% c_legendStr = getCalibrationIndLegend(calibrationInds);
+c_legendStr = {};
 % load mat file to get the number of data points
 load(fullfile(matFilePath,matFileDir(1).name));
 numDataPoints = size(xcorrMat,2);

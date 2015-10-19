@@ -39,7 +39,7 @@ if(strcmp(distanceMeasure,'SDI'))
         image2 = inputImageStack(:,:,(i+1));
         % calculate the distance between two images based on the SD of
         % pixel differences
-        deviationSigma = getPixIntensityDeviationSigma(image1,image2);
+        deviationSigma = getPixIntensityDeviation(image1,image2);
         predictedThicknessUnscaled = getRelativeDistance(meanVector,distMin,distMax,deviationSigma);
         predictedThickness(1,i) = predictedThicknessUnscaled .* inputResolution;
         predictionSD(k) = interp1((distMin:distMax-1),sdVector,...
