@@ -1,6 +1,6 @@
 % create ellipse image
 
-saveImageFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses/01.png';
+saveImageFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses/06.png';
 
 sizeR = 600;
 sizeC = 600;
@@ -28,8 +28,8 @@ darkImageBase = zeros(sizeR,sizeC);
 
 ellipseCenters = [120 120; 200 400; 350 120; 450 450];
 %radius = 70;
-a = 40;
-b = 70;
+a = 90;
+b = 40;
 
 thickness = 20;
 

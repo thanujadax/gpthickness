@@ -1,4 +1,4 @@
-function [predictedThickness, thicknessSD,syntheticStack] = predictThicknessXZ_Y...
+function [estimatedResolution,thicknessSD,syntheticStack] = estimateYresUsingX...
         (inputImageStackFileName,meanVector,sdVector,inputResolution,...
         distMin,method,interleave,saveSyntheticStack,distanceMeasure)
     
@@ -25,7 +25,7 @@ if(saveSyntheticStack)
     syntheticStack = zeros(sizeC,sizeZ,(numSectionIntervals+1));
 end
 
-predictedThickness = zeros(numSectionIntervals,1);
+estimatedResolution = zeros(numSectionIntervals,1);
 thicknessSD = zeros(numSectionIntervals,1);
 k = 0;
 
@@ -36,7 +36,7 @@ if(strcmp(distanceMeasure,'COC'))
         coc = corr2(A,B);
         k = k + 1;
         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
                 predThicknessUnscaled,method) .* inputResolution;
 
@@ -51,7 +51,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
         coc = getPixIntensityDeviation(A,B);
         k = k + 1;
         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
                 predThicknessUnscaled,method) .* inputResolution;
 
@@ -67,7 +67,7 @@ elseif(strcmp(distanceMeasure,'MSE'))
         coc = getPixIntensityMSE(A,B);
         k = k + 1;
         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-        predictedThickness(k) = predThicknessUnscaled .* inputResolution;
+        estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
                 predThicknessUnscaled,method) .* inputResolution;
 

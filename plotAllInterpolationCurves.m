@@ -29,8 +29,8 @@ params.usePrecomputedCurve = 1;
 distanceMeasure = 'SDI';
 % distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
-% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses_curves';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses_curves/y';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
 
 calibrationInds = [];
 params.pathToPrecomputedCurve = outputSavePath;
@@ -78,10 +78,10 @@ plot(x,y');
 % axis([XMIN XMAX YMIN YMAX])
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
-legend('1','10','30','60','100','200');
+legend('a=40,b=40','a=50,b=40','a=60,b=40','a=70,b=40','a=80,b=40','a=90,b=40');
 % legend(c_legendStr);
 xlabel('Distance (num pixels)')
-ylabel('Similarity')
+ylabel('Dissimilarity')
 titleStr = sprintf('Dist-Similarity curves: %s',tokenizedSubDirName);
 title(titleStr);
 %set(gca,'position',[0 0 1 1],'units','normalized')
