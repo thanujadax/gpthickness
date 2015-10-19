@@ -21,7 +21,7 @@ if(isempty(saveSyntheticStack))
 end
 
 if(saveSyntheticStack)
-    syntheticStack = zeros(sizeC,sizeZ,(numSectionIntervals+1));
+    syntheticStack = zeros(sizeR,sizeC,(numSectionIntervals+1));
 end
 
 estimatedResolution = zeros(numSectionIntervals,1);
@@ -98,7 +98,7 @@ if(strcmp(distanceMeasure,'maxNCC'))
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
-                syntheticStack(:,:,k) = A(:,:);
+                syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
             end
 
         end
@@ -125,7 +125,7 @@ elseif(strcmp(distanceMeasure,'COC'))
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
-                syntheticStack(:,:,k) = A(:,:);
+                syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
             end            
         end
     end
@@ -151,7 +151,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
-                syntheticStack(:,:,k) = A(:,:);
+                syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
             end            
         end
     end
@@ -177,7 +177,7 @@ elseif(strcmp(distanceMeasure,'MSE'))
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
-                syntheticStack(:,:,k) = A(:,:);
+                syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
             end            
         end
     end    

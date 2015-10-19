@@ -15,6 +15,9 @@ saveOnly = 0;
 xResolution = 5; % nm
 yResolution = 5; % nm
 numImagesUsedForCalibration = 100; % these images will not be used for testing
+minShift = 0;
+maxShift = 35;
+maxNumImages = 100;
 %******************************************************************
 %*** CHECK CALIBRATION METHODS VECTOR UNDER VALIDATION SECTION ****
 %******************************************************************
@@ -22,8 +25,8 @@ interleave = 0; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
 validateXUsingXresolution = 1;
-validateYUsingYresolution = 1;
-validateYUsingXresolution = 1;
+validateYUsingYresolution = 0;
+validateYUsingXresolution = 0;
 
 %% Param
 distanceMeasure = 'SDI';
@@ -73,21 +76,21 @@ plotSaveMeanCalibrationCurveWithSD...
 if(validateXUsingXresolution)
     inputResolution = xResolution;
     outputResolution = yResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateXusingXresolution...
+    [predictedThickness, predThickSd,syntheticStack] = estimateXresUsingX...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);    
 elseif(validateYUsingYresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateYusingYresolution...
+    [predictedThickness, predThickSd,syntheticStack] = estimateYresUsingY...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
 elseif(validateYUsingXresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateYusingYresolution...
+    [predictedThickness, predThickSd,syntheticStack] = estimateYresUsingY...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);    
