@@ -16,8 +16,8 @@ xResolution = 5; % nm
 yResolution = 5; % nm
 numImagesUsedForCalibration = 100; % these images will not be used for testing
 minShift = 0;
-maxShift = 35;
-maxNumImages = 100;
+maxShift = 10;
+maxNumImages = 10;
 %******************************************************************
 %*** CHECK CALIBRATION METHODS VECTOR UNDER VALIDATION SECTION ****
 %******************************************************************
@@ -27,7 +27,7 @@ interleave = 0; % if 1, e.g for x axis there will be a gap of 10nm
 validateXUsingXresolution = 1;
 validateYUsingYresolution = 0;
 validateYUsingXresolution = 0;
-
+validateXUsingYresolution = 0;
 %% Param
 distanceMeasure = 'SDI';
 % method = 'spline'; % method of interpolation
@@ -60,6 +60,12 @@ elseif(validateYUsingXresolution)
     calibrationString = sprintf('Avg %s curve using X resolution',distanceMeasure);
     calibrationFigureFileString = sprintf('%s_xResolution',distanceMeasure);
     subTitle = 'yUseX';
+    
+elseif(validateXUsingYresolution)
+    calibrationMethods = [2];
+    calibrationString = sprintf('Avg %s curve using Y resolution',distanceMeasure);
+    calibrationFigureFileString = sprintf('%s_xResolution',distanceMeasure);
+    subTitle = 'xUseY';
 end
 
 % get the calibration curves from the precomputed .mat files        
@@ -93,7 +99,15 @@ elseif(validateYUsingXresolution)
     [predictedThickness, predThickSd,syntheticStack] = estimateYresUsingY...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
-            minShift,maxShift,maxNumImages,numImagesUsedForCalibration);    
+            minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
+        
+elseif(validateXUsingYresolution)
+    inputResolution = yResolution;
+    outputResolution = xResolution;
+    [predictedThickness, predThickSd,syntheticStack] = estimateXresUsingX...
+            (inputImageStackFileName,meanVector,stdVector,inputResolution,...
+            distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
+            minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
 end
 
 if(saveSyntheticStack)
@@ -127,9 +141,10 @@ lineProps = [];
 transparent = 1;
 titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
                     subTitle,interleave,method);
-xlabelStr = 'Inter-section interval';
-ylabelStr = 'Thickness (nm)';
-shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
+xlabelStr = 'Resolution point';
+ylabelStr = 'Resolution (nm)';
+shadedErrorBar((1:size(predictedThickness,2)),mean(predictedThickness,1),...
+    getSumStd(predThickSd,1),color,transparent,...
     titleStr,xlabelStr,ylabelStr);
 % save plot
 predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,method);

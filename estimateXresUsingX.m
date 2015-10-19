@@ -7,25 +7,23 @@ function [estimatedResolution,thicknessSD,syntheticStack] = estimateXresUsingX..
 % meanVector - unscaled
 % sdVector - unscaled
 
+saveSyntheticStack = 0;
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
 
 [sizeR,sizeC,sizeZ] = size(inputImageStack);
 distMax = numel(meanVector);
-A = zeros(sizeC,sizeZ);
-B = zeros(sizeC,sizeZ);
 
-numSectionIntervals = numel(1:(interleave+1):sizeR-(1+interleave));
-
+numResolutionPoints = sizeC - maxShift;
 if(isempty(saveSyntheticStack))
     saveSyntheticStack = 0;
 end
 
 if(saveSyntheticStack)
-    syntheticStack = zeros(sizeR,sizeC,(numSectionIntervals+1));
+    syntheticStack = zeros(sizeR,sizeC-maxShift,maxNumImages);
 end
 
-estimatedResolution = zeros(numSectionIntervals,1);
-thicknessSD = zeros(numSectionIntervals,1);
+estimatedResolution = zeros(maxNumImages,maxShift+1);
+thicknessSD = zeros(maxNumImages,maxShift+1);
 k = 0;
 
 % if(strcmp(distanceMeasure,'COC'))
@@ -82,19 +80,24 @@ if(strcmp(distanceMeasure,'maxNCC'))
         [numR,numC] = size(I);
         j=0;
         for g=minShift:maxShift
-            A = zeros(numR,numC-g);
-            B = zeros(numR,numC-g);
-
-            A(:,:) = I(:,1+g:size(I,2));
-            B(:,:) = I(:,1:size(I,2)-g);
+            
+            A = zeros(numR,numC-maxShift-1);
+            B = zeros(numR,numC-maxShift-1);
+            Astart = 1 + g;
+            Aend = size(I,2) - maxShift + g-1;
+            Bstart = Astart + 1;
+            Bend = Aend + 1;
+            A(:,:) = I(:,Astart:Aend);
+            B(:,:) = I(:,Bstart:Bend);
+            
             j=j+1;
 
             xcorrImage = normxcorr2(A,B);
             coc = max(abs(xcorrImage(:)));
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-            estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+            estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -105,23 +108,26 @@ if(strcmp(distanceMeasure,'maxNCC'))
     end    
     
 elseif(strcmp(distanceMeasure,'COC'))
-    for z=1:maxNumImages
+    for z=(startImageInd+1):(startImageInd + maxNumImages)
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         j=0;
         for g=minShift:maxShift
-            A = zeros(numR,numC-g);
-            B = zeros(numR,numC-g);
-
-            A(:,:) = I(:,1+g:size(I,2));
-            B(:,:) = I(:,1:size(I,2)-g);
+            A = zeros(numR,numC-maxShift-1);
+            B = zeros(numR,numC-maxShift-1);
+            Astart = 1 + g;
+            Aend = size(I,2) - maxShift + g-1;
+            Bstart = Astart + 1;
+            Bend = Aend + 1;
+            A(:,:) = I(:,Astart:Aend);
+            B(:,:) = I(:,Bstart:Bend);
             j=j+1;
 
             coc = corr2(A,B);
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-            estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+            estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -131,23 +137,27 @@ elseif(strcmp(distanceMeasure,'COC'))
     end
     
 elseif(strcmp(distanceMeasure,'SDI'))
-    for z=1:maxNumImages
+    for z=(startImageInd+1):(startImageInd + maxNumImages)
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         j=0;
+        z
         for g=minShift:maxShift
-            A = zeros(numR,numC-g);
-            B = zeros(numR,numC-g);
-
-            A(:,:) = I(:,1+g:size(I,2));
-            B(:,:) = I(:,1:size(I,2)-g);
+            A = zeros(numR,numC-maxShift-1);
+            B = zeros(numR,numC-maxShift-1);
+            Astart = 1 + g;
+            Aend = size(I,2) - maxShift + g -1;
+            Bstart = Astart + 1;
+            Bend = Aend + 1;
+            A(:,:) = I(:,Astart:Aend);
+            B(:,:) = I(:,Bstart:Bend);
             j=j+1;
             
             coc = getPixIntensityDeviation(A,B);
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-            estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+            estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -157,23 +167,26 @@ elseif(strcmp(distanceMeasure,'SDI'))
     end
     
 elseif(strcmp(distanceMeasure,'MSE'))
-    for z=1:maxNumImages
+    for z=(startImageInd+1):(startImageInd + maxNumImages)
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         j=0;
         for g=minShift:maxShift
-            A = zeros(numR,numC-g);
-            B = zeros(numR,numC-g);
-
-            A(:,:) = I(:,1+g:size(I,2));
-            B(:,:) = I(:,1:size(I,2)-g);
+            A = zeros(numR,numC-maxShift-1);
+            B = zeros(numR,numC-maxShift-1);
+            Astart = 1 + g;
+            Aend = size(I,2) - maxShift + g-1;
+            Bstart = Astart + 1;
+            Bend = Aend + 1;
+            A(:,:) = I(:,Astart:Aend);
+            B(:,:) = I(:,Bstart:Bend);
             j=j+1;
             [~,MSE_intensity,~,~] = measerr(A,B);
             coc = MSE_intensity;
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-            estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
+            estimatedResolution(z,g+1) = predThicknessUnscaled .* inputResolution;
+            thicknessSD(z,g+1) = interp1((distMin:distMax-1),sdVector,...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
