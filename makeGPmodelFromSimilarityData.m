@@ -15,7 +15,8 @@ similarityDataMat = readAllMatFiles(matFilePath,fileStr,zDirection,calibrationMe
 totNumImages = size(similarityDataMat,1);
 % Sample the data (for being fast)
 % select half the data
-numImgToUse = floor(totNumImages/2);
+%numImgToUse = floor(totNumImages/2);
+numImgToUse = 100;
 vSampled = randi(length(similarityDataMat),1,numImgToUse);
 
 % plot similarities to be used for GP

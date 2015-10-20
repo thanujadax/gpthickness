@@ -97,8 +97,10 @@ if(strcmp(distanceMeasure,'maxNCC'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
-                    predThicknessUnscaled,method) .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = calculateThicknessSD...
+                (coc,sdVector,meanVector,distMin,distMax,predThicknessUnscaled,...
+                method)...
+                .* inputResolution;
 
             if(saveSyntheticStack)
                 syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
@@ -127,9 +129,11 @@ elseif(strcmp(distanceMeasure,'COC'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
-                    predThicknessUnscaled,method) .* inputResolution;
-
+            thicknessSD(z-startImageInd,g+1) = calculateThicknessSD...
+                (coc,sdVector,meanVector,distMin,distMax,predThicknessUnscaled,...
+                method)...
+                .* inputResolution;
+            
             if(saveSyntheticStack)
                 syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
             end            
@@ -156,8 +160,10 @@ elseif(strcmp(distanceMeasure,'SDI'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
-                    predThicknessUnscaled,method) .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = calculateThicknessSD...
+                (coc,sdVector,meanVector,distMin,distMax,predThicknessUnscaled,...
+                method)...
+                .* inputResolution;
 
             if(saveSyntheticStack)
                 syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
@@ -185,8 +191,10 @@ elseif(strcmp(distanceMeasure,'MSE'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
-                    predThicknessUnscaled,method) .* inputResolution;
+            thicknessSD(z-startImageInd,g+1) = calculateThicknessSD...
+                (coc,sdVector,meanVector,distMin,distMax,predThicknessUnscaled,...
+                method)...
+                .* inputResolution;
 
             if(saveSyntheticStack)
                 syntheticStack(1:size(A,1),1:size(A,2),k) = A(:,:);
