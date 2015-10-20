@@ -8,7 +8,7 @@ function validate2()
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
 precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151019/s502/sdi/xResUsingX';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151019/s502/sdi/xResUsingY';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -16,18 +16,21 @@ xResolution = 5; % nm
 yResolution = 5; % nm
 numImagesUsedForCalibration = 100; % these images will not be used for testing
 minShift = 0;
-maxShift = 10;
-maxNumImages = 10;
+maxShift = 20;
+maxNumImages = 100;
+
+numBins = 10;
+
 %******************************************************************
 %*** CHECK CALIBRATION METHODS VECTOR UNDER VALIDATION SECTION ****
 %******************************************************************
 interleave = 0; % if 1, e.g for x axis there will be a gap of 10nm
 % between two images used for prediction (interleaving 1 image)
 
-validateXUsingXresolution = 1;
+validateXUsingXresolution = 0;
 validateYUsingYresolution = 0;
 validateYUsingXresolution = 0;
-validateXUsingYresolution = 0;
+validateXUsingYresolution = 1;
 %% Param
 distanceMeasure = 'SDI';
 % method = 'spline'; % method of interpolation
@@ -82,21 +85,21 @@ plotSaveMeanCalibrationCurveWithSD...
 if(validateXUsingXresolution)
     inputResolution = xResolution;
     outputResolution = yResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateXresUsingX...
+    [predictedResolution, predResSd,syntheticStack] = estimateXresUsingX...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);    
 elseif(validateYUsingYresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateYresUsingY...
+    [predictedResolution, predResSd,syntheticStack] = estimateYresUsingY...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
 elseif(validateYUsingXresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateYresUsingY...
+    [predictedResolution, predResSd,syntheticStack] = estimateYresUsingY...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
@@ -104,7 +107,7 @@ elseif(validateYUsingXresolution)
 elseif(validateXUsingYresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;
-    [predictedThickness, predThickSd,syntheticStack] = estimateXresUsingX...
+    [predictedResolution, predResSd,syntheticStack] = estimateXresUsingX...
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);
@@ -120,15 +123,17 @@ if(saveSyntheticStack)
 
 end
 
+meanResolutionPerImage = mean(predictedResolution,2);
+
 % plot predicted thickness
-figure;plot(predictedThickness);
+figure;plot(predictedResolution);
 % lineProps = [];
 % transparent = 1;
-titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpolation)',...
-                    subTitle,interleave,method);
+titleStr = sprintf('Predicted resolution for different images %s - (%s interpolation)',...
+                    subTitle,method);
 title(titleStr)
-xlabel('Inter-section interval');
-ylabel('Thickness (nm)');
+xlabel('Image ID');
+ylabel('Resolution (nm)');
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
 %     titleStr,xlabelStr,ylabelStr);
 % save plot
@@ -139,14 +144,14 @@ print(predictionFileName,'-dpng');
 % plot predicted thickness with error bar
 lineProps = [];
 transparent = 1;
-titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)',...
-                    subTitle,interleave,method);
-xlabelStr = 'Resolution point';
+titleStr = sprintf('Predicted resolution %s - (%s interpooation)',...
+                    subTitle,method);
+xlabelStr = 'Image ID';
 ylabelStr = 'Resolution (nm)';
 
 figure();
-shadedErrorBar((1:size(predictedThickness,2)),mean(predictedThickness,1),...
-    getSumStd(predThickSd,1),color,transparent,...
+shadedErrorBar((1:size(predictedResolution,1)),mean(predictedResolution,2),...
+    getSumStd(predResSd,2),color,transparent,...
     titleStr,xlabelStr,ylabelStr);
 % save plot
 predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,method);
@@ -154,43 +159,43 @@ predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % save thickness in txt file
-save(strcat(predictionFileName,'.dat'),'predictedThickness','-ASCII');
-save(strcat(predictionFileName,'_SD','.dat'),'predThickSd','-ASCII');
+save(strcat(predictionFileName,'.dat'),'predictedResolution','-ASCII');
+save(strcat(predictionFileName,'_SD','.dat'),'predResSd','-ASCII');
 % calculate the error, mean error and the variance
 
 % plot SD
 figure;
-plot(predThickSd);
-titleStr = sprintf('Predicted thickness SD %s - Interleave = %d (%s interpolation)',...
-                    subTitle,interleave,method);
+plot(predResSd);
+titleStr = sprintf('Predicted Resolution SD %s - (%s interpolation)',...
+                    subTitle,method);
 title(titleStr)
 
-xlabel('Inter-section interval');
-ylabel('Thickness SD (nm))');
+xlabel('Image ID');
+ylabel('Resolution SD (nm))');
 % save
 predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % histograms.
-numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
-figure;hist(predictedThickness,numBins)
+% numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
+figure;hist(meanResolutionPerImage,numBins)
 title(titleStr)
-xlabel('Predicted thickness (nm)')
-ylabel('# sections')
+xlabel('Predicted Resolution (nm)')
+ylabel('# images')
 % save
 predictionFileName = sprintf('hist_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % calculate the error, mean error and the variance
-trueThickness = ones(numel(predictedThickness),1).* (outputResolution * (1+interleave));
-predictionError = (trueThickness - predictedThickness)./trueThickness(1);
-meanAbsPredictionError = mean(abs(predictionError));
+trueThickness = ones(numel(meanResolutionPerImage),1).* (outputResolution * (1+interleave));
+predictionError = (trueThickness - meanResolutionPerImage)./trueThickness(1);
+msePredictionError = mean((trueThickness - meanResolutionPerImage).^2);
 stdPredictionError = std(predictionError);
-meanSectionThickness = mean(predictedThickness);
-stdSectionThickness = std(predictedThickness);
-
+meanSectionThickness = mean(meanResolutionPerImage);
+stdSectionThickness = getSumStd(predResSd,2);
+stdSectionThickness = getSumStd(stdSectionThickness,1);
 % save prediction error
 predictionFileName = sprintf('NError_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
@@ -199,12 +204,12 @@ save(strcat(predictionFileName,'.dat'),'predictionError','-ASCII');
 % plot prediction error
 figure;
 plot(predictionError);
-titleStr = sprintf('Normalized Prediction Error %s - Interleave = %d (%s interploation)',...
-                    subTitle,interleave,method);
+titleStr = sprintf('Normalized Estimation Error %s - (%s interploation)',...
+                    subTitle,method);
 title(titleStr)
 
-xlabel('Inter-section interval');
-ylabel('Prediction Error');
+xlabel('Image ID');
+ylabel('Estimation Error');
 % save prediction plot
 predictionFileName = sprintf('predictionError_%s_%s_%s',predictionFigureFileStr,subTitle,method);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
@@ -215,8 +220,8 @@ statsFileName = sprintf('stats_%s_%s_%s',predictionFigureFileStr,subTitle,method
 statsFileName = fullfile(outputSavePath,statsFileName);
 statsFileName = strcat(statsFileName,'.dat'); 
 fidStats = fopen(statsFileName,'w');
-fprintf(fidStats,'mean abs normalized prediction error = %d \n',meanAbsPredictionError);
-fprintf(fidStats,'SD of prediction error = %d \n',stdPredictionError);
-fprintf(fidStats,'mean section thickness = %d \n',meanSectionThickness);
-fprintf(fidStats,'SD of section thickness = %d \n',stdSectionThickness);
+fprintf(fidStats,'mean squared estimation error = %d (nm2)\n',msePredictionError);
+fprintf(fidStats,'SD of estimation error = %d (nm)\n',stdPredictionError);
+fprintf(fidStats,'mean image resolution = %d (nm) \n',meanSectionThickness);
+fprintf(fidStats,'SD of image resolution = %d (nm)\n',stdSectionThickness);
 fclose(fidStats);
