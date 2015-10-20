@@ -97,7 +97,7 @@ if(strcmp(distanceMeasure,'maxNCC'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
+            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -127,7 +127,7 @@ elseif(strcmp(distanceMeasure,'COC'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
+            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -156,7 +156,7 @@ elseif(strcmp(distanceMeasure,'SDI'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
+            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)
@@ -185,7 +185,7 @@ elseif(strcmp(distanceMeasure,'MSE'))
             k = k + 1;
             predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
             estimatedResolution(z-startImageInd,g+1) = predThicknessUnscaled .* inputResolution;
-            thicknessSD(z-startImageInd,g+1) = interp1((distMin:distMax-1),sdVector,...
+            thicknessSD(z-startImageInd,g+1) = interp1(sdVector,(distMin:distMax-1),...
                     predThicknessUnscaled,method) .* inputResolution;
 
             if(saveSyntheticStack)

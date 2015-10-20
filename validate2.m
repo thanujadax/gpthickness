@@ -143,6 +143,8 @@ titleStr = sprintf('Predicted thickness %s - Interleave = %d (%s interpooation)'
                     subTitle,interleave,method);
 xlabelStr = 'Resolution point';
 ylabelStr = 'Resolution (nm)';
+
+figure();
 shadedErrorBar((1:size(predictedThickness,2)),mean(predictedThickness,1),...
     getSumStd(predThickSd,1),color,transparent,...
     titleStr,xlabelStr,ylabelStr);
