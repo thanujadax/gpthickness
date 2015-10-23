@@ -6,9 +6,9 @@ function validate2()
 
 %% Inputs
 saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved in output path
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
-precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151019/s502/sdi/xResUsingY';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s603/s603.tif';
+precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s603';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151019/s603/sdi/xResUsingY';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
