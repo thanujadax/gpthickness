@@ -22,8 +22,8 @@ vSampled = randi(length(similarityDataMat),1,numImgToUse);
 % plot similarities to be used for GP
 figure(), 
 plot(repmat([0:1:size(similarityDataMat,2)-1]',1,numImgToUse),similarityDataMat(vSampled,:)'), ...
-title('Similarities between images'), ...
-xlabel('distance'), ylabel('similarity'), ...
+title('Dissimilarities between images'), ...
+xlabel('distance'), ylabel('dissimilarity'), ...
 %axis([0,size(similarityDataMat,2),0.1,1]);
 
 % create x y values
@@ -36,41 +36,51 @@ vX = reshape(similarityDataMat(vSampled,:)',1,size(similarityDataMat,2)*numImgTo
 run('gpml/startup.m');
 
 % Specify covariance, mean and likelihood
-covfunc = @covSEisoU;                                        
-hyp.cov = rand(1);
+covfunc = @covSEiso;                                        
+hyp.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
 
 likfunc = @likGauss; 
 hyp.lik = log(0.1);
 
-meanfunc = {@meanSum, {{'meanPow', 3, {@meanLinear}},@meanConst} };
-hyp.mean = [0;0];
+meanfunc = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+hyp.mean = [1.607e-8,1];
+
+muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
+muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
+prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
+inf = {@infPrior,@infExact,prior};
 
 % Learn the hyperparameters
-hyp = minimize(hyp, @gp, -100, @infExact, meanfunc, covfunc, likfunc, vX, vY);
+%hyp = minimize(hyp, @gp, -500, @infExact, meanfunc, covfunc, likfunc, vX, vY)
+hyp = minimize(hyp, @gp, -500, inf, meanfunc, covfunc, likfunc, vX, vY)
+disp('Hyp ');
+exp(hyp.cov), exp(hyp.lik)
 
 % Infer the function using a gaussian process
-% disp('nlml = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y)')
-disp('Infering hyper-parameters for gaussian process ...')
-nlml = gp(hyp, @infExact, meanfunc, covfunc, likfunc, vX, vY)
-disp('done! ')
+disp('nlml = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y)')
+nlml = gp(hyp, @infExact, meanfunc, covfunc, likfunc, vX, vY);
+disp(' ')
 
 % Generalize to new datapoints
-disp('z = linspace(0, 1, 10000)'';')
-vZ = linspace(0, 1, 10000)';
+disp('z = linspace(0, 1.9, 101)'';')
+vZ = linspace(0, 55, 10000)';
 disp('[m s2] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y, z);')
-[m,s2] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, vX, vY, vZ);
+[m s2 mu sig] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, vX, vY, vZ);
 
 % Plot the infered function and confidence intervals
-figure()
+figure(2)
 set(gca, 'FontSize', 24)
-title('Similarity-Distance curve')
-f = [m+2*sqrt(s2); flip(m-2*sqrt(s2),1)];
-fill([vZ; flip(vZ,1)], f, [7 7 7]/8);
-hold on; plot(vZ, m, 'LineWidth', 2); plot(vX, vY, '+', 'MarkerSize', 12),
-% axis([0,1,0,36]),
-grid on, xlabel('similarity'), ylabel('distance'); hold off;
+f = [m+3*sqrt(s2); flipdim(m-3*sqrt(s2),1)];
+f2 = [mu+3*sqrt(sig); flipdim(mu-3*sqrt(sig),1)];
+fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
+%fill([vZ; flipdim(vZ,1)], f2, [5 5 5]/8);
+hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
+%plot(vZ, mu, 'Color', 'black','LineWidth', 2);
+axis([0,55,0,35]),
+grid on, xlabel('disimilarity'), ylabel('z section'); hold off;
+
 % save plot
-plotFileName = fullfile(outputSavePath,'similarity_distance_curve.svg');
+plotFileName = fullfile(outputSavePath,'dissimilarity_distance_curve.svg');
 print(plotFileName,'-dsvg')
 
 % save GP model
