@@ -18,7 +18,7 @@ function plotAllInterpolationCurves(outputSavePath,distanceMeasure)
 
 params.xyResolution = 5; % nm
 params.minShift = 0;
-params.maxShift = 35;
+params.maxShift = 25;
 params.maxNumImages = 1; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
@@ -29,8 +29,9 @@ params.usePrecomputedCurve = 1;
 distanceMeasure = 'SDI';
 % distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses_curves/y';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3_curves/y';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr/x';
 
 calibrationInds = [];
 params.pathToPrecomputedCurve = outputSavePath;
@@ -74,15 +75,17 @@ figure;
 % errBarZero = zeros(size(errBar));
 % H2 = mseb(x,y,errBarZero,lineProps,transparent);
 x = params.minShift:params.maxShift;
-plot(x,y');
+plot(x,y','LineWidth',2.5);
 % axis([XMIN XMAX YMIN YMAX])
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
-legend('a=40,b=40','a=50,b=40','a=60,b=40','a=70,b=40','a=80,b=40','a=90,b=40');
+% legend('a=40,b=80','a=40,b=60','a=40,b=40');
+legend('original','compressed in y')
 % legend(c_legendStr);
-xlabel('Distance (num pixels)')
-ylabel('Dissimilarity')
-titleStr = sprintf('Dist-Similarity curves: %s',tokenizedSubDirName);
+xlabel('Distance (num pixels)','FontSize',33)
+ylabel('Dissimilarity','FontSize',33)
+set(gca,'FontSize',25,'LineWidth',1.5)
+titleStr = sprintf('Distance-Dissimilarity curves: %s',tokenizedSubDirName);
 title(titleStr);
 %set(gca,'position',[0 0 1 1],'units','normalized')
 

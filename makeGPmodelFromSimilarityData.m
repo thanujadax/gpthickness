@@ -1,5 +1,5 @@
 function makeGPmodelFromSimilarityData...
-    (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods)
+    (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,numImgToUse)
 
 % Inputs:
 % calibrationMethods - which directions to be used for similarity curve
@@ -16,7 +16,7 @@ totNumImages = size(similarityDataMat,1);
 % Sample the data (for being fast)
 % select half the data
 %numImgToUse = floor(totNumImages/2);
-numImgToUse = 100;
+% numImgToUse = 100;
 vSampled = randi(length(similarityDataMat),1,numImgToUse);
 
 % plot similarities to be used for GP

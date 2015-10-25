@@ -4,13 +4,17 @@ function mainPredictThicknessOfVolume()
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses/06.png';
+% inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3/02.png';
 % inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/images/s704/001/rowShifted/200.png';
+inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/4units.png';
+
 
 % also the path where precomputed xcorr.mat files are saved
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses_curves';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3_curves';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr';
+
 
 % precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
 % % 1 - c.o.c across XY sections, along X
@@ -37,7 +41,7 @@ params.imgStackFileExt = 'png';
 params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
-params.maxShift = 35;
+params.maxShift = 25;
 params.maxNumImages = 1; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations

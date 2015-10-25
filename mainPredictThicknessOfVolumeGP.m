@@ -19,11 +19,11 @@ gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [10 11 12 13 14];
+calibrationMethods = [1 2];
 
-% distanceMeasure = 'SDI';  % standard deviation of pixel intensity
+distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences
-distanceMeasure = 'COC';  % coefficient of correlation
+% distanceMeasure = 'COC';  % coefficient of correlation
 % distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
 
 % params only for doThicknessEstimation
