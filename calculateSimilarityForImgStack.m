@@ -23,7 +23,7 @@ if(strcmp(distanceMeasure,'SDI'))
         % calculate the distance between two images based on the SD of
         % pixel differences
         deviationSigma = getPixIntensityDeviation(image1,image2);
-        sV(i) = deviationSigma;
+        sV(i-startInd + 1) = deviationSigma;
         
     end
 elseif(strcmp(distanceMeasure,'COC'))
@@ -33,7 +33,7 @@ elseif(strcmp(distanceMeasure,'COC'))
         % calculate the distance between the two images based on the
         % correlation coefficient
         coc = corr2(image1,image2);
-        sV(i) = coc;
+        sV(i-startInd + 1) = coc;
     end
 elseif(strcmp(distanceMeasure,'maxNCC'))
     for i = startInd:endInd
@@ -43,7 +43,7 @@ elseif(strcmp(distanceMeasure,'maxNCC'))
         % correlation coefficient
         xcorrMat = normxcorr2(image1,image2);
         maxXcorr = max(abs(xcorrMat(:)));
-        sV(i) = maxXcorr;
+        sV(i-startInd + 1) = maxXcorr;
     end
 else
     error('unrecongnized distance measure!')

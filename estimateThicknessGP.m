@@ -23,7 +23,8 @@ fill([vZ; flip(vZ,1)], f, [7 7 7]/8);
 % hold on; plot(vZ, m, 'LineWidth', 2); plot(gpModel.vX, gpModel.vY, '+', 'MarkerSize', 12),
 % % axis([0,1,0,36]),
 % grid on, xlabel('dissimilarity'), ylabel('distance (pixels)'); hold off;
-hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
+hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); 
+plot(gpModel.vX, gpModel.vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
 axis([0,55,0,35]),
 grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;

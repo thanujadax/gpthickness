@@ -3,9 +3,9 @@ function mainPredictThicknessOfVolumeGP()
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20150818/s704';
-gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1pred';
+gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
 
 
 % % 1 - c.o.c across XY sections, along X
@@ -36,8 +36,8 @@ params.maxNumImages = 100; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of one section
-params.plotOutput = 1; % don't plot intermediate curves.
-params.usePrecomputedCurve = 0;
+params.plotOutput = 0; % don't plot intermediate curves.
+params.usePrecomputedCurve = 1;
 params.pathToPrecomputedCurve = '';
 params.suppressPlots = 1;
 
@@ -50,6 +50,10 @@ saveOnly = 0;
 %yResolution = 5; % nm
 inputResolution = 5;
 
+startInd = params.maxNumImages + 1;
+numImagesToEstimate = 100;
+endInd = startInd + numImagesToEstimate;
+
 tokenizedFName = strsplit(inputImageStackFileName,filesep);
 nameOfStack = strtok(tokenizedFName(end),'.');
 subTitle = nameOfStack{1};
@@ -61,13 +65,6 @@ calibrationFigureFileString = sprintf('%s_xyResolution_ensemble',distanceMeasure
 color = 'b';
 
 predictionFigureFileStr = 'Prediction';
-
-% create xcorr mat files. We do not use the predictions here.
-if(~params.usePrecomputedCurve)
-    doThicknessEstimation(...
-        calibrationMethods,inputImageStackFileName,outputSavePath,params,distanceMeasure);
-    
-end
 
 % % get the calibration curves from the precomputed .mat files        
 % % get the avg calibration curve
@@ -85,9 +82,10 @@ end
 %         interpolationMethod,inputResolution,distanceMeasure);
 
 gpModel = importdata(gpModelPath);
-similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,distanceMeasure);
+similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
+    distanceMeasure,startInd,endInd);
 [predictedThickness, predictionSD] = estimateThicknessGP(...
-        similarityValues,gpModel,outputSavePath,nameOfStack);
+        similarityValues,gpModel,outputSavePath,subTitle);
 
 %% Plots
 % plot predicted thickness
@@ -111,7 +109,9 @@ titleStr = sprintf('Estimated thickness %s (%s interpolation)',...
                     subTitle,interpolationMethod);
 xlabelStr = 'Inter-section interval';
 ylabelStr = 'Thickness (nm)';
-shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predictionSD,color,transparent,...
+% 2 sigma
+sigmas = predictionSD*2;
+shadedErrorBar((1:numel(predictedThickness)),predictedThickness,sigmas,color,transparent,...
     titleStr,xlabelStr,ylabelStr);
 % save plot
 predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,interpolationMethod);
@@ -128,8 +128,8 @@ save(strcat(predictionFileName,'_SD','.dat'),'predictionSDCol','-ASCII');
 % plot SD
 figure;
 plot(predictionSD);
-titleStr = sprintf('Predicted thickness SD %s (%s interpolation)',...
-                    subTitle,interpolationMethod);
+titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
+                    subTitle);
 title(titleStr)
 
 xlabel('Inter-section interval');
