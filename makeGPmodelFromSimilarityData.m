@@ -23,7 +23,7 @@ vSampled = randi(length(similarityDataMat),1,numImgToUse);
 figure(), 
 plot(repmat([0:1:size(similarityDataMat,2)-1]',1,numImgToUse),similarityDataMat(vSampled,:)'), ...
 title('Dissimilarities between images'), ...
-xlabel('distance'), ylabel('dissimilarity'), ...
+xlabel('distance (pixels)'), ylabel('dissimilarity'), ...
 %axis([0,size(similarityDataMat,2),0.1,1]);
 
 % create x y values
@@ -77,7 +77,7 @@ fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
 hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
 axis([0,55,0,35]),
-grid on, xlabel('disimilarity'), ylabel('z section'); hold off;
+grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;
 
 % save plot
 plotFileName = fullfile(outputSavePath,'dissimilarity_distance_curve.svg');

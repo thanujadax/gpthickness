@@ -19,7 +19,7 @@ gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2];
+calibrationMethods = [1];
 
 distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences
@@ -31,7 +31,7 @@ params.imgStackFileExt = 'tif';
 params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
-params.maxShift = 35;
+params.maxShift = 30;
 params.maxNumImages = 100; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
