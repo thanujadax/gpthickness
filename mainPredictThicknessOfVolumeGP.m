@@ -69,20 +69,25 @@ if(~params.usePrecomputedCurve)
     
 end
 
-% get the calibration curves from the precomputed .mat files        
-% get the avg calibration curve
-[meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
-    (outputSavePath,fileStr,0,calibrationMethods,distanceMeasure);
+% % get the calibration curves from the precomputed .mat files        
+% % get the avg calibration curve
+% [meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
+%     (outputSavePath,fileStr,0,calibrationMethods,distanceMeasure);
+% 
+% % plot decay curve
+% plotSaveMeanCalibrationCurveWithSD...
+%     (inputImageStackFileName,calibrationString,saveOnly,...
+%     distMin,meanVector,stdVector,color,outputSavePath,calibrationFigureFileString);
+% 
+% % predict thickness
+% [predictedThickness, predictionSD] = predictThicknessFromCurve(...
+%         inputImageStackFileName,meanVector,stdVector,distMin,...
+%         interpolationMethod,inputResolution,distanceMeasure);
 
-% plot decay curve
-plotSaveMeanCalibrationCurveWithSD...
-    (inputImageStackFileName,calibrationString,saveOnly,...
-    distMin,meanVector,stdVector,color,outputSavePath,calibrationFigureFileString);
-
-% predict thickness
-[predictedThickness, predictionSD] = predictThicknessFromCurve(...
-        inputImageStackFileName,meanVector,stdVector,distMin,...
-        interpolationMethod,inputResolution,distanceMeasure);
+gpModel = importdata(gpModelPath);
+similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,distanceMeasure);
+[predictedThickness, predictionSD] = estimateThicknessGP(...
+        similarityValues,gpModel,outputSavePath,nameOfStack);
 
 %% Plots
 % plot predicted thickness

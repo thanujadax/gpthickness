@@ -1,4 +1,5 @@
-function sV = calculateSimilarityForImgStack(imageStackFileName,distanceMeasure)
+function sV = calculateSimilarityForImgStack(imageStackFileName,distanceMeasure,...
+    startInd,endInd)
 
 % calculate pairwise image similarity for each adjacent image pair
 
@@ -6,11 +7,17 @@ inputImageStack = readTiffStackToArray(imageStackFileName);
 numImg = size(inputImageStack,3);
 numSectionIntervals = numImg - 1;
 
-sV = zeros(numSectionIntervals,1);
+if(endInd>numSectionIntervals)
+    endInd = numSectionIntervals;
+end
+
+numIntervalsToCalculate = endInd - startInd + 1; 
+
+sV = zeros(numIntervalsToCalculate,1);
 
 if(strcmp(distanceMeasure,'SDI'))
     % use the method of SD of pixelwise intensity difference
-    for i = 1:numSectionIntervals
+    for i = startInd:endInd
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));
         % calculate the distance between two images based on the SD of
@@ -20,7 +27,7 @@ if(strcmp(distanceMeasure,'SDI'))
         
     end
 elseif(strcmp(distanceMeasure,'COC'))
-    for i = 1:numSectionIntervals
+    for i = startInd:endInd
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));
         % calculate the distance between the two images based on the
@@ -29,7 +36,7 @@ elseif(strcmp(distanceMeasure,'COC'))
         sV(i) = coc;
     end
 elseif(strcmp(distanceMeasure,'maxNCC'))
-    for i = 1:numSectionIntervals
+    for i = startInd:endInd
         image1 = inputImageStack(:,:,i);
         image2 = inputImageStack(:,:,(i+1));
         % calculate the distance between the two images based on the
