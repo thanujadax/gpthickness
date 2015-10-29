@@ -1,4 +1,4 @@
-function plotAllInterpolationCurves(outputSavePath,distanceMeasure)
+function plotAllInterpolationCurves(outputSavePath,distanceMeasure,c_legendString)
 
 % script to plot different calibration curves for the same volume
 % outputSavePath contains all the .mat files that encodes the estimation
@@ -26,12 +26,14 @@ params.numPairs = 1; % number of section pairs to be used to estimate the thickn
 params.plotOutput = 1;
 params.usePrecomputedCurve = 1;
 
-distanceMeasure = 'SDI';
+% distanceMeasure = 'SDI';
+
 % distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3_curves/y';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr/x';
+
+%outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr/x';
 
 calibrationInds = [];
 params.pathToPrecomputedCurve = outputSavePath;
@@ -71,7 +73,7 @@ transparent = 1;
 %set(gca,'position',[0 0 1 1],'units','normalized')
 
 % same plot without error bars
-figure; 
+
 % errBarZero = zeros(size(errBar));
 % H2 = mseb(x,y,errBarZero,lineProps,transparent);
 x = params.minShift:params.maxShift;
@@ -80,10 +82,10 @@ plot(x,y','LineWidth',2.5);
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
 % legend('a=40,b=80','a=40,b=60','a=40,b=40');
-legend('original','compressed in y')
-% legend(c_legendStr);
-xlabel('Distance (num pixels)','FontSize',33)
-ylabel('Dissimilarity','FontSize',33)
+% legend('original','compressed in y')
+legend(c_legendString);
+xlabel('Distance (num pixels)','FontSize',30)
+ylabel('Dissimilarity','FontSize',30)
 set(gca,'FontSize',25,'LineWidth',1.5)
 titleStr = sprintf('Distance-Dissimilarity curves: %s',tokenizedSubDirName);
 title(titleStr);

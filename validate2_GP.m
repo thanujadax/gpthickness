@@ -9,6 +9,7 @@ saveSyntheticStack = 1 ; % the synthetic stack used for validation to be saved i
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
 precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502';
 outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151019/s502/sdi/xResUsingX';
+gpModelPath = '';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 distMin = 0;
 saveOnly = 0;
@@ -68,15 +69,18 @@ elseif(validateXUsingYresolution)
     subTitle = 'xUseY';
 end
 
-% get the calibration curves from the precomputed .mat files        
-% get the avg calibration curve
-[meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
-    (precomputedMatFilePath,fileStr,0,calibrationMethods,distanceMeasure);
+% % get the calibration curves from the precomputed .mat files        
+% % get the avg calibration curve
+% [meanVector,stdVector] = makeEnsembleDecayCurveForVolume...
+%     (precomputedMatFilePath,fileStr,0,calibrationMethods,distanceMeasure);
+% 
+% % plot decay curve
+% plotSaveMeanCalibrationCurveWithSD...
+%     (inputImageStackFileName,calibrationString,saveOnly,...
+%     distMin,meanVector,stdVector,color,outputSavePath,calibrationFigureFileString);
 
-% plot decay curve
-plotSaveMeanCalibrationCurveWithSD...
-    (inputImageStackFileName,calibrationString,saveOnly,...
-    distMin,meanVector,stdVector,color,outputSavePath,calibrationFigureFileString);
+gpModel = importdata(gpModelPath);
+
 
 %% method1 predict the thickness/resolution in the assumed unknown direction
 if(validateXUsingXresolution)
@@ -86,6 +90,11 @@ if(validateXUsingXresolution)
             (inputImageStackFileName,meanVector,stdVector,inputResolution,...
             distMin,method,interleave,saveSyntheticStack,distanceMeasure,...
             minShift,maxShift,maxNumImages,numImagesUsedForCalibration);    
+    similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
+        distanceMeasure,startInd,endInd);
+    [predictedThickness, predThickSd] = estimateThicknessGP(...
+            similarityValues,gpModel,outputSavePath,subTitle);
+
 elseif(validateYUsingYresolution)
     inputResolution = yResolution;
     outputResolution = xResolution;

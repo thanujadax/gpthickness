@@ -28,7 +28,7 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squash
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1 2];
+calibrationMethods = [1];
 
 % distanceMeasure = 'MSE';  % MSE of pixel intensity
 distanceMeasure = 'SDI';  % standard deviation of pixel intensity

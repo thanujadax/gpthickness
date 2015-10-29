@@ -1,11 +1,15 @@
-function mainPredictThicknessOfVolumeGP()
+function [predictedThickness_u, predictionSD_u] = ...
+    mainPredictThicknessOfVolumeGP...
+    (inputImageStackFileName,outputSavePath,gpModelPath)
 
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1pred';
-gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
+% inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
+% inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap15_xShiftedStack_sliceID101.tif';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1pred';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151027/s502XY/x/g15';
+% gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
 
 
 % % 1 - c.o.c across XY sections, along X
@@ -17,7 +21,6 @@ gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20
 % % 7 - c.o.c across XY sections, along Z
 % % 8 - c.o.c across ZY sections, along Z
 % % 9 - c.o.c. across XZ sections, along Z
-% % 10 - SD of XY per pixel intensity difference
 
 calibrationMethods = [1];
 
@@ -32,7 +35,7 @@ params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
 params.maxShift = 30;
-params.maxNumImages = 100; % number of sections to initiate calibration.
+params.maxNumImages = 0; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of one section
@@ -51,8 +54,8 @@ saveOnly = 0;
 inputResolution = 5;
 
 startInd = params.maxNumImages + 1;
-numImagesToEstimate = 100;
-endInd = startInd + numImagesToEstimate;
+numImagesToEstimate = 30;
+endInd = startInd + numImagesToEstimate - 1;
 
 tokenizedFName = strsplit(inputImageStackFileName,filesep);
 nameOfStack = strtok(tokenizedFName(end),'.');
@@ -84,8 +87,11 @@ predictionFigureFileStr = 'Prediction';
 gpModel = importdata(gpModelPath);
 similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
     distanceMeasure,startInd,endInd);
-[predictedThickness, predictionSD] = estimateThicknessGP(...
+[predictedThickness_u, predictionSD_u] = estimateThicknessGP(...
         similarityValues,gpModel,outputSavePath,subTitle);
+    
+    predictedThickness = predictedThickness_u .* inputResolution;
+    predictionSD = predictionSD_u .* inputResolution;
 
 %% Plots
 % plot predicted thickness
@@ -128,6 +134,7 @@ save(strcat(predictionFileName,'_SD','.dat'),'predictionSDCol','-ASCII');
 % plot SD
 figure;
 plot(predictionSD);
+%axis ([1 ])
 titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
                     subTitle);
 title(titleStr)
