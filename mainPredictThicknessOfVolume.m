@@ -6,14 +6,14 @@ function mainPredictThicknessOfVolume()
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
 % inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3/02.png';
 % inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/images/s704/001/rowShifted/200.png';
-inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/4units.png';
+inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/1x8_1.png';
 
 
 % also the path where precomputed xcorr.mat files are saved
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3_curves';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/xcorr';
 
 
 % precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
@@ -28,7 +28,7 @@ outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squash
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-calibrationMethods = [1];
+calibrationMethods = [1 2];
 
 % distanceMeasure = 'MSE';  % MSE of pixel intensity
 distanceMeasure = 'SDI';  % standard deviation of pixel intensity

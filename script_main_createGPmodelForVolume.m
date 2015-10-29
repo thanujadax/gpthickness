@@ -12,13 +12,13 @@ function script_main_createGPmodelForVolume()
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-matFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1';
+matFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/xcorr';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/y';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 zDirection = 0; %?
-calibrationMethods = [1];
+calibrationMethods = [2];
 
-numImagesToUse = 100;
+numImagesToUse = 1;
 
 makeGPmodelFromSimilarityData...
     (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,numImagesToUse);

@@ -1,16 +1,17 @@
 function script_createXYshiftedStacks()
 
-inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
+inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/1x8_1.png';
 
-outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted';
-subTitle = 's502yShiftedGap15';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/x';
 
-imageID = 101; % image in the stack to be used
-shiftX = 0; % 0 to shift along Y
+subTitle = 'im04';
+
+imageID = 1; % image in the stack to be used
+shiftX = 1; % 0 to shift along Y
 
 minShift = 0;
-gap = 15;
-maxShift = 35*gap;
+gap = 1;
+maxShift = 25*gap;
 
 
 if(shiftX)

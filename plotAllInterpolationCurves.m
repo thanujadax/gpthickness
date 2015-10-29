@@ -26,7 +26,7 @@ params.numPairs = 1; % number of section pairs to be used to estimate the thickn
 params.plotOutput = 1;
 params.usePrecomputedCurve = 1;
 
-% distanceMeasure = 'SDI';
+distanceMeasure = 'SDI';
 
 % distanceMeasure = 'maxNCC'; % override by the info given in xcorrDistMeas.mat file name
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
@@ -34,6 +34,7 @@ params.usePrecomputedCurve = 1;
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
 
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr/x';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/xdirectionAll';
 
 calibrationInds = [];
 params.pathToPrecomputedCurve = outputSavePath;
@@ -76,19 +77,29 @@ transparent = 1;
 
 % errBarZero = zeros(size(errBar));
 % H2 = mseb(x,y,errBarZero,lineProps,transparent);
+
 x = params.minShift:params.maxShift;
-plot(x,y','LineWidth',2.5);
+figure();
+markers = {'+','o','x','s'};
+set(gca(), 'LineStyleOrder',markers)
+p = plot(x,y','LineWidth',2.5);
+p(1).Marker = markers{1};
+p(2).Marker = markers{2};
+p(3).Marker = markers{3};
+p(4).Marker = markers{4};
 % axis([XMIN XMAX YMIN YMAX])
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
-% legend('a=40,b=80','a=40,b=60','a=40,b=40');
+legend('1','1.33','2','4');
 % legend('original','compressed in y')
-legend(c_legendString);
-xlabel('Distance (num pixels)','FontSize',30)
-ylabel('Dissimilarity','FontSize',30)
-set(gca,'FontSize',25,'LineWidth',1.5)
-titleStr = sprintf('Distance-Dissimilarity curves: %s',tokenizedSubDirName);
-title(titleStr);
+% legend(c_legendString);
+xlabel('Distance (num pixels)','FontSize',35)
+ylabel('Dissimilarity','FontSize',35)
+set(gca,'FontSize',30,'LineWidth',1.5)
+% titleStr = sprintf('Distance-Dissimilarity curves: %s',tokenizedSubDirName);
+titleStr = 'X direction';
+title(titleStr,'FontSize',35);
+set(gca,'TickDir','out')
 %set(gca,'position',[0 0 1 1],'units','normalized')
 
 if(plotPredctionsFromTxt)

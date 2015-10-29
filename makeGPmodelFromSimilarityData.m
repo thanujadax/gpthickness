@@ -17,8 +17,11 @@ totNumImages = size(similarityDataMat,1);
 % select half the data
 %numImgToUse = floor(totNumImages/2);
 % numImgToUse = 100;
-vSampled = randi(length(similarityDataMat),1,numImgToUse);
-
+if(totNumImages>numImgToUse)
+    vSampled = randi(length(similarityDataMat),1,numImgToUse);
+else
+    vSampled = 1:totNumImages;
+end
 % plot similarities to be used for GP
 figure(), 
 plot(repmat([0:1:size(similarityDataMat,2)-1]',1,numImgToUse),similarityDataMat(vSampled,:)'), ...
