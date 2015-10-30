@@ -6,15 +6,15 @@ function mainPredictThicknessOfVolume()
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s704/s704.tif';
 % inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3/02.png';
 % inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/images/s704/001/rowShifted/200.png';
-inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/1x8_1.png';
-
+% inputImageStackFileName = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/1x8_1.png';
+inputImageStackFileName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/rawStack.tif';
 
 % also the path where precomputed xcorr.mat files are saved
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013/s704/ncc';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/ellipses3_curves';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/xcorr';
-
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im04/xcorr';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/xcorr';
 
 % precomputedMatFilePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151001/s704';
 % % 1 - c.o.c across XY sections, along X
@@ -37,12 +37,12 @@ distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
 
 % params only for doThicknessEstimation
-params.imgStackFileExt = 'png';
+params.imgStackFileExt = 'tif';
 params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
-params.maxShift = 25;
-params.maxNumImages = 1; % number of sections to initiate calibration.
+params.maxShift = 30;
+params.maxNumImages = 10; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.ImageSequence = [1]; % not used 

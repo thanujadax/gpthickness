@@ -34,7 +34,7 @@ params.imgStackFileExt = 'tif';
 params.minShift = 0;
 params.predict = 0; % we don't use the predict method in doThicknessEstimation
 params.xyResolution = 5; % nm
-params.maxShift = 30;
+params.maxShift = 25;
 params.maxNumImages = 0; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
@@ -54,7 +54,7 @@ saveOnly = 0;
 inputResolution = 5;
 
 startInd = params.maxNumImages + 1;
-numImagesToEstimate = 30;
+numImagesToEstimate = 25;
 endInd = startInd + numImagesToEstimate - 1;
 
 tokenizedFName = strsplit(inputImageStackFileName,filesep);

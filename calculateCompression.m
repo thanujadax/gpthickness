@@ -2,7 +2,8 @@
 function stats = calculateCompression()
 
 yCompRelX = 1; % calculate relative compression of Y axis wrt X. 0 for opposite.
-dataPointsToUse = 20;
+dataPointsToUse = 100;
+% startImgInd = 100;
 % k > 1 suggests that Y axis has been compressed wrt to X. 
 % e.g. k=2 means Y has been compressed twice. TODO: invert k?
 

@@ -66,7 +66,7 @@ disp(' ')
 
 % Generalize to new datapoints
 disp('z = linspace(0, 1.9, 101)'';')
-vZ = linspace(0, 55, 10000)';
+vZ = linspace(0, 80, 10000)';
 disp('[m s2] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y, z);')
 [m s2 mu sig] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, vX, vY, vZ);
 
@@ -79,7 +79,7 @@ fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
 %fill([vZ; flipdim(vZ,1)], f2, [5 5 5]/8);
 hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
-axis([0,55,0,35]),
+%axis([0,55,0,35]),
 grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;
 
 % save plot

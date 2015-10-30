@@ -26,7 +26,7 @@ fill([vZ; flip(vZ,1)], f, [7 7 7]/8);
 hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); 
 plot(gpModel.vX, gpModel.vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
-axis([0,55,0,35]),
+axis([0,55,0,25]),
 grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;
 % save plot
 plotFileName = sprintf('thicknessEstimates_%s.svg',volID);
