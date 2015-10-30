@@ -82,7 +82,7 @@ x = params.minShift:params.maxShift;
 figure();
 markers = {'+','o','*','s'};
 set(gca(), 'LineStyleOrder',markers)
-p = plot(y',x,'.','LineWidth',2.5);
+p = plot(y',x,'-.','LineWidth',2.5,'MarkerSize',13);
 p(1).Marker = markers{1};
 p(2).Marker = markers{2};
 p(3).Marker = markers{3};
@@ -90,7 +90,7 @@ p(4).Marker = markers{4};
 % axis([XMIN XMAX YMIN YMAX])
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
-legend('\gamma=1','\gamma=1.33','\gamma=2','\gamma=4','Location','northwest');
+legend('\gamma=1','\gamma=1.33','\gamma=2','\gamma=4','Location','southeast');
 % legend('original','compressed in y')
 % legend(c_legendString);
 ylabel('Distance (num pixels)','FontSize',35,'FontName','Times New Roman','FontWeight','bold')
