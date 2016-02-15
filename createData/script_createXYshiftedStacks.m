@@ -1,28 +1,31 @@
 function script_createXYshiftedStacks()
 
-inputImageStackFileName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/em_2013january/raw/09.tif';
+% inputImageStackFileName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/em_2013january/raw/09.tif';
+inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
 
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
+outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
+                                                            subTitle = '';
 
-                                                            subTitle = '09';
-
-imageID = 1; % image in the stack to be used
+% imageID = 1; % image in the stack to be used
 shiftX = 0; % 0 to shift along Y
 
 minShift = 0;
-gap = 1;
-maxShift = 25*gap;
+gap = 2;
+maxShift = 10*gap;
 
-% for i=101:120
+inputImageStack = readTiffStackToArray(inputImageStackFileName);
 
-    % imageID = i;
+for i=1:500
+
+    imageID = i;
     
     if(shiftX)
-        createXshiftedStack(inputImageStackFileName,imageID,...
+        createXshiftedStack(inputImageStack,imageID,...
             minShift,maxShift,gap,outputSavePath,subTitle)
     else
-        createYshiftedStack(inputImageStackFileName,imageID,...
+        createYshiftedStack(inputImageStack,imageID,...
             minShift,maxShift,gap,outputSavePath,subTitle)
     end
 
-% end
+end

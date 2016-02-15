@@ -34,7 +34,7 @@ distanceMeasure = 'SDI';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEMpng/similarity/s704/differentPos/001/rowShifted/allX';
 
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/gradientImagesGimp/xcorr/x';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/xdirectionAll';
+outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/ydirectionAll';
 
 calibrationInds = [];
 params.pathToPrecomputedCurve = outputSavePath;
@@ -90,14 +90,14 @@ p(4).Marker = markers{4};
 % axis([XMIN XMAX YMIN YMAX])
 % axis([params.minShift size(y,1) 0 max(max(y))])
 %legend('1.XY_x','2.XY_y','3.ZY_x','4.ZY_y','5.XZ_x','6.XZ_y','7.XY_z','9.ZY_z','10.SD-XY_xy');
-legend('\gamma=1','\gamma=1.33','\gamma=2','\gamma=4','Location','southeast');
+legend('\gamma=1','\gamma=0.75','\gamma=0.5','\gamma=0.25','Location','southeast');
 % legend('original','compressed in y')
 % legend(c_legendString);
 ylabel('Distance (num pixels)','FontSize',35,'FontName','Times New Roman','FontWeight','bold')
 xlabel('Dissimilarity (std. of pix diff.)','FontSize',35,'FontName','Times New Roman','FontWeight','bold')
 set(gca,'FontSize',30,'LineWidth',1.5)
 % titleStr = sprintf('Distance-Dissimilarity curves: %s',tokenizedSubDirName);
-titleStr = 'X direction';
+titleStr = 'Y direction';
 title(titleStr,'FontSize',35);
 set(gca,'TickDir','out')
 %set(gca,'position',[0 0 1 1],'units','normalized')

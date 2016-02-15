@@ -6,11 +6,13 @@ function [predictedThickness_u, predictionSD_u] = ...
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
+% inputImageStackFileName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/rawStack.tif';
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap15_xShiftedStack_sliceID101.tif';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1pred';
-% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/validation/20151027/s502XY/x/g15';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151031/s502';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssTEM/20151031';
 % gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
-
+% gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/y/gpModel.mat';
 
 % % 1 - c.o.c across XY sections, along X
 % % 2 - c.o.c across XY sections, along Y axis
@@ -94,11 +96,12 @@ similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
     predictionSD = predictionSD_u .* inputResolution;
 
 %% Plots
+if(params.plotOutput)
 % plot predicted thickness
 figure;plot(predictedThickness);
 titleStr = sprintf('Estimated thickness %s (%s interpolation)',...
                     subTitle,interpolationMethod);
-title(titleStr)
+% title(titleStr)
 xlabel('Inter-section interval');
 ylabel('Thickness (nm)');
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
@@ -145,7 +148,7 @@ ylabel('Thickness SD (nm))');
 predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,interpolationMethod);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
-
+end
 % % histograms.
 % numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
 % figure;hist(predictedThickness,numBins)

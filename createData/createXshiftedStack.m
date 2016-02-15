@@ -1,8 +1,8 @@
-function createXshiftedStack(inputImageStackFileName,imageID,...
+function createXshiftedStack(inputImageStack,imageID,...
         minShift,maxShift,gap,outputSavePath,subTitle)
     
    
-inputImageStack = readTiffStackToArray(inputImageStackFileName);
+% inputImageStack = readTiffStackToArray(inputImageStackFileName);
 
 I = inputImageStack(:,:,imageID);
 

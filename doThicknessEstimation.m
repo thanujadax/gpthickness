@@ -143,15 +143,15 @@ if(sum(calibrationMethods == 9)>0)
     calibrationFigureFileString = sprintf('09_%s_XZ_Z',distanceMeasure);    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat,distanceMeasure);
 end
-% if(sum(calibrationMethods == 10)>0)
-%     calibrationString = 'SD of pixel intensity XY along X and Y';
-%     disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X and Y...')
-%     xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
-%         params.maxShift,params.minShift,params.maxNumImages);
-%     disp('done!')
-%     calibrationFigureFileString = '10_sdpi_XY';
-%     saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat,distanceMeasure);
-% end
+if(sum(calibrationMethods == 10)>0)
+    calibrationString = 'SD of pixel intensity XY along X and Y';
+    disp('Calculating SD of intensity deviation curve using shifted XY sections stack, along X and Y...')
+    xcorrMat = getIntensityDeviationXYstack(inputImageStackFileName,...
+        params.maxShift,params.minShift,params.maxNumImages);
+    disp('done!')
+    calibrationFigureFileString = '10_sdpi_XY';
+    saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat,distanceMeasure);
+end
 % if(sum(calibrationMethods == 11)>0)
 %     calibrationString = 'SD of pixel intensity along X';
 %     disp('Calculating SD of intensity deviation curve along X ...')
