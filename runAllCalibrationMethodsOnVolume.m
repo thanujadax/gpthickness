@@ -21,7 +21,7 @@ params.predict = 1; % set to 0 if only the interpolation curve is required.
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 500; % number of sections to initiate calibration.
+params.maxNumImages = 5; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection

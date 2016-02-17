@@ -7,9 +7,9 @@
 
 inputPath = '/home/thanuja/projects/data/rita/folds_ssTEM_2';
 
-inputFileName1 = 'D4-06.tif';
-inputFileName2 = 'D4-07.tif';
-inputFileName3 = 'D4-08.tif';
+inputFileName1 = 'Ee1-07a.tif';
+inputFileName2 = 'Ee1-08a.tif';
+inputFileName3 = 'Ee1-09a.tif';
 
 outputSavePath = '/home/thanuja/projects/data/rita/folds_removed_ssTEM2';
 
@@ -39,17 +39,17 @@ meanPixVal = mean(mean(im2));
 
 %% define bounding box boundaries
 %% mask1
-bb1.x1 = 1;
-bb1.y1 = 1136;
+bb1.x1 = 0;
+bb1.y1 = 146;
 
-bb1.x2 = 2653;
-bb1.y2 = 1;
+bb1.x2 = 0;
+bb1.y2 = 335;
 
-bb1.x3 = 3070;
-bb1.y3 = 1;
+bb1.x3 = 4008;
+bb1.y3 = 671;
 
-bb1.x4 = 1;
-bb1.y4 = 1400;
+bb1.x4 = 4008;
+bb1.y4 = 443;
 
 x1 = [bb1.x1 bb1.x2 bb1.x3 bb1.x4];
 y1 = [bb1.y1 bb1.y2 bb1.y3 bb1.y4];
@@ -58,8 +58,8 @@ mask1 = poly2mask(x1,y1,sizeR1,sizeC1);
 
 %figure;imshow(mask1)
 
-bb2.x1 = 0;
-bb3.x1 = 0;
+bb2.x1 = -1;
+bb3.x1 = -1;
 %% mask 2
 bb2.x1 = 3080;
 bb2.y1 = 2588;
@@ -78,17 +78,17 @@ y2 = [bb2.y1 bb2.y2 bb2.y3 bb2.y4];
 mask2 = poly2mask(x2,y2,sizeR1,sizeC1);
 
 %% mask 3
-bb3.x1 = 0;
-bb3.y1 = 0;
+bb3.x1 = 1979;
+bb3.y1 = 1271;
 
-bb3.x2 = 0;
-bb3.y2 = 0;
+bb3.x2 = 1979;
+bb3.y2 = 1874;
 
-bb3.x3 = 0;
-bb3.y3 = 0;
+bb3.x3 = 2534;
+bb3.y3 = 1886;
 
-bb3.x4 = 0;
-bb3.y4 = 0;
+bb3.x4 = 2534;
+bb3.y4 = 1301;
 
 x3 = [bb3.x1 bb3.x2 bb3.x3 bb3.x4];
 y3 = [bb3.y1 bb3.y2 bb3.y3 bb3.y4];
@@ -98,7 +98,7 @@ mask3 = poly2mask(x3,y3,sizeR1,sizeC1);
 % Gaussian smoothning? At least at the boundary of the replacement patch
 % replace pixel values in bounding boxes
 % bb1
-if(bb1.x1>0)
+if(bb1.x1>-1)
     im1(mask1) = meanPixVal;
     im2(mask1) = meanPixVal;
     im3(mask1) = meanPixVal;
@@ -106,7 +106,7 @@ else
     disp('bounding box 1 is zero')
 end
 % bb2
-if(bb2.x1>0)
+if(bb2.x1>-1)
     im1(mask2) = meanPixVal;
     im2(mask2) = meanPixVal;
     im3(mask2) = meanPixVal;
@@ -114,7 +114,7 @@ else
     disp('bounding box 2 is zero')
 end
 % bb3
-if(bb3.x1>0)
+if(bb3.x1>-1)
     im1(mask3) = meanPixVal;
     im2(mask3) = meanPixVal;
     im3(mask3) = meanPixVal;
