@@ -6,8 +6,8 @@ runAllCalibrationMethodsOnVolume...
     (inputImageStackFileName,outputSavePath,params)
 
 # Create GP model from these similarity matrices
-makeGPmodelFromSimilarityData...
-    (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,numImgToUse)
+script_main_createGPmodelForVolume()
+set matFilePath, outputSavePath, fileStr, zDirection and calibrationMethods inside the script
 
 # Predict thickness for new tiff stack
 mainPredictThicknessOfVolumeGP(inputImageStackFileNAme,outputSavePath,gpModelPath)
