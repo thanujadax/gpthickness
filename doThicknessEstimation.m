@@ -1,6 +1,6 @@
 function thicknessEstimates = doThicknessEstimation(...
     calibrationMethods,inputImageStackFileName,outputSavePath,params,...
-    distanceMeasure)
+    distanceMeasure,distFileStr)
 
 % Performs section thickness estimation using representative
 % curves to determine the distance between two (adjacent) sections
@@ -68,7 +68,7 @@ if(sum(calibrationMethods == 3)>0)
     % the zy plane along the x axis.
     % each row corresponds to one starting image (zy section) of the stack
     
-    saveXcorrMat(nameOfStack,3,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,3,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
     
 end
 if(sum(calibrationMethods == 2)>0)
@@ -78,7 +78,7 @@ if(sum(calibrationMethods == 2)>0)
     xcorrMat = getXcorrXYstack(inputImageStackFileName,params.maxShift,...
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('done!')    
-    saveXcorrMat(nameOfStack,2,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,2,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end        
 if(sum(calibrationMethods == 4)>0)
     calibrationString = sprintf('%s ZY along Y',distanceMeasure);
@@ -87,7 +87,7 @@ if(sum(calibrationMethods == 4)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done')
     calibrationFigureFileString = sprintf('04_%s_ZY_Y',distanceMeasure);
-    saveXcorrMat(nameOfStack,4,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,4,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 1)>0)
     calibrationString = sprintf('%s XY along X',distanceMeasure);
@@ -96,7 +96,7 @@ if(sum(calibrationMethods == 1)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
     calibrationFigureFileString = sprintf('01_%s_XY_X',distanceMeasure);
-    saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 5)>0)
     calibrationString = sprintf('%s XZ along X',distanceMeasure);
@@ -105,7 +105,7 @@ if(sum(calibrationMethods == 5)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')    
     calibrationFigureFileString = sprintf('05_%s_XZ_X',distanceMeasure);
-    saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 6)>0)
     calibrationString = sprintf('%s XZ along Y',distanceMeasure);
@@ -114,7 +114,7 @@ if(sum(calibrationMethods == 6)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('06_%s_XZ_Y',distanceMeasure);
-    saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 7)>0)
     calibrationString = sprintf('%s XY along Z',distanceMeasure);
@@ -123,7 +123,7 @@ if(sum(calibrationMethods == 7)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('07_%s_XY_Z',distanceMeasure);
-    saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 8)>0)
     calibrationString = sprintf('%s ZY along Z',distanceMeasure);
@@ -132,7 +132,7 @@ if(sum(calibrationMethods == 8)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('08_%s_ZY_Z',distanceMeasure);
-    saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end    
 if(sum(calibrationMethods == 9)>0)
     calibrationString = sprintf('%s XZ along Z',distanceMeasure);
@@ -141,7 +141,7 @@ if(sum(calibrationMethods == 9)>0)
         params.minShift,params.maxNumImages,distanceMeasure);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('09_%s_XZ_Z',distanceMeasure);    
-    saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end
 if(sum(calibrationMethods == 10)>0)
     calibrationString = 'SD of pixel intensity XY along X and Y';
@@ -150,7 +150,7 @@ if(sum(calibrationMethods == 10)>0)
         params.maxShift,params.minShift,params.maxNumImages);
     disp('done!')
     calibrationFigureFileString = '10_sdpi_XY';
-    saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat,distanceMeasure);
+    saveXcorrMat(nameOfStack,10,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end
 % if(sum(calibrationMethods == 11)>0)
 %     calibrationString = 'SD of pixel intensity along X';
@@ -272,11 +272,12 @@ else
     thicknessEstimates = 0;
 end
 
-function saveXcorrMat(nameOfStack,calibrationID,outputSavePath,xcorrMat,distanceMeasure)
+function saveXcorrMat(nameOfStack,calibrationID,outputSavePath,xcorrMat,...
+    distanceMeasure,distFileStr)
     % save calibration curve .mat
     disp('Saving xcorrMat')
 
-    matName = sprintf('xcorrMat_%s_%s_cID%02d.mat',distanceMeasure,nameOfStack,calibrationID);
+    matName = sprintf('%s_%s_%s_cID%02d.mat',distFileStr,distanceMeasure,nameOfStack,calibrationID);
     xcorrFileName = fullfile(outputSavePath,matName);
     save(xcorrFileName,'xcorrMat')
     disp('done')

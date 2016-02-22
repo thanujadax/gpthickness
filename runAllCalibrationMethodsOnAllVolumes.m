@@ -1,40 +1,37 @@
 function runAllCalibrationMethodsOnAllVolumes...
-    (inputImageStackFileName,outputSavePath,params)
+    (imageStackDirectory,outputSavePath,params,...
+    stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr)
 
 % run all calibration methods for one volume and save the calibration
 % curves and the predictions in the outputPath
+% keep params.predict = 0 to only generate distance matrices (.mat)
 
-% distanceMeasure = 'COC';  % coefficient of correlation
+%% Parameters and input arguments
+% distanceMeasuresList = {'COC','SDI','MSE'};
+% params.predict = 0; % set to 0 if only the interpolation curve is required.
+% params.xyResolution = 5; % nm
+% params.maxShift = 40;
+% params.minShift = 0;
+% params.maxNumImages = 3; % number of sections to initiate calibration.
+%                 % the calibration curve is the mean value obtained by all
+%                 % these initiations
+% params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
+% params.plotOutput = 1;
+% params.suppressPlots = 1;
+% params.usePrecomputedCurve = 0;
+% params.pathToPrecomputedCurve = '';
+% params.imgStackFileExt = 'tif';
+% stacksAreInSeparateSubDirs = 0;
+% imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_aligned';
+% outputSavePath = '/home/thanuja/projects/data/rita/batchrun20160219/thicknessPredictions';
 
-distanceMeasuresList = {'COC','SDI','MSE'};
-
-params.predict = 0; % set to 0 if only the interpolation curve is required.
-params.xyResolution = 5; % nm
-params.maxShift = 40;
-params.minShift = 0;
-params.maxNumImages = 3; % number of sections to initiate calibration.
-                % the calibration curve is the mean value obtained by all
-                % these initiations
-params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
-params.plotOutput = 1;
-params.suppressPlots = 1;
-params.usePrecomputedCurve = 0;
-params.pathToPrecomputedCurve = '';
-params.imgStackFileExt = 'tif';
-
-stacksAreInSeparateSubDirs = 0;
-
-imageCubeDirectory = '/home/thanuja/projects/data/rita/cropped_aligned';
-outputSavePath = '/home/thanuja/projects/data/rita/batchrun20160219/thicknessPredictions';
-
+%%
 diaryFile = fullfile(outputSavePath,'log.txt');
 diary(diaryFile);
-% inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s108/s108.tif';
-% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/20150512';
 
 if(stacksAreInSeparateSubDirs==1)
 % get the list of directories
-[sampleDirectories,~] = subdir(imageCubeDirectory);
+[sampleDirectories,~] = subdir(imageStackDirectory);
 
 % get the tiff stack from each directory. some may have multiple tiff
 % stacks.
@@ -56,9 +53,9 @@ if(stacksAreInSeparateSubDirs==1)
         %     disp(str1)    
 
             % process each image stack in the sample
-            for j=1:length(imageStackDir)
+            for k=1:length(imageStackDir)
                 inputImageStackFileName = fullfile...
-                    (sampleSubDirName,imageStackDir(j).name);
+                    (sampleSubDirName,imageStackDir(k).name);
 
                 tokenizedFName = strsplit(inputImageStackFileName,filesep);
                 nameOfStack = strtok(tokenizedFName(end),'.');
@@ -74,23 +71,40 @@ if(stacksAreInSeparateSubDirs==1)
                     disp(str1)
                     thicknessEstimates = doThicknessEstimation(...
                     calibrationMethod,inputImageStackFileName,outputSavePath_i,params,...
-                    distanceMeasure);
-                end    
+                    distanceMeasure,distFileStr);
+                end 
+                
             end    
         end
 
     end
 else
     % read all tiff files. each tiff file is a separate volume
+    inputFiles = strcat('*',params.imgStackFileExt);
+    inputFilesFullPath = fullfile(imageStackDirectory,inputFiles);
+    inputFilesListing = dir(inputFilesFullPath);
     
     for j=1:length(distanceMeasuresList)
         % for all distance measures
         distanceMeasure = distanceMeasuresList{j};
         outputSaveDistMeasure = fullfile(outputSavePath,distanceMeasure);
-        checkAndCreateSubDir(outputSavePath,distanceMeasure)
-        for i=1:length(sampleDirectories)
-            
-            
+        checkAndCreateSubDir(outputSavePath,distanceMeasure);
+        for i=1:length(inputFilesListing)
+            sampleName = strsplit(inputFilesListing(i).name,'.');
+            sampleName = sampleName(1);
+            sampleName = char(sampleName);
+            inputImageStackFileName = fullfile(imageStackDirectory,inputFilesListing(i).name);
+            outputSavePathStack = fullfile(outputSaveDistMeasure,sampleName);
+            checkAndCreateSubDir(outputSaveDistMeasure,sampleName);
+            for calibrationMethod=1:9
+                str1 = sprintf...
+                    ('Running calibration method %02d on image stack %s using distMeasure %s',calibrationMethod,sampleName,distanceMeasure);
+                disp(str1)
+                thicknessEstimates = doThicknessEstimation(...
+                calibrationMethod,inputImageStackFileName,outputSavePathStack,params,...
+                distanceMeasure,distFileStr);
+            end
+                       
         end
         
     end

@@ -9,7 +9,7 @@ function makeGPmodelFromSimilarityData...
 %   x axis - similarity of a pair of images
 %   y axis - distance between the pair of images
 
-% read similarity data (all give images)
+% read similarity data (all given images)
 similarityDataMat = readAllMatFiles(matFilePath,fileStr,zDirection,calibrationMethods);
 
 totNumImages = size(similarityDataMat,1);

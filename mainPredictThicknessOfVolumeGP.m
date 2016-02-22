@@ -1,17 +1,18 @@
 function [predictedThickness_u, predictionSD_u] = ...
     mainPredictThicknessOfVolumeGP...
-    (inputImageStackFileName,outputSavePath,gpModelPath)
+    (inputImageStackFileName,outputSavePath,gpModelPath,...
+    params, startInd,numImagesToEstimate,interpolationMethod,distanceMeasure)
 
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
 
-inputImageStackFileName = '/home/thanuja/projects/data/rita/cropped_aligned/D4.tif';
+% inputImageStackFileName = '/home/thanuja/projects/data/rita/cropped_aligned/D4.tif';
 % inputImageStackFileName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/rawStack.tif';
 % inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap15_xShiftedStack_sliceID101.tif';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1pred';
-outputSavePath = '/home/thanuja/projects/data/rita/predictions/D4';
+% outputSavePath = '/home/thanuja/projects/data/rita/predictions/D4';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssTEM/20151031';
-gpModelPath = '/home/thanuja/projects/data/rita/gpModels/y_sdi/gpModel.mat';
+% gpModelPath = '/home/thanuja/projects/data/rita/gpModels/y_sdi/gpModel.mat';
 % gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/y/gpModel.mat';
 
 % % 1 - c.o.c across XY sections, along X
@@ -24,46 +25,48 @@ gpModelPath = '/home/thanuja/projects/data/rita/gpModels/y_sdi/gpModel.mat';
 % % 8 - c.o.c across ZY sections, along Z
 % % 9 - c.o.c. across XZ sections, along Z
 
-calibrationMethods = [2];
+% calibrationMethods = [2];
 
-distanceMeasure = 'SDI';  % standard deviation of pixel intensity
+% distanceMeasure = 'SDI';  % standard deviation of pixel intensity
 % differences
 % distanceMeasure = 'COC';  % coefficient of correlation
 % distanceMeasure = 'maxNCC'; % maximum normalized cross correlation
 
-% params only for doThicknessEstimation
-params.imgStackFileExt = 'tif';
-params.minShift = 0;
-params.predict = 0; % we don't use the predict method in doThicknessEstimation
-params.xyResolution = 5; % nm
-params.maxShift = 40;
-params.maxNumImages = 3; % number of sections to initiate calibration.
-                % the calibration curve is the mean value obtained by all
-                % these initiations
-params.numPairs = 1; % number of section pairs to be used to estimate the thickness of one section
-params.plotOutput = 1; % don't plot intermediate curves.
-params.usePrecomputedCurve = 1;
-params.pathToPrecomputedCurve = '';
-params.suppressPlots = 0;
+% % params only for doThicknessEstimation
+% params.imgStackFileExt = 'tif';
+% params.minShift = 0;
+% params.predict = 0; % we don't use the predict method in doThicknessEstimation
+% params.xyResolution = 5; % nm
+% params.maxShift = 40;
+% params.maxNumImages = 3; % number of sections to initiate calibration.
+%                 % the calibration curve is the mean value obtained by all
+%                 % these initiations
+% params.numPairs = 1; % number of section pairs to be used to estimate the thickness of one section
+% params.plotOutput = 1; % don't plot intermediate curves.
+% params.usePrecomputedCurve = 1;
+% params.pathToPrecomputedCurve = '';
+% params.suppressPlots = 0;
+% 
+% % other params
+% % methodCOC = 1; % if it's based on correlation
+% fileStr = 'xcorrMat'; % general string that defines the .mat file
+% distMin = 0;
+% saveOnly = 0;
+% %xResolution = 5; % nm
+% %yResolution = 5; % nm
 
-% other params
-% methodCOC = 1; % if it's based on correlation
-fileStr = 'xcorrMat'; % general string that defines the .mat file
-distMin = 0;
-saveOnly = 0;
-%xResolution = 5; % nm
-%yResolution = 5; % nm
-inputResolution = 5;
+% inputResolution = 5;
+inputResolution = params.xyResolution;
 
-startInd = 1;
-numImagesToEstimate = 3;
+% startInd = 1;
+% numImagesToEstimate = 3;
 endInd = startInd + numImagesToEstimate - 1;
 
 tokenizedFName = strsplit(inputImageStackFileName,filesep);
 nameOfStack = strtok(tokenizedFName(end),'.');
 subTitle = nameOfStack{1};
 
-interpolationMethod = 'linear';
+% interpolationMethod = 'linear';
 
 calibrationString = sprintf('Avg %s decay using X, Y resolutions',distanceMeasure);
 calibrationFigureFileString = sprintf('%s_xyResolution_ensemble',distanceMeasure);
@@ -86,6 +89,7 @@ predictionFigureFileStr = 'Prediction';
 %         inputImageStackFileName,meanVector,stdVector,distMin,...
 %         interpolationMethod,inputResolution,distanceMeasure);
 
+gpModelPath = fullfile(gpModelPath,'gpModel.mat');
 gpModel = importdata(gpModelPath);
 similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
     distanceMeasure,startInd,endInd);
