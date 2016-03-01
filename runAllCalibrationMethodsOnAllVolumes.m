@@ -80,7 +80,7 @@ if(stacksAreInSeparateSubDirs==1)
     end
 else
     % read all tiff files. each tiff file is a separate volume
-    inputFiles = strcat('*',params.imgStackFileExt);
+    inputFiles = strcat('*.',params.imgStackFileExt);
     inputFilesFullPath = fullfile(imageStackDirectory,inputFiles);
     inputFilesListing = dir(inputFilesFullPath);
     

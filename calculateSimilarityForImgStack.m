@@ -45,6 +45,17 @@ elseif(strcmp(distanceMeasure,'maxNCC'))
         maxXcorr = max(abs(xcorrMat(:)));
         sV(i-startInd + 1) = maxXcorr;
     end
+elseif(strcmp(distanceMeasure,'MSE'))
+    for i = startInd:endInd
+        image1 = inputImageStack(:,:,i);
+        image2 = inputImageStack(:,:,(i+1));
+        % calculate the distance between the two images based on the
+        % correlation coefficient
+        % xcorrMat = normxcorr2(image1,image2);
+        % maxXcorr = max(abs(xcorrMat(:)));
+        [~,MSE_intensity,~,~] = measerr(image1,image2);        
+        sV(i-startInd + 1) = MSE_intensity;
+    end    
 else
     error('unrecongnized distance measure!')
 end
