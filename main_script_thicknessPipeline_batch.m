@@ -1,4 +1,10 @@
-% for all tif stacks in the folder
+%% Input and output paths
+% input image stack directory. thickness prediction is done for all .tif
+% stacks available in this path
+imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/E1_elastic_aar';
+% results go here
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160301/';
+resultsSubDir = 'E1_elastic_affine';
 
 %% create .mat distance matrices in all distance metrics for each volume in
 % different subdirectories
@@ -25,16 +31,6 @@ params.imgStackFileExt = 'tif';
 
 stacksAreInSeparateSubDirs = 0; % all the stacks are in the same sub-directory
 
-% imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_aligned';
-% matFilePath = '/home/thanuja/projects/data/rita/batchrun20160223/distMat';
-% outputSavePath = '/home/thanuja/projects/data/rita/batchrun20160223/thicknessPredictions';
-% gpModelSavePath = '/home/thanuja/projects/data/rita/batchrun20160223/gpModels';
-
-% input image stack
-imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D5a';
-% results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160229/';
-resultsSubDir = 'D5a_elastic_2';
 
 %% Create required sub directories
 checkAndCreateSubDir(resultsRoot,resultsSubDir);
