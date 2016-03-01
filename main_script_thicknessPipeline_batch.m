@@ -30,10 +30,24 @@ stacksAreInSeparateSubDirs = 0; % all the stacks are in the same sub-directory
 % outputSavePath = '/home/thanuja/projects/data/rita/batchrun20160223/thicknessPredictions';
 % gpModelSavePath = '/home/thanuja/projects/data/rita/batchrun20160223/gpModels';
 
-imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_rigid/D5b';
-matFilePath = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160229/D5b_rigid/distMat';
-outputSavePath = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160229/D5b_rigid/thicknessPredictions';
-gpModelSavePath = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160229/D5b_rigid/gpModels';
+% input image stack
+imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D5a';
+% results go here
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160229/';
+resultsSubDir = 'D5a_elastic_2';
+
+%% Create required sub directories
+checkAndCreateSubDir(resultsRoot,resultsSubDir);
+resultsRoot = fullfile(resultsRoot,resultsSubDir);
+
+checkAndCreateSubDir(resultsRoot,'distMat');
+matFilePath = fullfile(resultsRoot,'distMat');
+
+checkAndCreateSubDir(resultsRoot,'thicknessPredictions');
+outputSavePath = fullfile(resultsRoot,'thicknessPredictions');
+
+checkAndCreateSubDir(resultsRoot,'gpModels');
+gpModelSavePath = fullfile(resultsRoot,'gpModels');
 
 startInd = 1;
 numImagesToEstimate = 3;

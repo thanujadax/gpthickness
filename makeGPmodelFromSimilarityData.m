@@ -40,18 +40,19 @@ run('gpml/startup.m');
 
 % Specify covariance, mean and likelihood
 covfunc = @covSEiso;                                        
-hyp.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
+hyp.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
 
 likfunc = @likGauss; 
 hyp.lik = log(0.1);
 
 meanfunc = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
-hyp.mean = [1.607e-8,1];
+hyp.mean = [0,1];
 
-muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
-muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
-prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
-inf = {@infPrior,@infExact,prior};
+%muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
+%muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
+%prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
+%inf = {@infPrior,@infExact,prior};
+inf = @infExact;
 
 % Learn the hyperparameters
 %hyp = minimize(hyp, @gp, -500, @infExact, meanfunc, covfunc, likfunc, vX, vY)
