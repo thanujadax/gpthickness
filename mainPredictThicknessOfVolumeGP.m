@@ -147,8 +147,8 @@ titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
                     subTitle);
 title(titleStr)
 
-xlabel('Inter-section interval');
-ylabel('Thickness SD (nm))');
+xlabel('Inter-section interval','FontSize',25);
+ylabel('Thickness SD (nm))','FontSize',25);
 % save
 predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,interpolationMethod);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
