@@ -16,7 +16,8 @@ inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedSt
 outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151102_s502_500';
 % gpModel learned for X axis
 % gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/x/gpModel.mat';
-gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
+gpModelXPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
+gpModelYPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2/gpModel.mat';
 gap = 2;
 %% thickness estimation GP
 % returned values are unscaled thickness: predictedThickness_u, predictionSD_u
@@ -24,10 +25,12 @@ inputImageStackDirContents = dir(fullfile(inputImageStackDirName,'*.tif'));
 numStacks = length(inputImageStackDirContents);
 for i=1:numStacks
     inputImageStackFileName = inputImageStackDirContents(i).name;
-    inputImageStackFileName = fullfile(inputImageStackDirName,inputImageStackFileName)
+    inputImageStackFileName = fullfile(inputImageStackDirName,inputImageStackFileName);
+    str1 = sprintf('Processing stack %s',inputImageStackFileName);
+    disp(str1)
     [thicknessVect, thicknessSdVect] = ...
         mainPredictThicknessOfVolumeGP...
-        (inputImageStackFileName,outputSavePath,gpModelPath);
+        (inputImageStackFileName,outputSavePath,gpModelXPath);
 
     thicknessVect(end) = [];
     thicknessSdVect(end) = [];

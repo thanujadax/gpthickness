@@ -1,10 +1,10 @@
 %% Input and output paths
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
-imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
+imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D4_elastic_aaa_square';
 % results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/';
-resultsSubDir = 's502';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160301/';
+resultsSubDir = 'D4_elastic_aaa_sq';
 
 %% create .mat distance matrices in all distance metrics for each volume in
 % different subdirectories
@@ -19,7 +19,7 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 20; % number of sections to initiate calibration.
+params.maxNumImages = 3; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -34,10 +34,10 @@ stacksAreInSeparateSubDirs = 0; % all the stacks are in the same sub-directory
 % GP model (learning)
 zDirection = 0; %?
 calibrationMethods = [1 2]; % we generate GPs for x and y directions only
-numImagesToUse = 20;
+numImagesToUse = 3;
 % GP estimation
 startInd = 1;  % thickness prediction starts with this image index
-numImagesToEstimate = 700; % how many images in the stack to be estimated
+numImagesToEstimate = 3; % how many images in the stack to be estimated
 interpolationMethod = 'linear'; % depricated
 
 %% Create required sub directories

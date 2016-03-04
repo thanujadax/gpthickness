@@ -27,6 +27,7 @@ function thicknessEstimates = doThicknessEstimation(...
 % % 7 - COC/SDI/MSE/maxNCC across XY sections, along Z
 % % 8 - COC/SDI/MSE/maxNCC across ZY sections, along Z
 % % 9 - COC/SDI/MSE/maxNCC across XZ sections, along Z
+% % FOLLOWING ARE DEPRICATED SINCE THE ABOVE 9 IMPLEMENT THEM ALREADY
 % % 10 - SD of per pixel intensity difference - XY avg
 % % 11 - SD of per pixel intensity difference - XY along X only
 % % 12 - SD of per pixel intensity difference - XY along Y only

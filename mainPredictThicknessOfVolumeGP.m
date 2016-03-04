@@ -105,9 +105,10 @@ if(params.plotOutput)
 figure;plot(predictedThickness);
 titleStr = sprintf('Estimated thickness %s (%s interpolation)',...
                     subTitle,interpolationMethod);
+set(gca,'FontSize',14)
 % title(titleStr)
-xlabel('Inter-section interval');
-ylabel('Thickness (nm)');
+xlabel('Inter-section interval','FontSize',25);
+ylabel('Thickness (nm)','FontSize',25);
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
 %     titleStr,xlabelStr,ylabelStr);
 % save plot
@@ -146,7 +147,7 @@ plot(predictionSD);
 titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
                     subTitle);
 title(titleStr)
-
+set(gca,'FontSize',14)
 xlabel('Inter-section interval','FontSize',25);
 ylabel('Thickness SD (nm))','FontSize',25);
 % save
