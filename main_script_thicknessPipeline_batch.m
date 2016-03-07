@@ -4,7 +4,36 @@
 imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D4_elastic_aaa_square';
 % results go here
 resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160301/';
-resultsSubDir = 'D4_elastic_aaa_sq';
+resultsSubDir = 'D4_elastic_aaa_sq_t2';
+
+%% GP model specifications
+% Execute the startup
+run('gpml/startup.m');
+
+% Specify covariance, mean and likelihood
+covfunc = containers.Map;
+covfunc('SDI') = @covSEiso;   
+
+hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+
+likfunc = containers.Map;
+likfunc('SDI') = @likGauss;
+
+hypsdi.lik = log(0.1);
+
+meanfunc = containers.Map;
+meanfunc('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+hypsdi.mean = [0,1];
+
+hyperparams = containers.Map;
+hyperparams('SDI') = hypsdi;
+
+%muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
+%muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
+%prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
+%inf = {@infPrior,@infExact,prior};
+inf = containers.Map;
+inf('SDI') = @infExact;
 
 %% create .mat distance matrices in all distance metrics for each volume in
 % different subdirectories
@@ -86,7 +115,13 @@ for i=1:length(distanceMeasuresList)
             checkAndCreateSubDir(saveGPModelDistVolDir,num2str(cID));
             saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
             makeGPmodelFromSimilarityData...
-    (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,numImagesToUse);        
+    (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,...
+    numImagesToUse,...
+    covfunc(char(distanceMeasuresList(i))),...
+    likfunc(char(distanceMeasuresList(i))),...
+    meanfunc(char(distanceMeasuresList(i))),...
+    hyperparams(char(distanceMeasuresList(i))),...
+    inf(char(distanceMeasuresList(i))));        
         end
     end
 end

@@ -1,13 +1,16 @@
 function makeGPmodelFromSimilarityData...
-    (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,numImgToUse)
+    (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,...
+    numImgToUse,covfunc,likfunc,meanfunc,hyp,inf)
 
 % Inputs:
 % calibrationMethods - which directions to be used for similarity curve
+% hyp - structure containing hyper parameters
 
 % Output:
 % similarity-distance curve
 %   x axis - similarity of a pair of images
 %   y axis - distance between the pair of images
+
 
 % read similarity data (all given images)
 similarityDataMat = readAllMatFiles(matFilePath,fileStr,zDirection,calibrationMethods);
@@ -35,24 +38,24 @@ xlabel('distance (pixels)'), ylabel('dissimilarity'), ...
 vY = repmat([0:1:size(similarityDataMat,2)-1]',numImgToUse,1);
 vX = reshape(similarityDataMat(vSampled,:)',1,size(similarityDataMat,2)*numImgToUse)';
 
-% Execute the startup
-run('gpml/startup.m');
-
-% Specify covariance, mean and likelihood
-covfunc = @covSEiso;                                        
-hyp.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
-
-likfunc = @likGauss; 
-hyp.lik = log(0.1);
-
-meanfunc = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
-hyp.mean = [0,1];
-
-%muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
-%muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
-%prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
-%inf = {@infPrior,@infExact,prior};
-inf = @infExact;
+% % Execute the startup
+% run('gpml/startup.m');
+% 
+% % Specify covariance, mean and likelihood
+% covfunc = @covSEiso;                                        
+% hyp.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+% 
+% likfunc = @likGauss; 
+% hyp.lik = log(0.1);
+% 
+% meanfunc = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+% hyp.mean = [0,1];
+% 
+% %muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
+% %muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
+% %prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
+% %inf = {@infPrior,@infExact,prior};
+% inf = @infExact;
 
 % Learn the hyperparameters
 %hyp = minimize(hyp, @gp, -500, @infExact, meanfunc, covfunc, likfunc, vX, vY)
