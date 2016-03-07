@@ -6,41 +6,11 @@ imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D4_elast
 resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160301/';
 resultsSubDir = 'D4_elastic_aaa_sq_t2';
 
-%% GP model specifications
-% Execute the startup
-run('gpml/startup.m');
+%% main params
 
-% Specify covariance, mean and likelihood
-covfunc = containers.Map;
-covfunc('SDI') = @covSEiso;   
-
-hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
-
-likfunc = containers.Map;
-likfunc('SDI') = @likGauss;
-
-hypsdi.lik = log(0.1);
-
-meanfunc = containers.Map;
-meanfunc('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
-hypsdi.mean = [0,1];
-
-hyperparams = containers.Map;
-hyperparams('SDI') = hypsdi;
-
-%muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
-%muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
-%prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
-%inf = {@infPrior,@infExact,prior};
-inf = containers.Map;
-inf('SDI') = @infExact;
-
-%% create .mat distance matrices in all distance metrics for each volume in
-% different subdirectories
-
-distFileStr = 'xcorrMat'; % general string that defines the .mat file
 % distanceMeasuresList = {'COC','SDI','MSE'};
-distanceMeasuresList = {'SDI'};
+distanceMeasuresList = {'COC'};
+distFileStr = 'xcorrMat'; % general string that defines the .mat file
 
 params.predict = 0; % set to 0 if only the interpolation curve is required while
 % running doThicknessEstimation in runAllCalibrationMethodsOnAllVolumes. 
@@ -68,6 +38,54 @@ numImagesToUse = 3;
 startInd = 1;  % thickness prediction starts with this image index
 numImagesToEstimate = 3; % how many images in the stack to be estimated
 interpolationMethod = 'linear'; % depricated
+
+%% GP model specifications
+% Execute the startup
+run('gpml/startup.m');
+
+% Specify covariance, mean and likelihood
+covfuncDict = containers.Map;
+covfuncDict('SDI') = @covSEiso;
+covfuncDict('COC') = @covSEiso;
+
+hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+
+likfuncDict = containers.Map;
+likfuncDict('SDI') = @likGauss;
+likfuncDict('COC') = @likGauss;
+
+hypsdi.lik = log(0.1);
+hypcoc.lik = log(0.1);
+
+meanfuncDict = containers.Map;
+meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
+    { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
+
+hypsdi.mean = [0,1];
+
+hypcocm_cons1 = 4319;
+hypcocm_cons2 = -4319;
+hypcocm_lin = 1;
+
+hypcocm_pow = hypcocm_lin;
+hypcocm_prod = [hypcocm_cons2 hypcocm_pow];
+hypcoc.mean = [hypcocm_cons1 hypcocm_prod];
+
+%hypcoc.mean = [100,1,1];
+
+hyperparams = containers.Map;
+hyperparams('SDI') = hypsdi;
+hyperparams('COC') = hypcoc;
+
+%muConst = 1.849e-08;    sConst = ( ( (2.244e-8) - (1.455e-8) )/2)^2;     % 95% = (1.455e-08, 2.244e-08)
+%muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
+%prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
+%inf = {@infPrior,@infExact,prior};
+infDict = containers.Map;
+infDict('SDI') = @infExact;
+infDict('COC') = @infExact;
 
 %% Create required sub directories
 checkAndCreateSubDir(resultsRoot,resultsSubDir);
@@ -97,6 +115,11 @@ runAllCalibrationMethodsOnAllVolumes...
 % for each calibration method k
 
 for i=1:length(distanceMeasuresList)
+    hyp = hyperparams(char(distanceMeasuresList(i)));
+    covfunc = covfuncDict(char(distanceMeasuresList(i)));
+    meanfunc = meanfuncDict(char(distanceMeasuresList(i)));
+    likfunc = likfuncDict(char(distanceMeasuresList(i)));
+    inf = infDict(char(distanceMeasuresList(i)));
     % for this dist measure, read all the sub-dirs (volumeIDs)
     distMeasureDir = fullfile(matFilePath,char(distanceMeasuresList(i)));
     checkAndCreateSubDir(gpModelSavePath,char(distanceMeasuresList(i)));
@@ -116,12 +139,7 @@ for i=1:length(distanceMeasuresList)
             saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
             makeGPmodelFromSimilarityData...
     (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,...
-    numImagesToUse,...
-    covfunc(char(distanceMeasuresList(i))),...
-    likfunc(char(distanceMeasuresList(i))),...
-    meanfunc(char(distanceMeasuresList(i))),...
-    hyperparams(char(distanceMeasuresList(i))),...
-    inf(char(distanceMeasuresList(i))));        
+    numImagesToUse,covfunc,likfunc,meanfunc,hyp,inf);        
         end
     end
 end
