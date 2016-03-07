@@ -1,6 +1,6 @@
 function makeGPmodelFromSimilarityData...
     (matFilePath,outputSavePath,fileStr,zDirection,calibrationMethods,...
-    numImgToUse,covfunc,likfunc,meanfunc,hyp,inf)
+    numImgToUse,covfunc,likfunc,meanfunc,hyp,inf,axisVect)
 
 % Inputs:
 % calibrationMethods - which directions to be used for similarity curve
@@ -83,7 +83,8 @@ fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
 %fill([vZ; flipdim(vZ,1)], f2, [5 5 5]/8);
 hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
-%axis([0,55,0,35]),
+% axis([0,55,0,35]),
+axis(axisVect),
 grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;
 
 % save plot

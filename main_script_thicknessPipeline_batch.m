@@ -9,7 +9,7 @@ resultsSubDir = 'D4_elastic_aaa_sq_t2';
 %% main params
 
 % distanceMeasuresList = {'COC','SDI','MSE'};
-distanceMeasuresList = {'COC'};
+distanceMeasuresList = {'SDI'};
 distFileStr = 'xcorrMat'; % general string that defines the .mat file
 
 params.predict = 0; % set to 0 if only the interpolation curve is required while
@@ -87,6 +87,10 @@ infDict = containers.Map;
 infDict('SDI') = @infExact;
 infDict('COC') = @infExact;
 
+axisVect = containers.Map;
+axisVect('SDI') = [0,55,0,40];
+axisVect('COC') = [0,1,0,40];
+
 %% Create required sub directories
 checkAndCreateSubDir(resultsRoot,resultsSubDir);
 resultsRoot = fullfile(resultsRoot,resultsSubDir);
@@ -139,7 +143,7 @@ for i=1:length(distanceMeasuresList)
             saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
             makeGPmodelFromSimilarityData...
     (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,...
-    numImagesToUse,covfunc,likfunc,meanfunc,hyp,inf);        
+    numImagesToUse,covfunc,likfunc,meanfunc,hyp,inf,axisVect(char(distanceMeasuresList(i))));        
         end
     end
 end
