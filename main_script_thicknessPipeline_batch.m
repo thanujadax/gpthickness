@@ -1,13 +1,12 @@
 %% Input and output paths
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
-imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_elastic/D4_elastic_aaa_square';
+imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_hist_aaa/D4';
 % results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160301/';
-resultsSubDir = 'D4_elastic_aaa_sq_t2';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160309/';
+resultsSubDir = 'D4_hist_aaa';
 
 %% main params
-
 % distanceMeasuresList = {'COC','SDI','MSE'};
 distanceMeasuresList = {'SDI'};
 distFileStr = 'xcorrMat'; % general string that defines the .mat file
@@ -88,7 +87,7 @@ infDict('SDI') = @infExact;
 infDict('COC') = @infExact;
 
 axisVect = containers.Map;
-axisVect('SDI') = [0,55,0,40];
+axisVect('SDI') = [0,inf,0,40];
 axisVect('COC') = [0,1,0,40];
 
 %% Create required sub directories

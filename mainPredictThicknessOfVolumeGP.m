@@ -103,8 +103,8 @@ similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
 if(params.plotOutput)
 % plot predicted thickness
 figure;plot(predictedThickness);
-titleStr = sprintf('Estimated thickness %s (%s interpolation)',...
-                    subTitle,interpolationMethod);
+titleStr = sprintf('Estimated thickness %s)',...
+                    subTitle);
 set(gca,'FontSize',14)
 % title(titleStr)
 xlabel('Inter-section interval','FontSize',25);
@@ -112,15 +112,15 @@ ylabel('Thickness (nm)','FontSize',25);
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
 %     titleStr,xlabelStr,ylabelStr);
 % save plot
-predictionFileName = sprintf('%s_%s_%s',predictionFigureFileStr,subTitle,interpolationMethod);
+predictionFileName = sprintf('%s_%s',predictionFigureFileStr,subTitle);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
 % plot predicted thickness with error bar
 lineProps = [];
 transparent = 1;
-titleStr = sprintf('Estimated thickness %s (%s interpolation)',...
-                    subTitle,interpolationMethod);
+titleStr = sprintf('Estimated thickness %s',...
+                    subTitle);
 xlabelStr = 'Inter-section interval';
 ylabelStr = 'Thickness (nm)';
 % 2 sigma
@@ -129,7 +129,7 @@ sigmas = predictionSD*2;
 % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,sigmas,color,transparent,...
 %     titleStr,xlabelStr,ylabelStr);
 % save plot
-predictionFileName = sprintf('%s_%s_%s_wErrBar',predictionFigureFileStr,subTitle,interpolationMethod);
+predictionFileName = sprintf('%s_%s_wErrBar',predictionFigureFileStr,subTitle);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 
@@ -151,7 +151,7 @@ set(gca,'FontSize',14)
 xlabel('Inter-section interval','FontSize',25);
 ylabel('Thickness SD (nm))','FontSize',25);
 % save
-predictionFileName = sprintf('SD_%s_%s_%s',predictionFigureFileStr,subTitle,interpolationMethod);
+predictionFileName = sprintf('SD_%s_%s',predictionFigureFileStr,subTitle);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 end

@@ -72,7 +72,7 @@ disp(' ')
 disp('z = linspace(0, 1.9, 101)'';')
 vZ = linspace(0, 80, 10000)';
 disp('[m s2] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y, z);')
-[m s2 mu sig] = gp(hyp, inf, meanfunc, covfunc, likfunc, vX, vY, vZ);
+[m,s2,mu,sig] = gp(hyp, inf, meanfunc, covfunc, likfunc, vX, vY, vZ);
 
 % Plot the infered function and confidence intervals
 figure(2)
