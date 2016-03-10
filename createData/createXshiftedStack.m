@@ -34,7 +34,7 @@ end
 syntheticStack(:,:,end) = B(:,:);
 
 % saveMat
-outputFileName = sprintf('%s_xShift_sliceID%0d.tif',subTitle,imageID);
+outputFileName = sprintf('%s_xShift_sliceID%03d.tif',subTitle,imageID);
 
 outputFileName = fullfile(outputSavePath,outputFileName);
 syntheticStack = syntheticStack./255;

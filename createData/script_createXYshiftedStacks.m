@@ -4,11 +4,13 @@ function script_createXYshiftedStacks()
 inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502/s502.tif';
 
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
-outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
-                                                            subTitle = '';
+% outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
+outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
+
+subTitle = '';
 
 % imageID = 1; % image in the stack to be used
-shiftX = 0; % 0 to shift along Y
+shiftX = 1; % 0 to shift along Y
 
 minShift = 0;
 gap = 2;

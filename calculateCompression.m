@@ -16,14 +16,17 @@ function stats = calculateCompression()
 %% file names
 % y shifted images
 % inputImageStackDirName = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
-inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
+usingXshifted = 1;
+inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
 outputSavePath = '/home/thanuja/projects/RESULTS/compression'; % this has to exist already
-outputSubDir = 's502_20160309'; % this will be created if it doesn't exist already
+outputSubDir = 's502_20160310_withOldGP_xshifted'; % this will be created if it doesn't exist already
 % gpModel learned for X axis
 % gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/x/gpModel.mat';
-gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/1';
-gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/2';
+% gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/1';
+% gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/2';
 
+gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1';
+gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2';
 %% Params
 distanceMeasure = 'SDI';
 gap = 2;
@@ -60,7 +63,7 @@ startIndV = 1;  % thickness prediction starts with this image index.
 % this refers to the index of the virtual stacks made out of each image.
 
 
-numImagesToEstimate = 500; % how many images in the stack to be estimated
+numImagesToEstimate = 50; % how many images in the virtual stack to be estimated
 interpolationMethod = 'linear'; % depricated
 %% thickness estimation GP
 % create output path
@@ -131,11 +134,21 @@ sdCompressionM_y = mean(compVectSdYY)
 
 figure;
 plot(compVectAll)
-title('\gamma_{yx}')
+if(usingXshifted)
+    ylabel('\gamma_{xx}');
+else
+    ylabel('\gamma_{yx}');
+end
+xlabel('Inter-section interval')
 
 figure;
 plot(compVectYY)
-title('\gamma_{yy}')
+if(usingXshifted)
+    ylabel('\gamma_{xy}')
+else
+    ylabel('\gamma_{yy}')
+end
+xlabel('Inter-section interval')
 
 stats = zeros(2,2);
 stats(1,1) = meanCompression_x;
@@ -143,21 +156,35 @@ stats(1,2) = sdCompressionM_x;
 stats(2,1) = meanCompression_y;
 stats(2,2) = sdCompressionM_y;
 
-meanFileName_yx = fullfile(outputSavePath,'compressionMeans_yx.txt');
-compSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
-thicknessSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
+if(usingXshifted)
+    meanFileName_yx = fullfile(outputSavePath,'compressionMeans_xx.txt');
+    compSdFileName_yx = fullfile(outputSavePath,'compressionSds_xx.txt');
+    thicknessSdFileName_yx = fullfile(outputSavePath,'compressionSds_xx.txt');
 
-meanFileName_yy = fullfile(outputSavePath,'compressionMeans_yy.txt');
-compSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
-thicknessSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
+    meanFileName_yy = fullfile(outputSavePath,'compressionMeans_xy.txt');
+    compSdFileName_yy = fullfile(outputSavePath,'compressionSds_xy.txt');
+    thicknessSdFileName_yy = fullfile(outputSavePath,'compressionSds_xy.txt');
 
-% save compressionMeans.txt compVectAll -ASCII;
-% save compressionSDs.txt thickVectSdAll -ASCII;
+    % save compressionMeans.txt compVectAll -ASCII;
+    % save compressionSDs.txt thickVectSdAll -ASCII;
+    
+else
+    meanFileName_yx = fullfile(outputSavePath,'compressionMeans_yx.txt');
+    compSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
+    thicknessSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
 
-save(meanFileName_yx,'compVectAll','-ASCII')
-save(compSdFileName_yx,'compVectSdAll','-ASCII')
-save(thicknessSdFileName_yx,'thickVectSdAll','-ASCII')
+    meanFileName_yy = fullfile(outputSavePath,'compressionMeans_yy.txt');
+    compSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
+    thicknessSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
 
-save(meanFileName_yy,'compVectYY','-ASCII')
-save(compSdFileName_yy,'compVectSdYY','-ASCII')
-save(thicknessSdFileName_yy,'thickVectSdYY','-ASCII')
+    % save compressionMeans.txt compVectAll -ASCII;
+    % save compressionSDs.txt thickVectSdAll -ASCII;
+
+end
+    save(meanFileName_yx,'compVectAll','-ASCII')
+    save(compSdFileName_yx,'compVectSdAll','-ASCII')
+    save(thicknessSdFileName_yx,'thickVectSdAll','-ASCII')
+
+    save(meanFileName_yy,'compVectYY','-ASCII')
+    save(compSdFileName_yy,'compVectSdYY','-ASCII')
+    save(thicknessSdFileName_yy,'thickVectSdYY','-ASCII')
