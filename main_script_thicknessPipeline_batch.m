@@ -1,10 +1,11 @@
 %% Input and output paths
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
-imageStackDirectory = '/home/thanuja/projects/data/rita/cropped_hist_aaa/D4';
+imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502/sig6';
 % results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/ssTEM_20160309/';
-resultsSubDir = 'D4_hist_aaa';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160311_gauss';
+resultsSubDir = 's502_sig6';
+dataSource = 'FIBSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
 % distanceMeasuresList = {'COC','SDI','MSE'};
@@ -17,7 +18,7 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 3; % number of sections to initiate calibration.
+params.maxNumImages = 15; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -32,11 +33,10 @@ stacksAreInSeparateSubDirs = 0; % all the stacks are in the same sub-directory
 % GP model (learning)
 zDirection = 0; %?
 calibrationMethods = [1 2]; % we generate GPs for x and y directions only
-numImagesToUse = 3;
+numImagesToUse = params.maxNumImages;
 % GP estimation
 startInd = 1;  % thickness prediction starts with this image index
-numImagesToEstimate = 3; % how many images in the stack to be estimated
-interpolationMethod = 'linear'; % depricated
+numImagesToEstimate = 500; % how many images in the stack to be estimated
 
 %% GP model specifications
 % Execute the startup
@@ -57,16 +57,53 @@ likfuncDict('COC') = @likGauss;
 hypsdi.lik = log(0.1);
 hypcoc.lik = log(0.1);
 
-meanfuncDict = containers.Map;
-meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
-meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
-    { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
+if(strcmp(dataSource,'ssTEM'))
+    
+    hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+    hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+    
+    meanfuncDict = containers.Map;
+    meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+    meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
+        { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
 
-hypsdi.mean = [0,1];
+    hypsdi.mean = [0,1];
+    hypcocm_cons1 = 4319;
+    hypcocm_cons2 = -4319;
+    hypcocm_lin = 1;
+elseif(strcmp(dataSource,'ssSEM'))
+    % untuned for ssSEM. still the same as ssTEM
+    
+    hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+    hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);    
+    
+    meanfuncDict = containers.Map;
+    meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+    meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
+        { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
 
-hypcocm_cons1 = 4319;
-hypcocm_cons2 = -4319;
-hypcocm_lin = 1;
+    hypsdi.mean = [0,1];
+    hypcocm_cons1 = 4319;
+    hypcocm_cons2 = -4319;
+    hypcocm_lin = 1;    
+elseif(strcmp(dataSource,'FIBSEM'))
+    % hypsdi.cov = log([lengthParameter,SDofSignal])
+    hypsdi.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
+    hypcoc.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);    
+    
+    meanfuncDict = containers.Map;
+    meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
+    meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
+        { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
+
+    hypsdi.mean = [1.607e-8,1];
+    hypcocm_cons1 = 4319; % ssTEM
+    hypcocm_cons2 = -4319; % ssTEM
+    hypcocm_lin = 1; % ssTEM
+else
+    error('Unknown datasource!')
+end
+
 
 hypcocm_pow = hypcocm_lin;
 hypcocm_prod = [hypcocm_cons2 hypcocm_pow];
@@ -184,7 +221,7 @@ for i=1:length(distanceMeasuresList)
             saveOutputDistVolcIDDir = fullfile(saveOutputDistVolDir,num2str(cID));
             mainPredictThicknessOfVolumeGP(imageFileName,saveOutputDistVolcIDDir,...
                 saveGPModelDistVolcIDDir,params,startInd,...
-                numImagesToEstimate,interpolationMethod,char(distanceMeasuresList(i)));
+                numImagesToEstimate,char(distanceMeasuresList(i)));
             
         end
     end
