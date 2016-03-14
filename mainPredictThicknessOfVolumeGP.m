@@ -155,6 +155,20 @@ predictionFileName = sprintf('SD_%s_%s',predictionFigureFileStr,subTitle);
 predictionFileName = fullfile(outputSavePath,predictionFileName);
 print(predictionFileName,'-dpng');
 end
+
+% stats
+meanThickness = mean(predictedThickness);
+meanOfSD = mean(predictionSD);
+sdOfMeanThickness = std(predictedThickness);
+% write to file
+statFileName = fullfile(outputSavePath,'stats.txt');
+fID = fopen(statFileName,'w');
+fprintf('meanThickness = %6.4f',meanThickness);
+fprintf('meanOfSD = %6.4f',meanOfSD);
+fprintf('SDofMeanThickness = %6.4f',sdOfMeanThickness);
+fclose(fID);
+
+
 % % histograms.
 % numBins = floor(numel(predictedThickness)/(100/(interleave+1)));
 % figure;hist(predictedThickness,numBins)

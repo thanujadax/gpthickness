@@ -1,10 +1,10 @@
 %% Input and output paths
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
-imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502/sig6';
+imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap02_xShiftedStack_sliceID101.tif';
 % results go here
 resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160311_gauss';
-resultsSubDir = 's502_sig6';
+resultsSubDir = 's502_sig-zero_xShifted_gap2_slice101';
 dataSource = 'FIBSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
@@ -88,7 +88,7 @@ elseif(strcmp(dataSource,'ssSEM'))
     hypcocm_lin = 1;    
 elseif(strcmp(dataSource,'FIBSEM'))
     % hypsdi.cov = log([lengthParameter,SDofSignal])
-    hypsdi.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
+    hypsdi.cov = log([20,1]);%log([1;0.1]);%log([1.9;25;10]);
     hypcoc.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);    
     
     meanfuncDict = containers.Map;
