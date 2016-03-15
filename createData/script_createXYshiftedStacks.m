@@ -8,6 +8,7 @@ inputImageStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/largercube
 outputSavePath = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
 
 subTitle = '';
+saveStack = 1;
 
 % imageID = 1; % image in the stack to be used
 shiftX = 1; % 0 to shift along Y
@@ -24,10 +25,10 @@ for i=1:500
     
     if(shiftX)
         createXshiftedStack(inputImageStack,imageID,...
-            minShift,maxShift,gap,outputSavePath,subTitle)
+            minShift,maxShift,gap,outputSavePath,subTitle,saveStack)
     else
         createYshiftedStack(inputImageStack,imageID,...
-            minShift,maxShift,gap,outputSavePath,subTitle)
+            minShift,maxShift,gap,outputSavePath,subTitle,saveStack)
     end
 
 end

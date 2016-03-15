@@ -1,5 +1,5 @@
-function createYshiftedStack(inputImageStack,imageID,...
-        minShift,maxShift,gap,outputSavePath,subTitle)
+function syntheticStack = createYshiftedStack(inputImageStack,imageID,...
+        minShift,maxShift,gap,outputSavePath,subTitle,saveStack)
     
     
 
@@ -27,12 +27,14 @@ end
 
 syntheticStack(:,:,end) = B(:,:);
 
-% saveMat
-outputFileName = sprintf('%s_yShiftedStack_sliceID%03d.tif',subTitle,imageID);
+if(saveStack)
+    % saveMat
+    outputFileName = sprintf('%s_yShiftedStack_sliceID%03d.tif',subTitle,imageID);
 
-outputFileName = fullfile(outputSavePath,outputFileName);
-syntheticStack = syntheticStack./255;
+    outputFileName = fullfile(outputSavePath,outputFileName);
+    syntheticStack = syntheticStack./255;
 
-for K=1:size(syntheticStack,3)
-    imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
+    for K=1:size(syntheticStack,3)
+        imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
+    end
 end

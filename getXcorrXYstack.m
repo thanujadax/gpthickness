@@ -1,4 +1,4 @@
-function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,maxNumImages,...
+function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,startInd,endInd,...
                         distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate the correlation of XY face along the Y axis . i.e. parallel to the
 % cutting plane where we have maximum resolution (5nmx5nm for FIBSEM)
@@ -28,16 +28,19 @@ numImages = size(inputImageStack,3);
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
 fprintf('Estimating similarity curve using %s of shifted XY sections ...',distanceMeasure);
-if(maxNumImages>numImages)
-    maxNumImages = numImages;
+if(endInd>numImages)
+    endInd = numImages;
     str1 = sprintf('maxNumImages > numImages. using numImages = %d instead',numImages);
     disp(str1)
 end
 numShifts = maxShift - minShift + 1;
-xcorrMat = zeros(maxNumImages,numShifts);
+numDataPoints = numel(startInd:endInd);
+xcorrMat = zeros(numDataPoints,numShifts);
 
+i = 0;
 if(strcmp(distanceMeasure,'maxNCC'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i = i+1;
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         k = 0;
@@ -48,12 +51,13 @@ if(strcmp(distanceMeasure,'maxNCC'))
             A(:,:) = I(1+g:size(I,1),:);
             B(:,:) = I(1:size(I,1)-g,:);
             xcorrImage = normxcorr2(A,B);
-            xcorrMat(z,k) = max(abs(xcorrImage(:)));
+            xcorrMat(i,k) = max(abs(xcorrImage(:)));
         end
     end
     
 elseif(strcmp(distanceMeasure,'COC'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i = i+1;
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         k = 0;
@@ -64,12 +68,13 @@ elseif(strcmp(distanceMeasure,'COC'))
 
             A(:,:) = I(1+g:size(I,1),:);
             B(:,:) = I(1:size(I,1)-g,:);
-            xcorrMat(z,k) = corr2(A,B);
+            xcorrMat(i,k) = corr2(A,B);
             
         end
     end 
 elseif(strcmp(distanceMeasure,'SDI'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i = i+1;
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         k = 0;
@@ -77,15 +82,14 @@ elseif(strcmp(distanceMeasure,'SDI'))
             k = k + 1;
             A = zeros(numR-g,numC);
             B = zeros(numR-g,numC);
-
             A(:,:) = I(1+g:size(I,1),:);
             B(:,:) = I(1:size(I,1)-g,:);
-            
-            xcorrMat(z,k) = getPixIntensityDeviation(A,B);           
+            xcorrMat(i,k) = getPixIntensityDeviation(A,B);           
         end
     end 
 elseif(strcmp(distanceMeasure,'MSE'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i = i+1;
         I = inputImageStack(:,:,z);
         [numR,numC] = size(I);
         k = 0;
@@ -97,7 +101,7 @@ elseif(strcmp(distanceMeasure,'MSE'))
             A(:,:) = I(1+g:size(I,1),:);
             B(:,:) = I(1:size(I,1)-g,:);
             [~,MSE_intensity,~,~] = measerr(A,B);
-            xcorrMat(z,k) = MSE_intensity;            
+            xcorrMat(i,k) = MSE_intensity;            
         end
     end 
 else

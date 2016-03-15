@@ -26,54 +26,6 @@ estimatedResolution = zeros(maxNumImages,maxShift+1);
 thicknessSD = zeros(maxNumImages,maxShift+1);
 k = 0;
 
-% if(strcmp(distanceMeasure,'COC'))
-%     for i=1:(interleave+1):sizeR-(1+interleave)
-%         A(:,:) = inputImageStack(i,:,:);
-%         B(:,:) = inputImageStack((i+1+interleave),:,:);
-%         coc = corr2(A,B);
-%         k = k + 1;
-%         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-%         estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-%         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
-%                 predThicknessUnscaled,method) .* inputResolution;
-% 
-%         if(saveSyntheticStack)
-%             syntheticStack(:,:,k) = A(:,:);
-%         end     
-%     end
-% elseif(strcmp(distanceMeasure,'SDI'))
-%     for i=1:(interleave+1):sizeR-(1+interleave)
-%         A(:,:) = inputImageStack(i,:,:);
-%         B(:,:) = inputImageStack((i+1+interleave),:,:);
-%         coc = getPixIntensityDeviation(A,B);
-%         k = k + 1;
-%         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-%         estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-%         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
-%                 predThicknessUnscaled,method) .* inputResolution;
-% 
-%         if(saveSyntheticStack)
-%             syntheticStack(:,:,k) = A(:,:);
-%         end     
-%     end    
-%     
-% elseif(strcmp(distanceMeasure,'MSE'))
-%     for i=1:(interleave+1):sizeR-(1+interleave)
-%         A(:,:) = inputImageStack(i,:,:);
-%         B(:,:) = inputImageStack((i+1+interleave),:,:);
-%         coc = getPixIntensityMSE(A,B);
-%         k = k + 1;
-%         predThicknessUnscaled = interp1(meanVector,(distMin:distMax-1),coc,method);
-%         estimatedResolution(k) = predThicknessUnscaled .* inputResolution;
-%         thicknessSD(k) = interp1((distMin:distMax-1),sdVector,...
-%                 predThicknessUnscaled,method) .* inputResolution;
-% 
-%         if(saveSyntheticStack)
-%             syntheticStack(:,:,k) = A(:,:);
-%         end     
-%     end     
-% end
-
 if(strcmp(distanceMeasure,'maxNCC'))
     for z=(startImageInd+1):(startImageInd + maxNumImages)
         I = inputImageStack(:,:,z);

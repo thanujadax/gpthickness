@@ -103,9 +103,9 @@ elseif(strcmp(dataSource,'FIBSEM'))
         { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
 
     hypsdi.mean = [1.607e-8,1];
-    hypcocm_cons1 = 4319; % ssTEM
-    hypcocm_cons2 = -4319; % ssTEM
-    hypcocm_lin = 1; % ssTEM
+    hypcocm_cons1 = 4319; % ssTEM ?
+    hypcocm_cons2 = -4319; % ssTEM ?
+    hypcocm_lin = 1; % ssTEM ?
 else
     error('Unknown datasource!')
 end
@@ -125,10 +125,12 @@ hyperparams('COC') = hypcoc;
 %muPow = 5.321;          sPow = ( (5.375 - 5.266)/2 )^2;                  % 95% = (5.266, 5.375)
 %prior.mean = {{@priorGauss,muConst,sConst}; {@priorGauss,muPow,sPow}};
 %inf = {@infPrior,@infExact,prior};
+clear infDict
 infDict = containers.Map;
 infDict('SDI') = @infExact;
 infDict('COC') = @infExact;
 
+clear axisVect
 axisVect = containers.Map;
 axisVect('SDI') = [0,inf,0,40];
 axisVect('COC') = [0,1,0,40];

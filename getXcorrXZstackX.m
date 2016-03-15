@@ -1,5 +1,5 @@
 function cocMat = getXcorrXZstackX(inputImageStackFileName,maxShift,...
-    minShift,maxNumImages,distanceMeasure,gaussianSigma,gaussianMaskSize)
+    minShift,startInd,endInd,distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate the correlation of XZ face along the X axis.
 
 % Inputs:
@@ -35,17 +35,19 @@ numImages = numY;
 % TODO: current we take the first n images for the estimation. Perhaps we
 % can think of geting a random n images.
 fprintf('Estimating similarity curve using %s of shifted XY sections ...',distanceMeasure);
-if(maxNumImages>numImages)
-    maxNumImages = numImages;
+if(endInd>numImages)
+    endInd = numImages;
     str1 = sprintf('maxNumImages > numImages. using numImages = %d instead',numImages);
     disp(str1)
 end
 numShifts = maxShift - minShift + 1;
-cocMat = zeros(maxNumImages,numShifts);
+numDataPoints = numel(startInd:endInd);
+cocMat = zeros(numDataPoints,numShifts);
 I = zeros(numR,numC);
-
+i = 0;
 if(strcmp(distanceMeasure,'maxNCC'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i=i+1;
         I(:,:) = inputImageStack(z,:,:);
         % [numR,numC] = size(I);
         k=0;
@@ -58,13 +60,14 @@ if(strcmp(distanceMeasure,'maxNCC'))
             k=k+1;
 
             xcorrImage = normxcorr2(A,B);
-            cocMat(z,k) = max(abs(xcorrImage(:)));
+            cocMat(i,k) = max(abs(xcorrImage(:)));
 
         end
     end
     
 elseif(strcmp(distanceMeasure,'COC'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i=i+1;
         I(:,:) = inputImageStack(z,:,:);
         % [numR,numC] = size(I);
         k=0;
@@ -76,12 +79,13 @@ elseif(strcmp(distanceMeasure,'COC'))
             B(:,:) = I(1:size(I,1)-g,:);
             k=k+1;
 
-            cocMat(z,k) = corr2(A,B);
+            cocMat(i,k) = corr2(A,B);
 
         end
     end
 elseif(strcmp(distanceMeasure,'SDI'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i=i+1;
         I(:,:) = inputImageStack(z,:,:);
         % [numR,numC] = size(I);
         k=0;
@@ -93,12 +97,13 @@ elseif(strcmp(distanceMeasure,'SDI'))
             B(:,:) = I(1:size(I,1)-g,:);
             k=k+1;
             
-            cocMat(z,k) = getPixIntensityDeviation(A,B);
+            cocMat(i,k) = getPixIntensityDeviation(A,B);
 
         end
     end
 elseif(strcmp(distanceMeasure,'MSE'))
-    for z=1:maxNumImages
+    for z=startInd:endInd
+        i=i+1;
         I(:,:) = inputImageStack(z,:,:);
         % [numR,numC] = size(I);
         k=0;
@@ -110,7 +115,7 @@ elseif(strcmp(distanceMeasure,'MSE'))
             B(:,:) = I(1:size(I,1)-g,:);
             k=k+1;
             [~,MSE_intensity,~,~] = measerr(A,B);
-            cocMat(z,k) = MSE_intensity;
+            cocMat(i,k) = MSE_intensity;
 
         end
     end

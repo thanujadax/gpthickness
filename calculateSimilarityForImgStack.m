@@ -1,10 +1,15 @@
 function sV = calculateSimilarityForImgStack(imageStackFileName,distanceMeasure,...
     startInd,endInd,gaussianSigma,gaussianMaskSize)
 
+% imageStackFileName can also be the imageMatrix itself :-)
+
 % calculate pairwise image similarity for each adjacent image pair
 
-inputImageStack = readTiffStackToArray(imageStackFileName);
-
+if(isa(imageStackFileName,'char'))
+    inputImageStack = readTiffStackToArray(imageStackFileName);
+else
+    inputImageStack = imageStackFileName;
+end
 % gaussain blur
 if(isempty(gaussianSigma))
     gaussianSigma = 0;
