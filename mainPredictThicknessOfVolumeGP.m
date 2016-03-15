@@ -1,7 +1,8 @@
 function [predictedThickness_u, predictionSD_u] = ...
     mainPredictThicknessOfVolumeGP...
     (inputImageStackFileName,outputSavePath,gpModelPath,...
-    params, startInd,numImagesToEstimate,distanceMeasure)
+    params, startInd,numImagesToEstimate,distanceMeasure,...
+    gaussianSigma,gaussianMaskSize)
 
 %inputImageStackFileName = '/home/thanuja/projects/data/ssSEM_dataset/cubes/30/s108/s108.tif';
 %outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/ssSEM/maxNCC/30m/20150812/s108';
@@ -92,7 +93,7 @@ predictionFigureFileStr = 'Prediction';
 gpModelPath = fullfile(gpModelPath,'gpModel.mat');
 gpModel = importdata(gpModelPath);
 similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
-    distanceMeasure,startInd,endInd);
+    distanceMeasure,startInd,endInd,gaussianSigma,gaussianMaskSize);
 [predictedThickness_u, predictionSD_u] = estimateThicknessGP(...
         similarityValues,gpModel,outputSavePath,subTitle);
     
@@ -100,6 +101,8 @@ similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
     predictionSD = predictionSD_u .* inputResolution;
 
 %% Plots
+% predictedThickness(end) = [];
+% predictionSD(end) = [];
 if(params.plotOutput)
 % plot predicted thickness
 figure;plot(predictedThickness);
@@ -163,9 +166,9 @@ sdOfMeanThickness = std(predictedThickness);
 % write to file
 statFileName = fullfile(outputSavePath,'stats.txt');
 fID = fopen(statFileName,'w');
-fprintf('meanThickness = %6.4f',meanThickness);
-fprintf('meanOfSD = %6.4f',meanOfSD);
-fprintf('SDofMeanThickness = %6.4f',sdOfMeanThickness);
+fprintf(fID,'meanThickness = %6.4f\n',meanThickness);
+fprintf(fID,'meanOfSD = %6.4f\n',meanOfSD);
+fprintf(fID,'SDofMeanThickness = %6.4f\n',sdOfMeanThickness);
 fclose(fID);
 
 

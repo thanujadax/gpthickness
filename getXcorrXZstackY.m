@@ -1,5 +1,5 @@
 function xcorrMat = getXcorrXZstackY(inputImageStackFileName,maxShift,...
-    minShift,maxNumImages,distanceMeasure)
+    minShift,maxNumImages,distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate the correlation of the xz plane. along Y axis
 % Inputs:
 % imageStack - image stack (tif) for which the thickness has to be
@@ -7,6 +7,14 @@ function xcorrMat = getXcorrXZstackY(inputImageStackFileName,maxShift,...
 
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
 % inputImageStack is a 3D array where the 3rd dimension is along the z axis
+
+% gaussain blur
+if(isempty(gaussianSigma))
+    gaussianSigma = 0;
+end
+if(gaussianSigma>0)
+    inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
+end
 
 % estimate the correlation curve (mean and sd) from different sets of
 % images within the max window given by maxShift

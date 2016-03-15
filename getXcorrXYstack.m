@@ -1,5 +1,5 @@
 function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,maxNumImages,...
-                        distanceMeasure)
+                        distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate the correlation of XY face along the Y axis . i.e. parallel to the
 % cutting plane where we have maximum resolution (5nmx5nm for FIBSEM)
 
@@ -8,8 +8,16 @@ function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,ma
 % estimated. This has to be registered along the z axis already.
 
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
+inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
 % inputImageStack is a 3D array where the 3rd dimension is along the z axis
 
+% gaussain blur
+if(isempty(gaussianSigma))
+    gaussianSigma = 0;
+end
+if(gaussianSigma>0)
+    inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
+end
 % estimate the correlation curve (mean and sd) from different sets of
 % images within the max window given by maxShift
 

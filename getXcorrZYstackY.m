@@ -1,5 +1,5 @@
 function xcorrMat = getXcorrZYstackY(inputImageStackFileName,maxShift,...
-    minShift,maxNumImages,distanceMeasure)
+    minShift,maxNumImages,distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate c.o.c curve on the ZY plane, shifting the (same) image along
 % the Y axis. Multiple images are used to get an average estimate of the
 % decay of c.o.c.
@@ -10,6 +10,14 @@ function xcorrMat = getXcorrZYstackY(inputImageStackFileName,maxShift,...
 
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
 % inputImageStack is a 3D array where the 3rd dimension is along the z axis
+
+% gaussain blur
+if(isempty(gaussianSigma))
+    gaussianSigma = 0;
+end
+if(gaussianSigma>0)
+    inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
+end
 
 % estimate the correlation curve (mean and sd) from different sets of
 % images within the max window given by maxShift

@@ -1,5 +1,5 @@
 function cocMat = getXcorrXZstackX(inputImageStackFileName,maxShift,...
-    minShift,maxNumImages,distanceMeasure)
+    minShift,maxNumImages,distanceMeasure,gaussianSigma,gaussianMaskSize)
 % calculate the correlation of XZ face along the X axis.
 
 % Inputs:
@@ -13,6 +13,14 @@ function cocMat = getXcorrXZstackX(inputImageStackFileName,maxShift,...
 
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
 % inputImageStack is a 3D array where the 3rd dimension is along the z axis
+
+% gaussain blur
+if(isempty(gaussianSigma))
+    gaussianSigma = 0;
+end
+if(gaussianSigma>0)
+    inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
+end
 
 % estimate the correlation curve (mean and sd) from different sets of
 % images within the max window given by maxShift

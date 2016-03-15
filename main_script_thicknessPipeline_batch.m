@@ -1,11 +1,17 @@
 %% Input and output paths
+gaussianSigma = 0; % to preprocess input image. for FIBSEM set to 0.5
+gaussianMaskSize = 5;
+
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
-imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap02_xShiftedStack_sliceID101.tif';
+% imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
+% imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap15_slice101';
+imageStackDirectory = '/home/thanuja/projects/data/rita/gauss/D4_aaa_hist/sig0.5';
 % results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160311_gauss';
-resultsSubDir = 's502_sig-zero_xShifted_gap2_slice101';
-dataSource = 'FIBSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
+% resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap15_slice101';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/ssTEM_folds_guass';
+resultsSubDir = 'D4_hist_aaa';
+dataSource = 'ssTEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
 % distanceMeasuresList = {'COC','SDI','MSE'};
@@ -18,7 +24,7 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 15; % number of sections to initiate calibration.
+params.maxNumImages = 3; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -128,6 +134,8 @@ axisVect('SDI') = [0,inf,0,40];
 axisVect('COC') = [0,1,0,40];
 
 %% Create required sub directories
+gausStr = strcat('_sig_%s',char(gaussianSigma));
+resutsSubDir = strcat(resultsSubDir,gausStr);
 checkAndCreateSubDir(resultsRoot,resultsSubDir);
 resultsRoot = fullfile(resultsRoot,resultsSubDir);
 
@@ -145,7 +153,8 @@ gpModelSavePath = fullfile(resultsRoot,'gpModels');
 % 
 runAllCalibrationMethodsOnAllVolumes...
     (imageStackDirectory,matFilePath,params,...
-    stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr);
+    stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr,...
+    gaussianSigma,gaussianMaskSize);
 
 %% create gp models for each volume, each dist measure , for x and y
 % separately
@@ -219,10 +228,13 @@ for i=1:length(distanceMeasuresList)
             saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
             checkAndCreateSubDir(saveOutputDistVolDir,num2str(cID));
             saveOutputDistVolcIDDir = fullfile(saveOutputDistVolDir,num2str(cID));
-            mainPredictThicknessOfVolumeGP(imageFileName,saveOutputDistVolcIDDir,...
+            [predictedThickness_u, predictionSD_u] = ...
+                mainPredictThicknessOfVolumeGP(imageFileName,saveOutputDistVolcIDDir,...
                 saveGPModelDistVolcIDDir,params,startInd,...
-                numImagesToEstimate,char(distanceMeasuresList(i)));
-            
+                numImagesToEstimate,char(distanceMeasuresList(i)),...
+                gaussianSigma,gaussianMaskSize);
+                       
         end
     end
 end
+            

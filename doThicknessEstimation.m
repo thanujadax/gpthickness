@@ -1,6 +1,6 @@
 function thicknessEstimates = doThicknessEstimation(...
     calibrationMethods,inputImageStackFileName,outputSavePath,params,...
-    distanceMeasure,distFileStr)
+    distanceMeasure,distFileStr,gaussianSigma,gaussianMaskSize)
 
 % Performs section thickness estimation using representative
 % curves to determine the distance between two (adjacent) sections
@@ -63,7 +63,8 @@ if(sum(calibrationMethods == 3)>0)
     calibrationString = sprintf('%s ZY along X',distanceMeasure);
     calibrationFigureFileString = sprintf('03_%s_ZY_X',distanceMeasure);
     xcorrMat = getXcorrZYstack(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('done!')
     % each column of xcorrMat corresponds to a sequence of shifted frames of
     % the zy plane along the x axis.
@@ -77,7 +78,8 @@ if(sum(calibrationMethods == 2)>0)
     calibrationString = sprintf('%s XY along Y',distanceMeasure);
     calibrationFigureFileString = sprintf('02_%s_XY_Y',distanceMeasure);
     xcorrMat = getXcorrXYstack(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('done!')    
     saveXcorrMat(nameOfStack,2,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
 end        
@@ -85,7 +87,8 @@ if(sum(calibrationMethods == 4)>0)
     calibrationString = sprintf('%s ZY along Y',distanceMeasure);
     fprintf('Calculating %s decay curve using ZY stack, along Y ...',distanceMeasure);
     xcorrMat = getXcorrZYstackY(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done')
     calibrationFigureFileString = sprintf('04_%s_ZY_Y',distanceMeasure);
     saveXcorrMat(nameOfStack,4,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -94,7 +97,8 @@ if(sum(calibrationMethods == 1)>0)
     calibrationString = sprintf('%s XY along X',distanceMeasure);
     fprintf('Calculating %s decay curve using XY images stack, along X ...',distanceMeasure);
     xcorrMat = getXcorrXYstackX(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')    
     calibrationFigureFileString = sprintf('01_%s_XY_X',distanceMeasure);
     saveXcorrMat(nameOfStack,1,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -103,7 +107,8 @@ if(sum(calibrationMethods == 5)>0)
     calibrationString = sprintf('%s XZ along X',distanceMeasure);
     fprintf('Calculating %s decay curve using XZ images stack, along X ...',distanceMeasure);
     xcorrMat = getXcorrXZstackX(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')    
     calibrationFigureFileString = sprintf('05_%s_XZ_X',distanceMeasure);
     saveXcorrMat(nameOfStack,5,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -112,7 +117,8 @@ if(sum(calibrationMethods == 6)>0)
     calibrationString = sprintf('%s XZ along Y',distanceMeasure);
     fprintf('Calculating %s decay curve using XZ images stack, along Y ...',distanceMeasure)
     xcorrMat = getXcorrXZstackY(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('06_%s_XZ_Y',distanceMeasure);
     saveXcorrMat(nameOfStack,6,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -121,7 +127,8 @@ if(sum(calibrationMethods == 7)>0)
     calibrationString = sprintf('%s XY along Z',distanceMeasure);
     fprintf('Calculating %s decay curve using XY images stack, along Z ...',distanceMeasure);
     xcorrMat = getXcorrXYstackZ(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('07_%s_XY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,7,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -130,7 +137,8 @@ if(sum(calibrationMethods == 8)>0)
     calibrationString = sprintf('%s ZY along Z',distanceMeasure);
     fprintf('Calculating %s decay curve using ZY images stack, along Z ...',distanceMeasure)
     xcorrMat = getXcorrZYstackZ(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('08_%s_ZY_Z',distanceMeasure);
     saveXcorrMat(nameOfStack,8,outputSavePath,xcorrMat,distanceMeasure,distFileStr);
@@ -139,7 +147,8 @@ if(sum(calibrationMethods == 9)>0)
     calibrationString = sprintf('%s XZ along Z',distanceMeasure);
     fprintf('Calculating %s decay curve using XZ images stack, along Z ...',distanceMeasure);
     xcorrMat = getXcorrXZstackZ(inputImageStackFileName,params.maxShift,...
-        params.minShift,params.maxNumImages,distanceMeasure);
+        params.minShift,params.maxNumImages,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
     disp('curve estimation done!')
     calibrationFigureFileString = sprintf('09_%s_XZ_Z',distanceMeasure);    
     saveXcorrMat(nameOfStack,9,outputSavePath,xcorrMat,distanceMeasure,distFileStr);

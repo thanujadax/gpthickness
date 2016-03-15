@@ -1,6 +1,6 @@
 function script2_sporringMethod()
 
-inputStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap15_xShiftedStack_sliceID101.tif';
+inputStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap02_xShiftedStack_sliceID101.tif';
 
 imageArray = readTiffStackToArray(inputStackFileName);
 
@@ -26,4 +26,4 @@ end
 plot(g(1:maxData));
 
 meanG = mean(g(1:maxData)) * 5
-sdG = std(g(1:maxData)) * 5
+sdG = std(g(1:maxDaxta)) * 5

@@ -1,9 +1,18 @@
 function sV = calculateSimilarityForImgStack(imageStackFileName,distanceMeasure,...
-    startInd,endInd)
+    startInd,endInd,gaussianSigma,gaussianMaskSize)
 
 % calculate pairwise image similarity for each adjacent image pair
 
 inputImageStack = readTiffStackToArray(imageStackFileName);
+
+% gaussain blur
+if(isempty(gaussianSigma))
+    gaussianSigma = 0;
+end
+if(gaussianSigma>0)
+    inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
+end
+
 numImg = size(inputImageStack,3);
 numSectionIntervals = numImg - 1;
 
