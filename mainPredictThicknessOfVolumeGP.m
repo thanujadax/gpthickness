@@ -101,8 +101,8 @@ similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
     predictionSD = predictionSD_u .* inputResolution;
 
 %% Plots
-% predictedThickness(end) = [];
-% predictionSD(end) = [];
+predictedThickness(end) = [];
+predictionSD(end) = [];
 if(params.plotOutput)
 % plot predicted thickness
 figure;plot(predictedThickness);

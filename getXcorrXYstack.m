@@ -8,7 +8,6 @@ function xcorrMat = getXcorrXYstack(inputImageStackFileName,maxShift,minShift,ma
 % estimated. This has to be registered along the z axis already.
 
 inputImageStack = readTiffStackToArray(inputImageStackFileName);
-inputImageStack = gaussianFilter(inputImageStack,gaussianSigma,gaussianMaskSize);
 % inputImageStack is a 3D array where the 3rd dimension is along the z axis
 
 % gaussain blur
