@@ -16,20 +16,28 @@ function stats = calculateCompression()
 %% file names
 % y shifted images
 % inputImageStackDirName = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
-usingXshifted = 1;
-inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
-outputSavePath = '/home/thanuja/projects/RESULTS/compression'; % this has to exist already
-outputSubDir = 's502_20160310_withOldGP_xshifted'; % this will be created if it doesn't exist already
+usingXshifted = 0;
+% inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
+% inputImageStackDirName = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/yShifted';
+inputImageStackDirName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/xyShifted/yShifted';
+outputSavePath = '/home/thanuja/projects/RESULTS/compression/20160317'; % this has to exist already
+outputSubDir = 'sstem_drosophila_004'; % this will be created if it doesn't exist already
+
 % gpModel learned for X axis
-% gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/x/gpModel.mat';
 % gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/1';
 % gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/2';
 
-gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1';
-gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2';
+% gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1';
+% gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2';
+
+gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/x';
+gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/y';
 %% Params
 distanceMeasure = 'SDI';
 gap = 2;
+gaussianSigma = 0;
+gaussianMaskSize = 5;
+
 yCompRelX = 1; % calculate relative compression of Y axis wrt X. 0 for opposite.
 dataPointsToUse = 100;
 % startImgInd = 100;
@@ -46,9 +54,9 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 % running doThicknessEstimation in runAllCalibrationMethodsOnAllVolumes. 
 
 params.xyResolution = 5; % nm
-params.maxShift = 30;
+params.maxShift = 20;
 params.minShift = 0;
-params.maxNumImages = 100; % number of sections to initiate calibration.
+params.maxNumImages = 10; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -85,7 +93,8 @@ for i=1:numStacks
     [thicknessVect_X, thicknessSdVect_X] = ...
         mainPredictThicknessOfVolumeGP...
         (inputImageStackFileName,outputSavePath,gpModelXPath,...
-        params, startIndV,numImagesToEstimate,interpolationMethod,distanceMeasure);
+        params, startIndV,numImagesToEstimate,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
 
     thicknessVect_X(end) = [];
     thicknessSdVect_X(end) = [];
@@ -97,7 +106,7 @@ for i=1:numStacks
     sdCompression_x = std(1./(thicknessVect_X));    
     
     compVectAll = [compVectAll; compression_x];
-    compressionProfiles_yx = [compressionProfiles_yx compressionVect_x];
+    compressionProfiles_yx = [compressionProfiles_yx; compressionVect_x];
     thickVectSdAll = [thickVectSdAll; sdThickness_x];
     compVectSdAll = [compVectSdAll; sdCompression_x];
     
@@ -105,7 +114,8 @@ for i=1:numStacks
     [thicknessVect_Y, thicknessSdVect_Y] = ...
         mainPredictThicknessOfVolumeGP...
         (inputImageStackFileName,outputSavePath,gpModelYPath,...
-        params, startIndV,numImagesToEstimate,interpolationMethod,distanceMeasure);
+        params, startIndV,numImagesToEstimate,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
 
     thicknessVect_Y(end) = [];
     thicknessSdVect_Y(end) = [];
@@ -117,7 +127,7 @@ for i=1:numStacks
     sdCompression_y = std(1./(thicknessVect_Y));    
 
     compVectYY = [compVectYY; compression_y];
-    compressionProfiles_yy = [compressionProfiles_yy compressionVect_y];
+    compressionProfiles_yy = [compressionProfiles_yy; compressionVect_y];
     thickVectSdYY = [thickVectSdYY; sdThickness_y];
     compVectSdYY = [compVectSdYY; sdCompression_y];    
 

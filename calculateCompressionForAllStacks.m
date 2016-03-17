@@ -10,15 +10,43 @@ thickVectSdAll = [];
 compVectSdAll = [];
 %% file names
 % y shifted images
-% inputImageStackDirName = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
-inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
+inputImageStackDirName = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/yShifted';
+% inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/yShifted500_2_new';
 % outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShiftedStats';
-outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151102_s502_500';
+% outputSavePath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151102_s502_500';
+outputSavePath = '/home/thanuja/projects/RESULTS/compression/20160317_sstem/002';
 % gpModel learned for X axis
-% gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/gpModels/x/gpModel.mat';
-gpModelXPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
-gpModelYPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2/gpModel.mat';
+gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/x';
+% gpModelXPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1/gpModel.mat';
+% gpModelYPath = '/home/thanuja/projects/tests/thickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2/gpModel.mat';
+
+%% params
 gap = 2;
+gaussianSigma = 0;
+gaussianMaskSize = 5;
+distanceMeasure = 'SDI';
+params.predict = 0; % set to 0 if only the interpolation curve is required while
+% running doThicknessEstimation in runAllCalibrationMethodsOnAllVolumes. 
+
+params.xyResolution = 5; % nm
+params.maxShift = 20;
+params.minShift = 0;
+params.maxNumImages = 10; % number of sections to initiate calibration.
+                % the calibration curve is the mean value obtained by all
+                % these initiations
+params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
+params.plotOutput = 0;
+params.suppressPlots = 1;
+params.usePrecomputedCurve = 0;
+params.pathToPrecomputedCurve = '';
+params.imgStackFileExt = 'tif';
+
+% GP estimation
+startIndV = 1;  % thickness prediction starts with this image index.
+% this refers to the index of the virtual stacks made out of each image.
+
+
+numImagesToEstimate = 50; % how many images in the virtual stack to be estimated
 %% thickness estimation GP
 % returned values are unscaled thickness: predictedThickness_u, predictionSD_u
 inputImageStackDirContents = dir(fullfile(inputImageStackDirName,'*.tif'));
@@ -30,7 +58,11 @@ for i=1:numStacks
     disp(str1)
     [thicknessVect, thicknessSdVect] = ...
         mainPredictThicknessOfVolumeGP...
-        (inputImageStackFileName,outputSavePath,gpModelXPath);
+        (inputImageStackFileName,outputSavePath,gpModelXPath,...
+        params, startIndV,numImagesToEstimate,distanceMeasure,...
+        gaussianSigma,gaussianMaskSize);
+        % (inputImageStackFileName,outputSavePath,gpModelXPath);
+    
 
     thicknessVect(end) = [];
     thicknessSdVect(end) = [];
@@ -62,9 +94,9 @@ meanFileName = fullfile(outputSavePath,'compressionMeans.txt');
 compSdFileName = fullfile(outputSavePath,'compressionSds.txt');
 thicknessSdFileName = fullfile(outputSavePath,'compressionSds.txt');
 
-save compressionMeans.txt compVectAll -ASCII;
-save compressionSDs.txt thickVectSdAll -ASCII;
+% save compressionMeans.txt compVectAll -ASCII;
+% save compressionSDs.txt thickVectSdAll -ASCII;
 
 save(meanFileName,'compVectAll','-ASCII')
 save(compSdFileName,'compVectSdAll','-ASCII')
-save(thicknessSdFileName,'thicknessVectSdAll','-ASCII')
+save(thicknessSdFileName,'thickVectSdAll','-ASCII')

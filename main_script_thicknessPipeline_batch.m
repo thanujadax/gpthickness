@@ -5,12 +5,14 @@ gaussianMaskSize = 5;
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
-imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
+% imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
 % imageStackDirectory = '/home/thanuja/projects/data/rita/gauss/D4_aaa_hist/sig0.5';
+imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
 % results go here
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
+% resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/ssTEM_folds_guass';
-resultsSubDir = 'test3';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
+resultsSubDir = 'thickness';
 dataSource = 'FIBSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
@@ -24,9 +26,14 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 10; % number of sections to initiate calibration.
+% for training - generating distance-dissimilarity data points
+params.startInd = 1;
+params.endInd = 15;
+params.maxNumImages = numel(params.startInd:params.endInd); % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
+
+
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
 params.plotOutput = 1;
 params.suppressPlots = 1;
@@ -132,8 +139,8 @@ infDict('COC') = @infExact;
 
 clear axisVect
 axisVect = containers.Map;
-axisVect('SDI') = [0,inf,0,40];
-axisVect('COC') = [0,1,0,40];
+axisVect('SDI') = [0,inf,params.minShift,params.maxShift];
+axisVect('COC') = [0,1,params.minShift,params.maxShift];
 
 %% Create required sub directories
 gausStr = sprintf('_sig_%s',num2str(gaussianSigma));

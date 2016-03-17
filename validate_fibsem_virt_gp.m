@@ -5,6 +5,8 @@ function validate_fibsem_virt_gp()
 % test images are used to create X shifted and Y shifted stacks
 % gpModels are generated for the training images
 
+% still buggy. use the older version (validate2_GP instead)
+
 %% Inputs
 
 usingXshiftedStack = 1;
@@ -20,7 +22,7 @@ inputImageName = 's502.tif';
 subTitle = '';
 
 resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160315/fibsemValidation';
-resultsSubDir = '002';
+resultsSubDir = '003';
 
 gaussianSigma = 0;
 gaussianMaskSize = 5;
@@ -33,10 +35,16 @@ trainStopInd = 20;
 testStartInd = 21;
 testStopInd = 30;
 
-minShift = 0;
-maxShift = 30;
+% when predicting thickness for virtual stacks
+vStartInd = 1;
+vEndInd = 30;
 
-gap = 1; % translates to the distance between 2 adjacent images in the virtual stack
+minShift = 0;
+maxShift = 40;
+
+% change maxShift accordingly
+gap = 2; % translates to the distance between 2 adjacent images in the virtual stack
+
 dataSource = 'FIBSEM';
 %% Params
 % distanceMeasuresList = {'COC','SDI','MSE'};
@@ -127,8 +135,8 @@ infDict('COC') = @infExact;
 
 clear axisVect
 axisVect = containers.Map;
-axisVect('SDI') = [0,inf,0,40];
-axisVect('COC') = [0,1,0,40];
+axisVect('SDI') = [0,inf,minShift,maxShift];
+axisVect('COC') = [0,1,minShift,maxShift];
 
 %% create sub-directories
 gausStr = sprintf('_gap_%s_sig_%s',num2str(gap),num2str(gaussianSigma));
@@ -201,7 +209,7 @@ for imageID = testStartInd:testStopInd
         virtualStack = createXshiftedStack(inputImageStack,imageID,...
             minShift,maxShift,gap,virtualStackePath,subTitle,saveVirtualStack);
         similarityValues = calculateSimilarityForImgStack(virtualStack,...
-            distanceMeasure,startInd,endInd,gaussianSigma,gaussianMaskSize);
+            distanceMeasure,vStartInd,vEndInd,gaussianSigma,gaussianMaskSize);
         if(usingGPmodelX)
         [predictedThickness, predThickSd] = estimateThicknessGP(...
                 similarityValues,gpModel_1,thicknessPredictionsSavePath,subTitle);
@@ -221,7 +229,7 @@ for imageID = testStartInd:testStopInd
         virtualStack = createYshiftedStack(inputImageStack,imageID,...
             minShift,maxShift,gap,virtualStackePath,subTitle,saveVirtualStack);
         similarityValues = calculateSimilarityForImgStack(virtualStack,...
-            distanceMeasure,startInd,endInd,gaussianSigma,gaussianMaskSize);
+            distanceMeasure,vStartInd,vEndInd,gaussianSigma,gaussianMaskSize);
         if(usingGPmodelX)
         [predictedThickness, predThickSd] = estimateThicknessGP(...
                 similarityValues,gpModel_1,thicknessPredictionsSavePath,subTitle);
