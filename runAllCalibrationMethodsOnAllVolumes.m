@@ -1,7 +1,7 @@
 function runAllCalibrationMethodsOnAllVolumes...
     (imageStackDirectory,outputSavePath,params,...
     stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr,...
-    gaussianSigma,gaussianMaskSize)
+    calibrationMethods,gaussianSigma,gaussianMaskSize)
 
 % run all calibration methods for one volume and save the calibration
 % curves and the predictions in the outputPath
@@ -66,7 +66,8 @@ if(stacksAreInSeparateSubDirs==1)
                 outputSavePath_i = fullfile(outputSaveDistMeasure,nameOfStack);
 
                 % writes output to output path as txt file. Col vector.
-                for calibrationMethod=1:9
+                for m=1:length(calibrationMethods)
+                    calibrationMethod = calibrationMethods(m);
                     str1 = sprintf...
                         ('Running calibration method %02d on image stack %s using distMeasure %s',calibrationMethod,sampleSubDirName,distanceMeasure);
                     disp(str1)
@@ -98,7 +99,8 @@ else
             inputImageStackFileName = fullfile(imageStackDirectory,inputFilesListing(i).name);
             outputSavePathStack = fullfile(outputSaveDistMeasure,sampleName);
             checkAndCreateSubDir(outputSaveDistMeasure,sampleName);
-            for calibrationMethod=1:9
+            for m=1:length(calibrationMethods)
+                calibrationMethod = calibrationMethods(m);
                 str1 = sprintf...
                     ('Running calibration method %02d on image stack %s using distMeasure %s',calibrationMethod,sampleName,distanceMeasure);
                 disp(str1)

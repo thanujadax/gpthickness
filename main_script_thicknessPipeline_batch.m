@@ -1,19 +1,20 @@
 %% Input and output paths
-gaussianSigma = 0; % to preprocess input image. for FIBSEM set to 0.5
+gaussianSigma = 1; % to preprocess input image. for FIBSEM set to 0.5
 gaussianMaskSize = 5;
 
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
-% imageStackDirectory = '/home/thanuja/projects/data/rita/gauss/D4_aaa_hist/sig0.5';
-imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
+imageStackDirectory = '/home/thanuja/projects/data/ssSEM_dataset/smallCubes/s108';
+% imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
+
 % results go here
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
-% resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/ssTEM_folds_guass';
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsSubDir = 'thickness';
-dataSource = 'FIBSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160420_ssSEM';
+% resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
+resultsSubDir = 's108_1';
+dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
 % distanceMeasuresList = {'COC','SDI','MSE'};
@@ -24,7 +25,7 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 % running doThicknessEstimation in runAllCalibrationMethodsOnAllVolumes. 
 
 params.xyResolution = 5; % nm
-params.maxShift = 40;
+params.maxShift = 30;
 params.minShift = 0;
 % for training - generating distance-dissimilarity data points
 params.startInd = 1;
@@ -60,7 +61,7 @@ covfuncDict = containers.Map;
 covfuncDict('SDI') = @covSEiso;
 covfuncDict('COC') = @covSEiso;
 
-hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+hypsdi.cov = log([3,1]);%log([1;0.1]);%log([1.9;25;10]);
 hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
 
 likfuncDict = containers.Map;
@@ -71,23 +72,24 @@ hypsdi.lik = log(0.1);
 hypcoc.lik = log(0.1);
 
 if(strcmp(dataSource,'ssTEM'))
-    
-    hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+    % hypsdi.cov = log([lengthParameter,SDofSignal])
+    hypsdi.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
     hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
     
     meanfuncDict = containers.Map;
     meanfuncDict('SDI') = {@meanProd, { {@meanConst}, {'meanPow', 5.356, {@meanLinear}} } };
     meanfuncDict('COC') = {@meanSum, { {@meanConst}, ...
-        { @meanProd, { {@meanConst}, {'meanPow', -0.005158, {@meanLinear}} } } } };
+        { @meanProd, { {@meanConst}, {'meanPow', 6.801, {@meanLinear}} } } } };
+    % meanPow, b?
 
     hypsdi.mean = [0,1];
-    hypcocm_cons1 = 4319;
-    hypcocm_cons2 = -4319;
+    hypcocm_cons1 = 2.193; % c
+    hypcocm_cons2 = 2.31e-10; % a
     hypcocm_lin = 1;
 elseif(strcmp(dataSource,'ssSEM'))
     % untuned for ssSEM. still the same as ssTEM
     
-    hypsdi.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+    hypsdi.cov = log([10,1]);%log([1;0.1]);%log([1.9;25;10]);
     hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);    
     
     meanfuncDict = containers.Map;
@@ -163,7 +165,7 @@ gpModelSavePath = fullfile(resultsRoot,'gpModels');
 runAllCalibrationMethodsOnAllVolumes...
     (imageStackDirectory,matFilePath,params,...
     stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr,...
-    gaussianSigma,gaussianMaskSize);
+    calibrationMethods,gaussianSigma,gaussianMaskSize);
 
 %% create gp models for each volume, each dist measure , for x and y
 % separately

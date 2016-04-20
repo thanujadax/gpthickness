@@ -23,6 +23,7 @@ totNumImages = size(similarityDataMat,1);
 if(totNumImages>numImgToUse)
     vSampled = randi(length(similarityDataMat),1,numImgToUse);
 else
+    numImgToUse = totNumImages;
     vSampled = 1:totNumImages;
 end
 % plot similarities to be used for GP

@@ -1,6 +1,7 @@
 function script2_sporringMethod()
 
-inputStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap02_xShiftedStack_sliceID101.tif';
+% inputStackFileName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/s502xShiftedGap02_xShiftedStack_sliceID101.tif';
+inputStackFileName = '/home/thanuja/projects/data/rita/cropped_hist_aaa/Ee1b/Ee1b.tif';
 
 imageArray = readTiffStackToArray(inputStackFileName);
 
@@ -8,7 +9,7 @@ imageArray = readTiffStackToArray(inputStackFileName);
 
 maxG = 25; % maximum sampling distance to evaluate
 
-maxData = 20;
+maxData = 2;
 
 endInd = 25;
 
@@ -26,4 +27,4 @@ end
 plot(g(1:maxData));
 
 meanG = mean(g(1:maxData)) * 5
-sdG = std(g(1:maxDaxta)) * 5
+sdG = std(g(1:maxData)) * 5
