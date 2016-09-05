@@ -28,11 +28,6 @@ outputSavePath = '/path/to/save/output';
 gpModelSavePath = '/path/to/save/gausian/process/models/learned';
 numImagesToEstimate = 10; % for each image stack
 
-## Coefficient of stretching (compression) estimation
-For a given tif stack, in order to estimate the coefficient of stretching (along Y rel to X)
-1. Create shifted versions of each image using script_createXYshiftedStacks.m and save these shifted versions in one directory (automatically done by the script) 
-3. Use calculateCompression.m with the above directory as the input. GPmodels created as saved for thickness estimates should also be given as an input.
-
 # Description
 The script
 1. Generates the distance-similarity matrices for individual images
@@ -54,5 +49,8 @@ set matFilePath, outputSavePath, fileStr, zDirection and calibrationMethods insi
 mainPredictThicknessOfVolumeGP(inputImageStackFileNAme,outputSavePath,gpModelPath)
 also have to specify calibration method [1,6] as described in the comments section
 
-
+## Coefficient of stretching (compression) estimation
+For a given tif stack, in order to estimate the coefficient of stretching (along Y rel to X)
+1. Create shifted versions of each image using script_createXYshiftedStacks.m and save these shifted versions in one directory (automatically done by the script) 
+2. Use calculateCompression.m with the above directory as the input. GPmodels created as saved for thickness estimates should also be given as an input.
 

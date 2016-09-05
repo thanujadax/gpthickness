@@ -1,6 +1,7 @@
 % thickness estimation batch srcript
 function main_estimateThicknessBatch()
-
+% depricated version ?
+% look at main_script_thicknessPipeline_batch.m
 %% Parameters
 calibrationMethod = 1;
 % % 1 - c.o.c across XY sections, along X

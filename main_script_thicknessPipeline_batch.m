@@ -6,14 +6,14 @@ gaussianMaskSize = 5;
 % stacks available in this path
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
-imageStackDirectory = '/home/thanuja/projects/data/ssSEM_dataset/smallCubes/s108';
+imageStackDirectory = '/home/thanuja/projects/data/ssSEM_dataset/20sections/s202_ESB/s202_aligned';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
 
 % results go here
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160420_ssSEM';
+resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160513_ssSEM_s202ESB';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsSubDir = 's108_1';
+resultsSubDir = '001';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
@@ -50,7 +50,7 @@ calibrationMethods = [1 2]; % we generate GPs for x and y directions only
 numImagesToUse = params.maxNumImages;
 % GP estimation
 startInd = 1;  % thickness prediction starts with this image index
-numImagesToEstimate = 500; % how many images in the stack to be estimated
+numImagesToEstimate = 15; % how many images in the stack to be estimated
 
 %% GP model specifications
 % Execute the startup
