@@ -17,7 +17,7 @@ xlabel('disimilarity'), ylabel('z section'), ...
 axis([0,55,0,size(mData,2)]);
 
 % Execute the startup
-run('gpml/startup.m');
+run('gpml/gpmlStartup.m');
 
 vY = repmat([0:1:size(mData,2)-1]',nNumImg,1);
 vX = reshape(mData(vSampled,:)',1,size(mData,2)*nNumImg)';

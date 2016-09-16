@@ -84,7 +84,7 @@ endInd = testStopInd;
 numImagesToEstimate = 500; % how many images in the stack to be estimated
 %% GP model
 % Execute the startup
-run('gpml/startup.m');
+run('gpml/gpmlStartup.m');
 
 % Specify covariance, mean and likelihood
 covfuncDict = containers.Map;

@@ -13,6 +13,14 @@ J = single(rgb2gray(J)); % in the documentation
 [F1 D1] = vl_sift(I);
 [F2 D2] = vl_sift(J);
 
+% [F D] = vl_sift(I);
+% I is a grayscale image of single precision. F is a set of key points of
+% I. Each column of F (one key point) has the form [X;Y;S;TH] where X,Y is
+% the fractional centre of the frame, S is the scale and TH is the
+% orientation in radians. Key points are also referred to as SIFT frames.
+% Each column of D is the descriptor of the corresponding key point of F.
+% Each descriptor vector (col) is a 128 dimentional vector of class UINT8.
+
 % Where 1.5 = ratio between euclidean distance of NN2/NN1
 [matches score] = vl_ubcmatch(D1,D2,1.5); 
 
