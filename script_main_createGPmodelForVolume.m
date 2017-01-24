@@ -12,8 +12,8 @@ function script_main_createGPmodelForVolume()
 % % 9 - c.o.c. across XZ sections, along Z
 % % 10 - SD of XY per pixel intensity difference
 
-matFilePath = '/home/thanuja/projects/data/rita/distMat_SDI';
-outputSavePath = '/home/thanuja/projects/data/rita/gpModels/x_sdi';
+matFilePath = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/20170104/distMat';
+outputSavePath = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/20170104/gpModels/x_sdi';
 fileStr = 'xcorrMat'; % general string that defines the .mat file
 zDirection = 0; %?
 calibrationMethods = [1];

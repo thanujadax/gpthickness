@@ -17,21 +17,21 @@ function stats = calculateCompression()
 % y shifted images
 % inputImageStackDirName = '/home/thanuja/projects/tests/thickness/similarityCurves/compression/20151030/sstem/yShifted';
 usingXshifted = 0;
-% inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
+inputImageStackDirName = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted500_2_new';
 % inputImageStackDirName = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/yShifted';
-inputImageStackDirName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/xyShifted/yShifted';
-outputSavePath = '/home/thanuja/projects/RESULTS/compression/20160317'; % this has to exist already
-outputSubDir = 'sstem_drosophila_004'; % this will be created if it doesn't exist already
+% inputImageStackDirName = '/home/thanuja/projects/data/drosophilaLarva_ssTEM/xyShifted/yShifted';
+outputSavePath = '/home/thanuja/projects/RESULTS/compression/20170106'; % this has to exist already
+outputSubDir = 'FIBs502'; % this will be created if it doesn't exist already
 
 % gpModel learned for X axis
-% gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/1';
-% gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/2';
+gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/1';
+gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/FIBSEM_20160301/s502/gpModels/SDI/s502/2';
 
 % gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c1';
 % gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/FIBSEM/20151013_allVols/SDI/s502/gpEstimates_02/c2';
 
-gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/x';
-gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/y';
+% gpModelXPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/x';
+% gpModelYPath = '/home/thanuja/projects/RESULTS/sectionThickness/similarityCurves/compression/20151030/sstem/gpModels/y';
 %% Params
 distanceMeasure = 'SDI';
 gap = 2;

@@ -21,7 +21,9 @@ params.predict = 0; % set to 0 if only the interpolation curve is required.
 params.xyResolution = 5; % nm
 params.maxShift = 40;
 params.minShift = 0;
-params.maxNumImages = 3; % number of sections to initiate calibration.
+params.startInd = 1;
+params.endInd = 6;
+params.maxNumImages = 6; % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
@@ -31,15 +33,19 @@ params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
 distanceMeasure = 'SDI';
+distFileStr = 'xcorrMat'; % general string that defines the .mat file
+gaussianSigma = 1; % to preprocess input image. for FIBSEM set to 0.5
+gaussianMaskSize = 5;
 
-inputImageStackFileName = '/home/thanuja/projects/data/rita/cropped_aligned/D4.tif';
-outputSavePath = '/home/thanuja/projects/data/rita/distMat';
+inputImageStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r1_c1_0_20_aligned.tif';
+outputSavePath = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/20170104/distMat';
 
 for calibrationMethod=1:9
 % calibrationMethod=10;
     str1 = sprintf('Running calibration method %02d',calibrationMethod);
     disp(str1)
     thicknessEstimates = doThicknessEstimation(...
-    calibrationMethod,inputImageStackFileName,outputSavePath,params,distanceMeasure);
+    calibrationMethod,inputImageStackFileName,outputSavePath,params,distanceMeasure,...
+    distFileStr,gaussianSigma,gaussianMaskSize);
     
 end

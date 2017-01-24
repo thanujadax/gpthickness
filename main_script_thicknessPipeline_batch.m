@@ -1,17 +1,17 @@
 %% Input and output paths
-gaussianSigma = 1; % to preprocess input image. for FIBSEM set to 0.5
+gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
 
 % input image stack directory. thickness prediction is done for all .tif
 % stacks available in this path
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
-imageStackDirectory = '/home/thanuja/projects/data/ssSEM_dataset/20sections/s202_ESB/s202_aligned';
+imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
 
 % results go here
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
-resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160513_ssSEM_s202ESB';
+resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
 resultsSubDir = '001';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
@@ -37,7 +37,7 @@ params.maxNumImages = numel(params.startInd:params.endInd); % number of sections
 
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
 params.plotOutput = 1;
-params.suppressPlots = 1;
+params.suppressPlots = 0;
 params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
@@ -50,11 +50,11 @@ calibrationMethods = [1 2]; % we generate GPs for x and y directions only
 numImagesToUse = params.maxNumImages;
 % GP estimation
 startInd = 1;  % thickness prediction starts with this image index
-numImagesToEstimate = 15; % how many images in the stack to be estimated
+numImagesToEstimate = 20; % how many images in the stack to be estimated
 
 %% GP model specifications
 % Execute the startup
-run('gpml/startup.m');
+run('gpml/gpmlStartup.m');
 
 % Specify covariance, mean and likelihood
 covfuncDict = containers.Map;
