@@ -4,6 +4,7 @@
 
 %% input file paths and parameters
 % to create shifted images
+usePrecomputedStacks = 1;
 usingXshifted = 0;
 gap = 2; 
 minShift = 0;
@@ -11,6 +12,7 @@ maxShift = 20;
 saveShiftedStack = 1;
 
 originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
+dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 rotations = 30; % rotation in degrees
 gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
@@ -27,8 +29,8 @@ params.predict = 0; % set to 0 if only the interpolation curve is required while
 % running doThicknessEstimation in runAllCalibrationMethodsOnAllVolumes. 
 
 params.xyResolution = 5; % nm
-params.maxShift = 30;
-params.minShift = 0;
+params.maxShift = 30; % for dist curve
+params.minShift = 0; % for dist curve
 % for training - generating distance-dissimilarity data points
 params.startInd = 1;
 params.endInd = 15;
@@ -50,7 +52,7 @@ calibrationMethods = [1 2]; % we generate GPs for x and y directions only
 numImagesToUse = params.maxNumImages;
 % GP estimation
 startInd = 1;  % thickness prediction starts with this image index
-numImagesToEstimate = 20; % how many images in the stack to be estimated
+endInd = maxShift; % how many images in the stack to be estimated
 
 %% Create required sub directories
 gausStr = sprintf('_sig_%s',num2str(gaussianSigma));
@@ -184,39 +186,44 @@ for r = 1:length(rotations)
     rotatedCroppedImgFileName = fullfile(rotatedImgesSavePath,rotatedCroppedImgFileName);
     writeImageMatrixToTiffStack(im_rot_cropped,rotatedCroppedImgFileName);
     %% create and save GP models for rotated stack
-for i=1:length(distanceMeasuresList)
-    hyp = hyperparams(char(distanceMeasuresList(i)));
-    covfunc = covfuncDict(char(distanceMeasuresList(i)));
-    meanfunc = meanfuncDict(char(distanceMeasuresList(i)));
-    likfunc = likfuncDict(char(distanceMeasuresList(i)));
-    inf = infDict(char(distanceMeasuresList(i)));
-    % for this dist measure, read all the sub-dirs (volumeIDs)
-    distMeasureDir = fullfile(matFilePath,char(distanceMeasuresList(i)));
-    checkAndCreateSubDir(gpModelSavePath,char(distanceMeasuresList(i)));
-    saveGPmodelDistDir = fullfile(gpModelSavePath,char(distanceMeasuresList(i)));
-    volumeDirs = dir(distMeasureDir);
-    isub = [volumeDirs(:).isdir];
-    volumeDirs = {volumeDirs(isub).name}';
-    volumeDirs(ismember(volumeDirs,{'.','..'})) = [];
-    for j=1:length(volumeDirs)
-        volMatDirFull = fullfile(distMeasureDir,char(volumeDirs(j)));
-        checkAndCreateSubDir(saveGPmodelDistDir,char(volumeDirs(j)));
-        saveGPModelDistVolDir = fullfile(saveGPmodelDistDir,char(volumeDirs(j)));
-        % read relevant mat files cID = calibration method
-        for k=1:length(calibrationMethods)
-            cID = calibrationMethods(k);
-            checkAndCreateSubDir(saveGPModelDistVolDir,num2str(cID));
-            saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
-            makeGPmodelFromSimilarityData...
-    (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,...
-    numImagesToUse,covfunc,likfunc,meanfunc,hyp,inf,axisVect(char(distanceMeasuresList(i))));        
+    % create distance matrices
+    runAllCalibrationMethodsOnAllVolumes...
+    (rotatedImgesSavePath,matFilePath,params,...
+    stacksAreInSeparateSubDirs,distanceMeasuresList,distFileStr,...
+    calibrationMethods,gaussianSigma,gaussianMaskSize);
+
+    for i=1:length(distanceMeasuresList)
+        hyp = hyperparams(char(distanceMeasuresList(i)));
+        covfunc = covfuncDict(char(distanceMeasuresList(i)));
+        meanfunc = meanfuncDict(char(distanceMeasuresList(i)));
+        likfunc = likfuncDict(char(distanceMeasuresList(i)));
+        infe = infDict(char(distanceMeasuresList(i)));
+        % for this dist measure, read all the sub-dirs (volumeIDs)
+        distMeasureDir = fullfile(matFilePath,char(distanceMeasuresList(i)));
+        checkAndCreateSubDir(gpModelSavePath,char(distanceMeasuresList(i)));
+        saveGPmodelDistDir = fullfile(gpModelSavePath,char(distanceMeasuresList(i)));
+        volumeDirs = dir(distMeasureDir);
+        isub = [volumeDirs(:).isdir];
+        volumeDirs = {volumeDirs(isub).name}';
+        volumeDirs(ismember(volumeDirs,{'.','..'})) = [];
+        for j=1:length(volumeDirs)
+            volMatDirFull = fullfile(distMeasureDir,char(volumeDirs(j)));
+            checkAndCreateSubDir(saveGPmodelDistDir,char(volumeDirs(j)));
+            saveGPModelDistVolDir = fullfile(saveGPmodelDistDir,char(volumeDirs(j)));
+            % read relevant mat files cID = calibration method
+            for k=1:length(calibrationMethods)
+                cID = calibrationMethods(k);
+                checkAndCreateSubDir(saveGPModelDistVolDir,num2str(cID));
+                saveGPModelDistVolcIDDir = fullfile(saveGPModelDistVolDir,num2str(cID));
+                makeGPmodelFromSimilarityData...
+        (volMatDirFull,saveGPModelDistVolcIDDir,distFileStr,zDirection,cID,...
+        numImagesToUse,covfunc,likfunc,meanfunc,hyp,infe,axisVect(char(distanceMeasuresList(i))));        
+            end
         end
-    end
-end    
+    end    
     
     %% create inputs stacks of shifted images
-    if(~usePrecomputedStacks)
-        
+    if(~usePrecomputedStacks)       
         checkAndCreateSubDir(rotatedImgesSavePath,'yShifted');
         yShiftedSavePath = fullfile(rotatedImgesSavePath,'yShifted');
         for imageID = 1:size(im_rot_cropped,3)
@@ -225,5 +232,11 @@ end
         end
     end
     %% run distance (thickness) estimator to predict \gamma_{yx}
-
+    % using all the shifted images
+    gpModelXPath = fullfile(saveGPModelDistVolDir,'1');
+    gpModelYPath = fullfile(saveGPModelDistVolDir,'2');
+    stats = calculateCompressionFn(...
+    rotatedImgesSavePath,outputSavePath,gpModelXPath,gpModelYPath,...
+    char(distanceMeasuresList(1)),gap,gaussianSigma,gaussianMaskSize,params,...
+    startInd,endInd,usingXshifted)
 end
