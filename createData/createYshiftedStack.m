@@ -32,7 +32,9 @@ if(saveStack)
     outputFileName = sprintf('%s%03d.tif',subTitle,imageID);
     outputFileName = fullfile(outputSavePath,outputFileName);
     syntheticStack = syntheticStack./255;
-
+    if exist(outputFileName, 'file')==2
+        delete(outputFileName);
+    end
     for K=1:size(syntheticStack,3)
         imwrite(syntheticStack(:, :, K), outputFileName, 'WriteMode', 'append',  'Compression','none');
     end
