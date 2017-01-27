@@ -4,7 +4,7 @@
 
 %% input file paths and parameters
 % to create shifted images
-usePrecomputedStacks = 1;
+usePrecomputedStacks = 0;
 usingXshifted = 0;
 gap = 2; 
 minShift = 0;
@@ -13,7 +13,7 @@ saveShiftedStack = 1;
 
 originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
-rotations = 30; % rotation in degrees
+rotations = 0; % rotation in degrees
 gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
 
@@ -33,7 +33,7 @@ params.maxShift = 30; % for dist curve
 params.minShift = 0; % for dist curve
 % for training - generating distance-dissimilarity data points
 params.startInd = 1;
-params.endInd = 15;
+params.endInd = 10;
 params.maxNumImages = numel(params.startInd:params.endInd); % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
@@ -60,7 +60,6 @@ resultsSubDir = strcat(resultsSubDir,gausStr);
 checkAndCreateSubDir(resultsRoot,resultsSubDir);
 resultsRoot = fullfile(resultsRoot,resultsSubDir);
 
-
 %% create and save gp models for new x and y axis
 % GP model specifications
 % Execute the startup
@@ -71,8 +70,8 @@ covfuncDict = containers.Map;
 covfuncDict('SDI') = @covSEiso;
 covfuncDict('COC') = @covSEiso;
 
-hypsdi.cov = log([3,1]);%log([1;0.1]);%log([1.9;25;10]);
-hypcoc.cov = log([1,1]);%log([1;0.1]);%log([1.9;25;10]);
+hypsdi.cov = log([3,1]); %log([1;0.1]);%log([1.9;25;10]);
+hypcoc.cov = log([1,1]); %log([1;0.1]);%log([1.9;25;10]);
 
 likfuncDict = containers.Map;
 likfuncDict('SDI') = @likGauss;
@@ -180,7 +179,7 @@ for r = 1:length(rotations)
     im_rotated = imrotate(im_original,theta,'bilinear','crop');
     %% extract cubic block with horizontal x axis (rotated axis)
     cropSize = min(size(imtest))/sqrt(2);
-    im_rot_cropped = cropImageFromCenter(im_rotated,cropSize,cropSize);
+    im_rot_cropped = cropImageFromCenter(im_rotated,cropSize,cropSize) .*255;
     % save rotated cropped image stack
     rotatedCroppedImgFileName = sprintf('%03d.tif',theta);
     rotatedCroppedImgFileName = fullfile(rotatedImgesSavePath,rotatedCroppedImgFileName);

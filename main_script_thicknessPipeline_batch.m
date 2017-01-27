@@ -13,7 +13,7 @@ imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
 resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsSubDir = '001';
+resultsSubDir = '002';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
