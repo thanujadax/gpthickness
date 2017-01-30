@@ -104,59 +104,59 @@ similarityValues = calculateSimilarityForImgStack(inputImageStackFileName,...
 % predictedThickness(end) = [];
 % predictionSD(end) = [];
 if(params.plotOutput)
-% plot predicted thickness
-figure;plot(predictedThickness);
-titleStr = sprintf('Estimated thickness %s)',...
-                    subTitle);
-set(gca,'FontSize',14)
-% title(titleStr)
-xlabel('Inter-section interval','FontSize',25);
-ylabel('Thickness (nm)','FontSize',25);
-% shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
-%     titleStr,xlabelStr,ylabelStr);
-% save plot
-predictionFileName = sprintf('%s_%s',predictionFigureFileStr,subTitle);
-predictionFileName = fullfile(outputSavePath,predictionFileName);
-print(predictionFileName,'-dpng');
+    % plot predicted thickness
+    figure;plot(predictedThickness);
+    titleStr = sprintf('Estimated thickness %s)',...
+                        subTitle);
+    set(gca,'FontSize',14)
+    % title(titleStr)
+    xlabel('Inter-section interval','FontSize',25);
+    ylabel('Thickness (nm)','FontSize',25);
+    % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,predThickSd,color,transparent,...
+    %     titleStr,xlabelStr,ylabelStr);
+    % save plot
+    predictionFileName = sprintf('%s_%s',predictionFigureFileStr,subTitle);
+    predictionFileName = fullfile(outputSavePath,predictionFileName);
+    print(predictionFileName,'-dpng');
 
-% plot predicted thickness with error bar
-lineProps = [];
-transparent = 1;
-titleStr = sprintf('Estimated thickness %s',...
-                    subTitle);
-xlabelStr = 'Inter-section interval';
-ylabelStr = 'Thickness (nm)';
-% 2 sigma
-sigmas = predictionSD*2;
-% Temporarily removing plot
-% shadedErrorBar((1:numel(predictedThickness)),predictedThickness,sigmas,color,transparent,...
-%     titleStr,xlabelStr,ylabelStr);
-% save plot
-predictionFileName = sprintf('%s_%s_wErrBar',predictionFigureFileStr,subTitle);
-predictionFileName = fullfile(outputSavePath,predictionFileName);
-print(predictionFileName,'-dpng');
+    % plot predicted thickness with error bar
+    lineProps = [];
+    transparent = 1;
+    titleStr = sprintf('Estimated thickness %s',...
+                        subTitle);
+    xlabelStr = 'Inter-section interval';
+    ylabelStr = 'Thickness (nm)';
+    % 2 sigma
+    sigmas = predictionSD*2;
+    % Temporarily removing plot
+    % shadedErrorBar((1:numel(predictedThickness)),predictedThickness,sigmas,color,transparent,...
+    %     titleStr,xlabelStr,ylabelStr);
+    % save plot
+    predictionFileName = sprintf('%s_%s_wErrBar',predictionFigureFileStr,subTitle);
+    predictionFileName = fullfile(outputSavePath,predictionFileName);
+    print(predictionFileName,'-dpng');
 
-% save thickness in txt file
-predictedThicknessCol = predictedThickness';
-predictionSDCol = predictionSD';
-save(strcat(predictionFileName,'.dat'),'predictedThicknessCol','-ASCII');
-save(strcat(predictionFileName,'_SD','.dat'),'predictionSDCol','-ASCII');
-% calculate the error, mean error and the variance
+    % save thickness in txt file
+    predictedThicknessCol = predictedThickness';
+    predictionSDCol = predictionSD';
+    save(strcat(predictionFileName,'.dat'),'predictedThicknessCol','-ASCII');
+    save(strcat(predictionFileName,'_SD','.dat'),'predictionSDCol','-ASCII');
+    % calculate the error, mean error and the variance
 
-% plot SD
-figure;
-plot(predictionSD);
-%axis ([1 ])
-titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
-                    subTitle);
-title(titleStr)
-set(gca,'FontSize',14)
-xlabel('Inter-section interval','FontSize',25);
-ylabel('Thickness SD (nm))','FontSize',25);
-% save
-predictionFileName = sprintf('SD_%s_%s',predictionFigureFileStr,subTitle);
-predictionFileName = fullfile(outputSavePath,predictionFileName);
-print(predictionFileName,'-dpng');
+    % plot SD
+    figure;
+    plot(predictionSD);
+    %axis ([1 ])
+    titleStr = sprintf('Predicted thickness SD %s (Gaussian Process Regression)',...
+                        subTitle);
+    title(titleStr)
+    set(gca,'FontSize',14)
+    xlabel('Inter-section interval','FontSize',25);
+    ylabel('Thickness SD (nm))','FontSize',25);
+    % save
+    predictionFileName = sprintf('SD_%s_%s',predictionFigureFileStr,subTitle);
+    predictionFileName = fullfile(outputSavePath,predictionFileName);
+    print(predictionFileName,'-dpng');
 end
 
 % stats

@@ -1,6 +1,6 @@
 % script calculate compression
 function stats = calculateCompressionFn(...
-    inputImageStackDirName,outputSavePath,gpModelXPath,gpModelYPath,...
+    inputImageStackDirName,outputSavePath,blockName,gpModelXPath,gpModelYPath,...
     distanceMeasure,gap,gaussianSigma,gaussianMaskSize,params,...
     startInd,endInd,usingXshifted)
 % create Y-shifted sub-stacks for the given stack. These are the inputs.
@@ -165,25 +165,37 @@ stats(2,1) = meanCompression_y;
 stats(2,2) = sdCompressionM_y;
 
 if(usingXshifted)
-    meanFileName_yx = fullfile(outputSavePath,'compressionMeans_xx.txt');
-    compSdFileName_yx = fullfile(outputSavePath,'compressionSds_xx.txt');
-    thicknessSdFileName_yx = fullfile(outputSavePath,'compressionSds_xx.txt');
+    meanFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionMeans_xx%s.txt',blockName));
+    compSdFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionSds_xx%s.txt',blockName));
+    thicknessSdFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionSds_xx%s.txt',blockName));
 
-    meanFileName_yy = fullfile(outputSavePath,'compressionMeans_xy.txt');
-    compSdFileName_yy = fullfile(outputSavePath,'compressionSds_xy.txt');
-    thicknessSdFileName_yy = fullfile(outputSavePath,'compressionSds_xy.txt');
+    meanFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionMeans_xy%s.txt',blockName));
+    compSdFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionSds_xy%s.txt',blockName));
+    thicknessSdFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionSds_xy%s.txt',blockName));
 
     % save compressionMeans.txt compVectAll -ASCII;
     % save compressionSDs.txt thickVectSdAll -ASCII;
     
 else
-    meanFileName_yx = fullfile(outputSavePath,'compressionMeans_yx.txt');
-    compSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
-    thicknessSdFileName_yx = fullfile(outputSavePath,'compressionSds_yx.txt');
+    meanFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionMeans_yx%s.txt',blockName));
+    compSdFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionSds_yx%s.txt',blockName));
+    thicknessSdFileName_yx = fullfile(outputSavePath,...
+        sprintf('compressionSds_yx%s.txt',blockName));
 
-    meanFileName_yy = fullfile(outputSavePath,'compressionMeans_yy.txt');
-    compSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
-    thicknessSdFileName_yy = fullfile(outputSavePath,'compressionSds_yy.txt');
+    meanFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionMeans_yy%s.txt',blockName));
+    compSdFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionSds_yy%s.txt',blockName));
+    thicknessSdFileName_yy = fullfile(outputSavePath,...
+        sprintf('compressionSds_yy%s.txt',blockName));
 
     % save compressionMeans.txt compVectAll -ASCII;
     % save compressionSDs.txt thickVectSdAll -ASCII;

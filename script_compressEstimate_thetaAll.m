@@ -13,7 +13,7 @@ saveShiftedStack = 1;
 
 originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
-rotations = 0; % rotation in degrees
+rotations = 0:10:60; % rotation in degrees [0 10 20 30 40]
 gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
 
@@ -37,11 +37,9 @@ params.endInd = 10;
 params.maxNumImages = numel(params.startInd:params.endInd); % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
-
-
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
-params.plotOutput = 1;
-params.suppressPlots = 0;
+params.plotOutput = 0;
+params.suppressPlots = 1;
 params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
@@ -235,7 +233,7 @@ for r = 1:length(rotations)
     gpModelXPath = fullfile(saveGPModelDistVolDir,'1');
     gpModelYPath = fullfile(saveGPModelDistVolDir,'2');
     stats = calculateCompressionFn(...
-    yShiftedSavePath,outputSavePath,gpModelXPath,gpModelYPath,...
+    yShiftedSavePath,outputSavePath,blockName,gpModelXPath,gpModelYPath,...
     char(distanceMeasuresList(1)),gap,gaussianSigma,gaussianMaskSize,params,...
     startInd,endInd,usingXshifted)
 end
