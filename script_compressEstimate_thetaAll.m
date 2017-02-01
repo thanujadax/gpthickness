@@ -1,3 +1,5 @@
+function script_compressEstimate_thetaAll(...
+    originalStackFileName,resultsRoot)
 % main script to create compression estimates \gamma_{yx} for different
 % rotated versions of the original image stack
 % rotations \theta = [0,10,90]
@@ -11,14 +13,15 @@ minShift = 0;
 maxShift = 20;
 saveShiftedStack = 1;
 
-originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
+% originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
+% originalStackFileName = '/home/thanuja/DATA/ssSEM/ziqiang2/Sample2404/block_3000x.tif';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
-rotations = 0:10:60; % rotation in degrees [0 10 20 30 40]
+rotations = 0:10:180; % rotation in degrees [0 10 20 30 40]
 gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
 
-resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2/orientationsTest';
-resultsSubDir = '001';
+% resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/2404';
+resultsSubDir = '3000x';
 
 distanceMeasuresList = {'SDI'};
 distFileStr = 'xcorrMat'; % general string that defines the .mat file
