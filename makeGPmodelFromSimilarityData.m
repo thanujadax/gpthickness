@@ -76,17 +76,19 @@ disp('[m s2] = gp(hyp, @infExact, meanfunc, covfunc, likfunc, x, y, z);')
 [m,s2,mu,sig] = gp(hyp, inf, meanfunc, covfunc, likfunc, vX, vY, vZ);
 
 % Plot the infered function and confidence intervals
-figure(2)
+figure;
 set(gca, 'FontSize', 24)
-f = [m+3*sqrt(s2); flipdim(m-3*sqrt(s2),1)];
+% f = [m+3*sqrt(s2); flipdim(m-3*sqrt(s2),1)];
+f = [m+sqrt(s2); flipdim(m-sqrt(s2),1)];
 f2 = [mu+3*sqrt(sig); flipdim(mu-3*sqrt(sig),1)];
-fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
+% fill([vZ; flipdim(vZ,1)], f, [7 7 7]/8), hold on,
+fill([vZ; flipdim(vZ,1)], f, [1.0 0.5 0]), hold on,
 %fill([vZ; flipdim(vZ,1)], f2, [5 5 5]/8);
 hold on; plot(vZ, m, 'Color', 'black','LineWidth', 2); plot(vX, vY, '+r', 'MarkerSize', 5), hold on,
 %plot(vZ, mu, 'Color', 'black','LineWidth', 2);
 % axis([0,55,0,35]),
 axis(axisVect),
-grid on, xlabel('disimilarity'), ylabel('distance (pixels)'); hold off;
+grid on, xlabel('Dissimilarity (std. intensity diff.)'), ylabel('Distance (pixels)'); hold off;
 
 % save plot
 plotFileName = fullfile(outputSavePath,'dissimilarity_distance_curve.svg');

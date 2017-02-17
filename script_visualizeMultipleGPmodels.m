@@ -7,6 +7,7 @@ markers = {'+','o','*','s'};
 markerSize = 7;
 %% im 1
 gpModelPath = '/home/thanuja/projects/tests/thickness/similarityCurves/squashing/newImages/im01/x/gpModel.mat';
+% gpModelPath = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2/002_sig_2/gpModels/SDI/r2_c1_0_20_aligned_2/1/gpModel.mat';
 gpModel = importdata(gpModelPath);
 
 [m,s2] = gp(gpModel.hyp, @infExact, gpModel.meanfunc, gpModel.covfunc,...

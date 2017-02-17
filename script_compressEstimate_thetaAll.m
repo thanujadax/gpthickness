@@ -16,7 +16,7 @@ saveShiftedStack = 1;
 % originalStackFileName = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2/r2_c1_0_20_aligned_2.tif';
 % originalStackFileName = '/home/thanuja/DATA/ssSEM/ziqiang2/Sample2404/block_3000x.tif';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
-rotations = 0:10:180; % rotation in degrees [0 10 20 30 40]
+rotations = 170:10:180; % rotation in degrees [0 10 20 30 40]
 gaussianSigma = 2; % to preprocess input image. for FIBSEM set to 0.5. ssSEM 1.5?
 gaussianMaskSize = 5;
 

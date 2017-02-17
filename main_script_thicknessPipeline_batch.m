@@ -13,7 +13,7 @@ imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
 resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsSubDir = '002';
+resultsSubDir = '003';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
@@ -33,7 +33,6 @@ params.endInd = 15;
 params.maxNumImages = numel(params.startInd:params.endInd); % number of sections to initiate calibration.
                 % the calibration curve is the mean value obtained by all
                 % these initiations
-
 
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
 params.plotOutput = 1;
