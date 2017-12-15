@@ -6,14 +6,16 @@ gaussianMaskSize = 5;
 % stacks available in this path
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/gaussianBlurred/s502_xShifted_gap10_slice101/sig3';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
-imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2';
+% imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
+imageStackDirectory = '/home/data/DATA/ETH/ssSEM_AFM_thickness/small';
 
 % results go here
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
-resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
+% resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsSubDir = '003';
+resultsRoot = '/home/thanuja/DATA/ETH/results';
+resultsSubDir = '001';
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
