@@ -9,16 +9,16 @@ Readme.txt: sectionThickness
 main_script_thicknessPipeline_batch.m contains a script you can use to run the thickness estimation method using different image similarity measures.
 
 The inputs are set in the top part of the script.
-
+```
 params.xyResolution = 5; % nm
-params.maxShift = 40;
-params.minShift = 0;
+params.maxShift = 40;    % How much each training image should be shifted in pixels to learn the GP model
+params.minShift = 0;     % Keep it zero
 params.maxNumImages = 3; % number of sections to initiate calibration.
-                % the calibration curve is the mean value obtained by all
+                % the calibration curve (GP) is the mean value obtained by all
                 % these initiations
-params.plotOutput = 1;
-params.suppressPlots = 1;
-params.imgStackFileExt = 'tif';
+params.plotOutput = 1;   % 0 to turn off visualizations
+params.suppressPlots = 1; % 0 to write output plots to files (directory name mentioned below) 
+params.imgStackFileExt = 'tif'; % image file type
 
 stacksAreInSeparateSubDirs = 0; % all the stacks are in the same sub-directory
 
@@ -27,7 +27,7 @@ matFilePath = '/path/to/save/distance/matrices';
 outputSavePath = '/path/to/save/output';
 gpModelSavePath = '/path/to/save/gausian/process/models/learned';
 numImagesToEstimate = 10; % for each image stack
-
+```
 # Description
 The script
 1. Generates the distance-similarity matrices for individual images
