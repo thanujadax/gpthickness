@@ -8,14 +8,14 @@ gaussianMaskSize = 5;
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/XYshiftedStacks/s502/xShifted/gap02_slice101';
 % imageStackDirectory = '/home/thanuja/DATA/ssSEM/20161215/tiff_blocks1/r2_c1_0_20_aligned2';
 % imageStackDirectory = '/home/thanuja/projects/data/FIBSEM_dataset/largercubes/s502';
-imageStackDirectory = '/home/data/DATA/ETH/ssSEM_AFM_thickness/small';
-
+imageStackDirectory = '/home/data/DATA/ETH/ssSEM_AFM_thickness/sizeRange/500';
 % results go here
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160314/FIBSEM_gauss/s502_gap2_slice101';
 % resultsRoot = '/home/thanuja/RESULTS/sectionThickness/ssSEM_70nm/r2_c1_0_20_2';
 % resultsRoot = '/home/thanuja/projects/RESULTS/sectionThickness/20160316_FIBSEM';
-resultsRoot = '/home/thanuja/DATA/ETH/results';
-resultsSubDir = '001';
+resultsRoot = '/home/thanuja/DATA/ETH/results/sizeRange';
+resultsSubDir = '500';
+
 dataSource = 'ssSEM'; % options: 'FIBSEM','ssTEM','ssSEM'
 
 %% main params
@@ -37,8 +37,8 @@ params.maxNumImages = numel(params.startInd:params.endInd); % number of sections
                 % these initiations
 
 params.numPairs = 1; % number of section pairs to be used to estimate the thickness of onesection
-params.plotOutput = 1;
-params.suppressPlots = 0;
+params.plotOutput = 0;
+params.suppressPlots = 1;
 params.usePrecomputedCurve = 0;
 params.pathToPrecomputedCurve = '';
 params.imgStackFileExt = 'tif';
